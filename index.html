@@ -16,7 +16,7 @@
         .nav-btn { flex: 1; min-width: 120px; padding: 14px; background-color: #5865F2; color: white; border: none; border-radius: 8px; font-weight: bold; font-size: 1.05rem; cursor: pointer; transition: 0.2s; display: flex; align-items: center; justify-content: center; gap: 6px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
         .nav-btn.active { background-color: #3c45a5; box-shadow: inset 0 0 0 2px rgba(255,255,255,0.4); }
 
-         /* 계산 모드 스위치 */
+        /* 계산 모드 스위치 */
         .mode-switch { display: flex; background: #1e1f22; border-radius: 8px; overflow: hidden; margin-bottom: 20px; border: 1px solid #3f4147; }
         .mode-label { flex: 1; text-align: center; padding: 14px; cursor: pointer; color: #949ba4; font-weight: bold; font-size: 1rem; transition: 0.2s; position: relative; }
         .mode-label input { position: absolute; opacity: 0; cursor: pointer; }
@@ -30,16 +30,11 @@
         #card-forge { border-top-color: #e67e22; }
 
         .card h2 { margin-top: 0; color: #ffffff; border-bottom: 1px solid #3f4147; padding-bottom: 15px; margin-bottom: 20px; font-size: 1.3rem; }
-        .input-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px; }
-        /* 박스 전체를 가로 정렬(Flex)로 변경 */
-        .input-group { display: flex; align-items: center; justify-content: space-between; background-color: #1e1f22; padding: 12px 16px; border-radius: 8px; border: 1px solid #2b2d31; transition: all 0.2s ease; }
-        /* 입력칸 클릭 시 박스 전체 테두리 강조 */
-        .input-group:focus-within { border-color: #5865F2; }
-        /* 왼쪽 라벨 스타일 */
-        .input-group label { margin: 0; font-size: 0.9rem; font-weight: 600; color: #949ba4; white-space: nowrap; }
-        /* 오른쪽 입력칸 스타일 */
-        .input-group input { width: 50%; padding: 0; background-color: transparent; border: none; color: #ffffff; font-size: 1.05rem; text-align: right; /* 숫자를 오른쪽으로 정렬 */font-weight: bold; }
-        .input-group input:focus { outline: none; }
+        .input-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px; }
+        .input-group label { display: block; margin-bottom: 8px; font-size: 0.95rem; font-weight: 600; color: #b5bac1; }
+        .input-group input { width: 100%; padding: 12px; background-color: #1e1f22; border: 1px solid #1e1f22; border-radius: 8px; color: #dbdee1; box-sizing: border-box; font-size: 1rem; transition: border-color 0.2s; }
+        .input-group input:focus { outline: none; border-color: #5865F2; }
+        .input-group input::placeholder { color: #5c5f66; }
         .full-width { grid-column: span 2; }
         
         .calc-btn { width: 100%; padding: 16px; background-color: #2ecc71; color: #1e1f22; border: none; border-radius: 8px; font-weight: bold; font-size: 1.15rem; cursor: pointer; transition: 0.2s; box-shadow: 0 4px 6px rgba(46, 204, 113, 0.2); }
@@ -52,17 +47,13 @@
         .rarity-title { margin-bottom: 12px; font-weight: bold; color: #fff; font-size: 1.1rem; border-bottom: 1px solid #3f4147; padding-bottom: 8px; }
         .rarity-table { display: grid; gap: 6px; }
         .rarity-row { display: flex; justify-content: space-between; padding: 10px 14px; border-radius: 6px; font-weight: 800; font-size: 0.95rem; }
-
-        .mode-target .currency-only { display: none !important; }
-        /* '재화 기준' 모드일 때 목표 레벨 숨김 */
-        .mode-currency .target-only { display: none !important; }
     </style>
 </head>
 <body>
 
 <div class="container">
     <h1>포마 승천 통합 계산기</h1>
-    <p class="subtitle"></p>
+    <p class="subtitle">모든 데이터 및 보유 재화 기반 연산 통합 버전</p>
 
     <div class="mode-switch">
         <label class="mode-label active" id="lbl-target">
@@ -85,11 +76,11 @@
     <div id="card-skill" class="card">
         <h2>🎟️ 스킬 승천 계산기</h2>
         <div class="input-grid">
-            <div class="input-group"><label>현재 레벨</label><input type="number" id="s-cur" placeholder="1" data-default="1" onfocus="this.placeholder=''" onblur="this.placeholder='1'"></div>
-            <div class="input-group target-only"><label>목표 레벨</label><input type="number" id="s-tar" placeholder="100" data-default="100" onfocus="this.placeholder=''" onblur="this.placeholder='100'"></div>
-            <div class="input-group"><label>진행도</label><input type="number" id="s-prog" placeholder="0" data-default="0" onfocus="this.placeholder=''" onblur="this.placeholder='0'"></div>
-            <div class="input-group"><label>5회 비용</label><input type="number" id="s-cost" placeholder="200" data-default="200" onfocus="this.placeholder=''" onblur="this.placeholder='200'"></div>
-            <div class="input-group full-width currency-only"><label>보유 재화</label><input type="text" id="s-curr" placeholder="0" data-default="0" onfocus="this.placeholder=''" onblur="this.placeholder='0'" onkeyup="formatInput(this)"></div>
+            <div class="input-group"><label>현재 레벨</label><input type="number" id="s-cur" value="1"></div>
+            <div class="input-group mode-target"><label>목표 레벨</label><input type="number" id="s-tar" value="37"></div>
+            <div class="input-group mode-curr" style="display:none;"><label>보유 재화 (k, m, b 입력 가능)</label><input type="text" id="s-curr" value="30k" placeholder="예: 30000, 30k"></div>
+            <div class="input-group"><label>진행도 (사용한 횟수)</label><input type="number" id="s-prog" value="0"></div>
+            <div class="input-group"><label>5회 소환 비용</label><input type="number" id="s-cost" value="160"></div>
         </div>
         <button class="calc-btn" onclick="calc('skill')">계산하기</button>
         <div class="result-box" id="res-skill"></div>
@@ -99,11 +90,11 @@
     <div id="card-pet" class="card">
         <h2>🥚 알 승천 계산기</h2>
         <div class="input-grid">
-            <div class="input-group"><label>현재 레벨</label><input type="number" id="p-cur" placeholder="1" data-default="1" onfocus="this.placeholder=''" onblur="this.placeholder='1'"></div>
-            <div class="input-group target-only"><label>목표 레벨</label><input type="number" id="p-tar" placeholder="100" data-default="100" onfocus="this.placeholder=''" onblur="this.placeholder='100'"></div>
-            <div class="input-group"><label>진행도</label><input type="number" id="p-prog" placeholder="0" data-default="0" onfocus="this.placeholder=''" onblur="this.placeholder='0'"></div>
-            <div class="input-group"><label>추탈 %</label><input type="number" id="p-ext" placeholder="0" data-default="0" onfocus="this.placeholder=''" onblur="this.placeholder='0'"></div>
-            <div class="input-group full-width currency-only"><label>보유 재화</label><input type="text" id="p-curr" placeholder="0" data-default="0" onfocus="this.placeholder=''" onblur="this.placeholder='0'" onkeyup="formatInput(this)"></div>
+            <div class="input-group"><label>현재 레벨</label><input type="number" id="p-cur" value="1"></div>
+            <div class="input-group mode-target"><label>목표 레벨</label><input type="number" id="p-tar" value="37"></div>
+            <div class="input-group mode-curr" style="display:none;"><label>보유 재화 (k, m, b 입력 가능)</label><input type="text" id="p-curr" value="30k" placeholder="예: 30000, 30k"></div>
+            <div class="input-group"><label>진행도 (사용한 횟수)</label><input type="number" id="p-prog" value="0"></div>
+            <div class="input-group"><label>추가 획득 확률(추탈) %</label><input type="number" id="p-ext" value="0"></div>
         </div>
         <button class="calc-btn" onclick="calc('pet')">계산하기</button>
         <div class="result-box" id="res-pet"></div>
@@ -113,12 +104,12 @@
     <div id="card-mount" class="card active">
         <h2>🗝️ 탈것 승천 계산기</h2>
         <div class="input-grid">
-            <div class="input-group"><label>현재 레벨</label><input type="number" id="m-cur" placeholder="1" data-default="1" onfocus="this.placeholder=''" onblur="this.placeholder='1'"></div>
-            <div class="input-group target-only"><label>목표 레벨</label><input type="number" id="m-tar" placeholder="100" data-default="100" onfocus="this.placeholder=''" onblur="this.placeholder='100'"></div>
-            <div class="input-group"><label>진행도</label><input type="number" id="m-prog" placeholder="0" data-default="0" onfocus="this.placeholder=''" onblur="this.placeholder='0'"></div>
-            <div class="input-group"><label>추탈 %</label><input type="number" id="m-ext" placeholder="0" data-default="0" onfocus="this.placeholder=''" onblur="this.placeholder='0'"></div>
-            <div class="input-group"><label>1회 비용</label><input type="number" id="m-cost" placeholder="50" data-default="50" onfocus="this.placeholder=''" onblur="this.placeholder='50'"></div>
-            <div class="input-group full-width currency-only"><label>보유 재화</label><input type="text" id="m-curr" placeholder="0" data-default="0" onfocus="this.placeholder=''" onblur="this.placeholder='0'" onkeyup="formatInput(this)"></div>
+            <div class="input-group"><label>현재 레벨</label><input type="number" id="m-cur" value="1"></div>
+            <div class="input-group mode-target"><label>목표 레벨</label><input type="number" id="m-tar" value="37"></div>
+            <div class="input-group mode-curr" style="display:none;"><label>보유 재화 (k, m, b 입력 가능)</label><input type="text" id="m-curr" value="30k" placeholder="예: 30000, 30k"></div>
+            <div class="input-group"><label>진행도 (사용한 횟수)</label><input type="number" id="m-prog" value="0"></div>
+            <div class="input-group"><label>추가 획득 확률(추탈) %</label><input type="number" id="m-ext" value="25"></div>
+            <div class="input-group full-width"><label>1회 소환 비용</label><input type="number" id="m-cost" value="35"></div>
         </div>
         <button class="calc-btn" onclick="calc('mount')">계산하기</button>
         <div class="result-box" id="res-mount"></div>
@@ -128,11 +119,11 @@
     <div id="card-forge" class="card">
         <h2>⚒️ 대장간 승천 계산기</h2>
         <div class="input-grid">
-            <div class="input-group"><label>현재 레벨</label><input type="number" id="f-cur" placeholder="1" data-default="1" onfocus="this.placeholder=''" onblur="this.placeholder='1'"></div>
-            <div class="input-group target-only"><label>목표 레벨</label><input type="number" id="f-tar" placeholder="35" data-default="35" onfocus="this.placeholder=''" onblur="this.placeholder='35'"></div>
-            <div class="input-group"><label>비감 %</label><input type="number" id="f-dis" placeholder="0" data-default="0" onfocus="this.placeholder=''" onblur="this.placeholder='0'"></div>
-            <div class="input-group"><label>시감 %</label><input type="number" id="f-spd" placeholder="0" data-default="0" onfocus="this.placeholder=''" onblur="this.placeholder='0'"></div>
-            <div class="input-group full-width currency-only"><label>보유 코인</label><input type="text" id="f-curr" placeholder="0" data-default="0" onfocus="this.placeholder=''" onblur="this.placeholder='0'" onkeyup="formatInput(this)"></div>
+            <div class="input-group"><label>현재 레벨</label><input type="number" id="f-cur" value="1"></div>
+            <div class="input-group mode-target"><label>목표 레벨 (Max 36)</label><input type="number" id="f-tar" value="35"></div>
+            <div class="input-group mode-curr" style="display:none;"><label>보유 코인 (k, m, b 입력 가능)</label><input type="text" id="f-curr" value="1.5m" placeholder="예: 1500000, 1.5m"></div>
+            <div class="input-group"><label>시간 감소율(시감) %</label><input type="number" id="f-spd" value="0"></div>
+            <div class="input-group"><label>비용 감소율(비감) %</label><input type="number" id="f-dis" value="0"></div>
         </div>
         <button class="calc-btn" onclick="calcForge()">계산하기</button>
         <div class="result-box" id="res-forge"></div>
@@ -158,11 +149,8 @@
             });
         });
     };
- 
-    function switchMode(mode) {
-    document.body.className = 'mode-' + mode; // 'mode-target' 또는 'mode-currency'로 변경됨
-}
-    // 문자열 숫자 파싱 함수 (k, m, b 단위 지원)
+
+    // 문자열 숫자 파싱 함수 (k, m, b, t 단위 지원)
     function parseCurrency(value) {
         if (!value) return 0;
         let str = value.toString().toLowerCase().replace(/,/g, '').trim();
@@ -170,6 +158,8 @@
         if (isNaN(num)) return 0;
         if (str.endsWith('k')) return num * 1000;
         if (str.endsWith('m')) return num * 1000000;
+        if (str.endsWith('b')) return num * 1000000000;
+        if (str.endsWith('t')) return num * 1000000000000;
         return num;
     }
 
@@ -195,15 +185,7 @@
         document.getElementById('btn-' + id).classList.add('active');
     }
 
-    function val(id) { 
-    let el = document.getElementById(id);
-    if (!el) return 0;
-    
-    // 핵심: 화면에 숨겨져 있다면(offsetParent가 null이면) 0을 반환하여 계산 방해 방지
-    if (el.offsetParent === null) return 0; 
-    
-    return el.value === "" ? (parseFloat(el.getAttribute('data-default')) || 0) : (parseFloat(el.value) || 0);
-}
+    function val(id) { return parseFloat(document.getElementById(id).value) || 0; }
 
     // ============================================
     // 1. CSV 기반 소환 횟수/비용 데이터
@@ -318,19 +300,12 @@
                 let level = cur;
                 let needNext = (level - 1 < skillData.length ? skillData[level - 1] : 110);
                 
-                // 수정됨: 200 대신 100 제한
-                while (totalAvail >= needNext && level < 100) {
+                while (totalAvail >= needNext && level < 200) {
                     totalAvail -= needNext;
                     level++;
                     needNext = (level - 1 < skillData.length ? skillData[level - 1] : 110);
                 }
-                
-                // 수정됨: 만렙일 때 텍스트 구분
-                if (level >= 100) {
-                    res.innerHTML = `[보유 재화 소진 시] 도달 가능 최대 레벨: <strong style="color:#2ecc71;">100레벨 (만렙)</strong><br>남은 횟수(진행도): <strong>${Math.floor(totalAvail)}</strong>`;
-                } else {
-                    res.innerHTML = `[보유 재화 소진 시] 도달 가능 최대 레벨: <strong>${level}레벨</strong><br>남은 횟수(진행도): <strong>${Math.floor(totalAvail)} / ${needNext}</strong>`;
-                }
+                res.innerHTML = `[보유 재화 소진 시] 도달 가능 최대 레벨: <strong>${level}레벨</strong><br>남은 횟수(진행도): <strong>${Math.floor(totalAvail)} / ${needNext}</strong>`;
                 drawRarity('rarity-skill', level, skillRarity, RarityNames, RarityColors);
             }
             
@@ -356,19 +331,12 @@
                 let level = cur;
                 let needNext = (level - 1 < petData.length ? petData[level - 1] : 23);
                 
-                // 수정됨: 200 대신 100 제한
-                while (totalAvail >= needNext && level < 100) {
+                while (totalAvail >= needNext && level < 200) {
                     totalAvail -= needNext;
                     level++;
                     needNext = (level - 1 < petData.length ? petData[level - 1] : 23);
                 }
-                
-                // 수정됨: 만렙일 때 텍스트 구분
-                if (level >= 100) {
-                    res.innerHTML = `[보유 재화 소진 시] 도달 가능 최대 레벨: <strong style="color:#2ecc71;">100레벨 (만렙)</strong><br>남은 횟수(진행도): <strong>${Math.floor(totalAvail)}</strong>`;
-                } else {
-                    res.innerHTML = `[보유 재화 소진 시] 도달 가능 최대 레벨: <strong>${level}레벨</strong><br>남은 횟수(진행도): <strong>${Math.floor(totalAvail)} / ${needNext}</strong>`;
-                }
+                res.innerHTML = `[보유 재화 소진 시] 도달 가능 최대 레벨: <strong>${level}레벨</strong><br>남은 횟수(진행도): <strong>${Math.floor(totalAvail)} / ${needNext}</strong>`;
                 drawRarity('rarity-pet', level, petRarity, RarityNames, RarityColors);
             }
             
@@ -390,20 +358,11 @@
                 let pullsAvail = Math.floor(curr / cost) * (1 + ext / 100);
                 let totalAvail = pullsAvail + prog;
                 
-                let level = cur;
+                let levelGained = Math.floor(totalAvail / 20);
+                let level = cur + levelGained;
+                let leftover = totalAvail % 20;
                 
-                // 수정됨: 단순 더하기에서 루프 계산으로 변경하여 100 제한 적용
-                while (totalAvail >= 20 && level < 100) {
-                    totalAvail -= 20;
-                    level++;
-                }
-                
-                // 수정됨: 만렙일 때 텍스트 구분
-                if (level >= 100) {
-                    res.innerHTML = `[보유 재화 소진 시] 도달 가능 최대 레벨: <strong style="color:#2ecc71;">100레벨 (만렙)</strong><br>남은 횟수(진행도): <strong>${Math.floor(totalAvail)}</strong>`;
-                } else {
-                    res.innerHTML = `[보유 재화 소진 시] 도달 가능 최대 레벨: <strong>${level}레벨</strong><br>남은 횟수(진행도): <strong>${Math.floor(totalAvail)} / 20</strong>`;
-                }
+                res.innerHTML = `[보유 재화 소진 시] 도달 가능 최대 레벨: <strong>${level}레벨</strong><br>남은 횟수(진행도): <strong>${Math.floor(leftover)} / 20</strong>`;
                 drawRarity('rarity-mount', level, mountRarity, RarityNames, RarityColors);
             }
         }
@@ -422,7 +381,7 @@
 
         if (currentMode === 'target') {
             let tar = val('f-tar');
-            if (tar > 35 || cur >= tar) return res.innerHTML = `<span style="color:#ed4245; font-weight:bold;">목표 레벨을 올바르게 입력하세요 (현재보다 크고 35 이하).</span>`;
+            if (tar > 36 || cur >= tar) return res.innerHTML = `<span style="color:#ed4245; font-weight:bold;">목표 레벨을 올바르게 입력하세요 (현재보다 크고 36 이하).</span>`;
             
             let c = 0, t = 0, s = 0;
             for (let i = cur - 1; i < tar - 1 && i < forgeBase.length; i++) {
@@ -438,8 +397,7 @@
             let timeAccum = 0;
             let costAccum = 0;
             
-            // 수정됨: 36에서 35로 제한하여 오류 방지
-            while (level < 35) {
+            while (level < 36) {
                 let nextCost = Math.floor(forgeBase[level - 1].c * dis);
                 if (curr >= nextCost) {
                     curr -= nextCost;
@@ -451,12 +409,7 @@
                 }
             }
             
-            // 수정됨: 만렙일 때 텍스트 구분
-            if (level >= 35) {
-                res.innerHTML = `[보유 코인 소진 시] 도달 가능 최대 레벨: <strong style="color:#2ecc71;">35레벨 (만렙)</strong><br>총 소모 코인: <strong>${formatNum(costAccum)}</strong><br>사용 후 남은 코인: <strong>${formatNum(curr)}</strong><br>총 소요 시간: <strong>${formatTime(timeAccum / spd)}</strong>`;
-            } else {
-                res.innerHTML = `[보유 코인 소진 시] 도달 가능 최대 레벨: <strong>${level}레벨</strong><br>총 소모 코인: <strong>${formatNum(costAccum)}</strong><br>사용 후 남은 코인: <strong>${formatNum(curr)}</strong><br>총 소요 시간: <strong>${formatTime(timeAccum / spd)}</strong>`;
-            }
+            res.innerHTML = `[보유 코인 소진 시] 도달 가능 최대 레벨: <strong>${level}레벨</strong><br>총 소모 코인: <strong>${formatNum(costAccum)}</strong><br>사용 후 남은 코인: <strong>${formatNum(curr)}</strong><br>총 소요 시간: <strong>${formatTime(timeAccum / spd)}</strong>`;
             drawRarity('rarity-forge', level, forgeRarity, ForgeNames, ForgeColors);
         }
     }
