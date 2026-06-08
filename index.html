@@ -27,7 +27,7 @@
         #card-skill { border-top-color: #e74c3c; }
         #card-pet { border-top-color: #f1c40f; }
         #card-mount { border-top-color: #9b59b6; }
-        #card-forge { border-top-color: #e67e22; }
+        #card-forge { border-top-color: #5865F2; }
 
         .card h2 { margin-top: 0; color: #ffffff; border-bottom: 1px solid #3f4147; padding-bottom: 15px; margin-bottom: 20px; font-size: 1.3rem; display: flex; align-items: center; gap: 8px; }
         
@@ -49,7 +49,7 @@
         .rarity-row { display: flex; justify-content: space-between; padding: 10px 15px; border-radius: 8px; font-weight: bold; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
         
         /* 콤마 변환을 위한 입력 필드 스타일 */
-        .currency-input { font-family: 'Pretendard', monospace; font-weight: 600; color: #2ecc71 !important; }
+        .currency-input { font-family: 'Pretendard', monospace; font-weight: 600; !important; }
 
         /* 모드에 따른 입력 필드 숨김 처리 */
         .mode-target .currency-only { display: none !important; }
@@ -71,7 +71,7 @@
         <button class="nav-btn active" id="btn-skill" onclick="tab('skill')">🎟️ 스킬</button>
         <button class="nav-btn" id="btn-pet" onclick="tab('pet')">🥚 알 (펫)</button>
         <button class="nav-btn" id="btn-mount" onclick="tab('mount')">🗝️ 탈것</button>
-        <button class="nav-btn" style="background-color: #e67e22;" id="btn-forge" onclick="tab('forge')">⚒️ 대장간</button>
+        <button class="nav-btn" id="btn-forge" onclick="tab('forge')">⚒️ 대장간</button>
     </div>
 
     <div id="card-skill" class="card active mode-target">
