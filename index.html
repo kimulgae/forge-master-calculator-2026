@@ -77,10 +77,10 @@
         <h2>🎟️ 스킬 승천 계산기</h2>
         <div class="input-grid">
             <div class="input-group"><label>현재 레벨</label><input type="number" id="s-cur" value="1"></div>
-            <div class="input-group mode-target"><label>목표 레벨</label><input type="number" id="s-tar" value="37"></div>
-            <div class="input-group mode-curr" style="display:none;"><label>보유 재화 (k, m, b 입력 가능)</label><input type="text" id="s-curr" value="30k" placeholder="예: 30000, 30k"></div>
+            <div class="input-group mode-target"><label>목표 레벨</label><input type="number" id="s-tar" value="100"></div>
+            <div class="input-group mode-curr" style="display:none;"><label>보유 재화 (k 입력 가능)</label><input type="text" id="s-curr" value="30k" placeholder="예: 30000, 30k"></div>
             <div class="input-group"><label>진행도 (사용한 횟수)</label><input type="number" id="s-prog" value="0"></div>
-            <div class="input-group"><label>5회 소환 비용</label><input type="number" id="s-cost" value="160"></div>
+            <div class="input-group"><label>5회 소환 비용</label><input type="number" id="s-cost" value="200"></div>
         </div>
         <button class="calc-btn" onclick="calc('skill')">계산하기</button>
         <div class="result-box" id="res-skill"></div>
@@ -91,8 +91,8 @@
         <h2>🥚 알 승천 계산기</h2>
         <div class="input-grid">
             <div class="input-group"><label>현재 레벨</label><input type="number" id="p-cur" value="1"></div>
-            <div class="input-group mode-target"><label>목표 레벨</label><input type="number" id="p-tar" value="37"></div>
-            <div class="input-group mode-curr" style="display:none;"><label>보유 재화 (k, m, b 입력 가능)</label><input type="text" id="p-curr" value="30k" placeholder="예: 30000, 30k"></div>
+            <div class="input-group mode-target"><label>목표 레벨</label><input type="number" id="p-tar" value="100"></div>
+            <div class="input-group mode-curr" style="display:none;"><label>보유 재화 (k 입력 가능)</label><input type="text" id="p-curr" value="30k" placeholder="예: 30000, 30k"></div>
             <div class="input-group"><label>진행도 (사용한 횟수)</label><input type="number" id="p-prog" value="0"></div>
             <div class="input-group"><label>추가 획득 확률(추탈) %</label><input type="number" id="p-ext" value="0"></div>
         </div>
@@ -105,11 +105,11 @@
         <h2>🗝️ 탈것 승천 계산기</h2>
         <div class="input-grid">
             <div class="input-group"><label>현재 레벨</label><input type="number" id="m-cur" value="1"></div>
-            <div class="input-group mode-target"><label>목표 레벨</label><input type="number" id="m-tar" value="37"></div>
-            <div class="input-group mode-curr" style="display:none;"><label>보유 재화 (k, m, b 입력 가능)</label><input type="text" id="m-curr" value="30k" placeholder="예: 30000, 30k"></div>
+            <div class="input-group mode-target"><label>목표 레벨</label><input type="number" id="m-tar" value="100"></div>
+            <div class="input-group mode-curr" style="display:none;"><label>보유 재화 (k 입력 가능)</label><input type="text" id="m-curr" value="30k" placeholder="예: 30000, 30k"></div>
             <div class="input-group"><label>진행도 (사용한 횟수)</label><input type="number" id="m-prog" value="0"></div>
-            <div class="input-group"><label>추가 획득 확률(추탈) %</label><input type="number" id="m-ext" value="25"></div>
-            <div class="input-group full-width"><label>1회 소환 비용</label><input type="number" id="m-cost" value="35"></div>
+            <div class="input-group"><label>추가 획득 확률(추탈) %</label><input type="number" id="m-ext" value="0"></div>
+            <div class="input-group full-width"><label>1회 소환 비용</label><input type="number" id="m-cost" value="50"></div>
         </div>
         <button class="calc-btn" onclick="calc('mount')">계산하기</button>
         <div class="result-box" id="res-mount"></div>
@@ -121,7 +121,7 @@
         <div class="input-grid">
             <div class="input-group"><label>현재 레벨</label><input type="number" id="f-cur" value="1"></div>
             <div class="input-group mode-target"><label>목표 레벨 (Max 36)</label><input type="number" id="f-tar" value="35"></div>
-            <div class="input-group mode-curr" style="display:none;"><label>보유 코인 (k, m, b 입력 가능)</label><input type="text" id="f-curr" value="1.5m" placeholder="예: 1500000, 1.5m"></div>
+            <div class="input-group mode-curr" style="display:none;"><label>보유 코인 (k, m 입력 가능)</label><input type="text" id="f-curr" value="1.5m" placeholder="예: 1500000, 1.5m"></div>
             <div class="input-group"><label>시간 감소율(시감) %</label><input type="number" id="f-spd" value="0"></div>
             <div class="input-group"><label>비용 감소율(비감) %</label><input type="number" id="f-dis" value="0"></div>
         </div>
@@ -150,7 +150,7 @@
         });
     };
 
-    // 문자열 숫자 파싱 함수 (k, m, b, t 단위 지원)
+    // 문자열 숫자 파싱 함수 (k, m 단위 지원)
     function parseCurrency(value) {
         if (!value) return 0;
         let str = value.toString().toLowerCase().replace(/,/g, '').trim();
@@ -158,8 +158,6 @@
         if (isNaN(num)) return 0;
         if (str.endsWith('k')) return num * 1000;
         if (str.endsWith('m')) return num * 1000000;
-        if (str.endsWith('b')) return num * 1000000000;
-        if (str.endsWith('t')) return num * 1000000000000;
         return num;
     }
 
