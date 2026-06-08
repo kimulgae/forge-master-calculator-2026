@@ -62,11 +62,11 @@
 
 <div class="container">
     <h1>포마 승천 통합 계산기</h1>
-    <p class="subtitle">계산 모드를 선택하고 정확한 필요 재화를 확인하세요.</p>
+    <p class="subtitle">기준을 선택하고 필요 재화를 확인하세요.</p>
 
     <div class="mode-toggle">
-        <button class="mode-btn active" id="btn-mode-target" onclick="setMode('target')">🎯 목표 레벨 도달 비용 계산</button>
-        <button class="mode-btn" id="btn-mode-currency" onclick="setMode('currency')">💰 보유 재화 최대 레벨 계산</button>
+        <button class="mode-btn active" id="btn-mode-target" onclick="setMode('target')">🎯 목표 레벨 기준</button>
+        <button class="mode-btn" id="btn-mode-currency" onclick="setMode('currency')">💰 보유 재화 기준</button>
     </div>
 
     <div class="nav-buttons">
@@ -217,6 +217,47 @@
         if (h > 0) res.push(`${h}시간`);
         if (m > 0 || res.length === 0) res.push(`${m}분`);
         return res.join(' ');
+    }
+
+     let currentMode = 'target';
+    
+    window.onload = () => {
+        // 엔터키 즉시 연산 바인딩
+        document.querySelectorAll('input').forEach(input => {
+            input.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    const activeCard = document.querySelector('.card.active');
+                    if(activeCard) activeCard.querySelector('.calc-btn').click();
+                }
+            });
+        });
+    };
+
+    // 문자열 숫자 파싱 함수 (k, m, b 단위 지원)
+    function parseCurrency(value) {
+        if (!value) return 0;
+        let str = value.toString().toLowerCase().replace(/,/g, '').trim();
+        let num = parseFloat(str);
+        if (isNaN(num)) return 0;
+        if (str.endsWith('k')) return num * 1000;
+        if (str.endsWith('m')) return num * 1000000;
+        if (str.endsWith('b')) return num * 1000000000;
+        return num;
+    }
+
+    // 모드 탭 전환
+    function toggleMode() {
+        currentMode = document.querySelector('input[name="calcMode"]:checked').value;
+        document.querySelectorAll('.mode-label').forEach(l => l.classList.remove('active'));
+        document.getElementById(currentMode === 'target' ? 'lbl-target' : 'lbl-curr').classList.add('active');
+        
+        document.querySelectorAll('.mode-target').forEach(el => el.style.display = currentMode === 'target' ? 'block' : 'none');
+        document.querySelectorAll('.mode-curr').forEach(el => el.style.display = currentMode === 'curr' ? 'block' : 'none');
+        
+        // 모드 변경 시 기존 결과창 초기화
+        document.querySelectorAll('.result-box').forEach(el => el.style.display = 'none');
+        document.querySelectorAll('.rarity-container').forEach(el => el.style.display = 'none');
     }
 
     function tab(id) {
