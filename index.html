@@ -300,12 +300,19 @@
                 let level = cur;
                 let needNext = (level - 1 < skillData.length ? skillData[level - 1] : 110);
                 
-                while (totalAvail >= needNext && level < 200) {
+                // 수정됨: 200 대신 100 제한
+                while (totalAvail >= needNext && level < 100) {
                     totalAvail -= needNext;
                     level++;
                     needNext = (level - 1 < skillData.length ? skillData[level - 1] : 110);
                 }
-                res.innerHTML = `[보유 재화 소진 시] 도달 가능 최대 레벨: <strong>${level}레벨</strong><br>남은 횟수(진행도): <strong>${Math.floor(totalAvail)} / ${needNext}</strong>`;
+                
+                // 수정됨: 만렙일 때 텍스트 구분
+                if (level >= 100) {
+                    res.innerHTML = `[보유 재화 소진 시] 도달 가능 최대 레벨: <strong style="color:#2ecc71;">100레벨 (만렙)</strong><br>남은 횟수(진행도): <strong>${Math.floor(totalAvail)}</strong>`;
+                } else {
+                    res.innerHTML = `[보유 재화 소진 시] 도달 가능 최대 레벨: <strong>${level}레벨</strong><br>남은 횟수(진행도): <strong>${Math.floor(totalAvail)} / ${needNext}</strong>`;
+                }
                 drawRarity('rarity-skill', level, skillRarity, RarityNames, RarityColors);
             }
             
@@ -331,12 +338,19 @@
                 let level = cur;
                 let needNext = (level - 1 < petData.length ? petData[level - 1] : 23);
                 
-                while (totalAvail >= needNext && level < 200) {
+                // 수정됨: 200 대신 100 제한
+                while (totalAvail >= needNext && level < 100) {
                     totalAvail -= needNext;
                     level++;
                     needNext = (level - 1 < petData.length ? petData[level - 1] : 23);
                 }
-                res.innerHTML = `[보유 재화 소진 시] 도달 가능 최대 레벨: <strong>${level}레벨</strong><br>남은 횟수(진행도): <strong>${Math.floor(totalAvail)} / ${needNext}</strong>`;
+                
+                // 수정됨: 만렙일 때 텍스트 구분
+                if (level >= 100) {
+                    res.innerHTML = `[보유 재화 소진 시] 도달 가능 최대 레벨: <strong style="color:#2ecc71;">100레벨 (만렙)</strong><br>남은 횟수(진행도): <strong>${Math.floor(totalAvail)}</strong>`;
+                } else {
+                    res.innerHTML = `[보유 재화 소진 시] 도달 가능 최대 레벨: <strong>${level}레벨</strong><br>남은 횟수(진행도): <strong>${Math.floor(totalAvail)} / ${needNext}</strong>`;
+                }
                 drawRarity('rarity-pet', level, petRarity, RarityNames, RarityColors);
             }
             
@@ -358,11 +372,20 @@
                 let pullsAvail = Math.floor(curr / cost) * (1 + ext / 100);
                 let totalAvail = pullsAvail + prog;
                 
-                let levelGained = Math.floor(totalAvail / 20);
-                let level = cur + levelGained;
-                let leftover = totalAvail % 20;
+                let level = cur;
                 
-                res.innerHTML = `[보유 재화 소진 시] 도달 가능 최대 레벨: <strong>${level}레벨</strong><br>남은 횟수(진행도): <strong>${Math.floor(leftover)} / 20</strong>`;
+                // 수정됨: 단순 더하기에서 루프 계산으로 변경하여 100 제한 적용
+                while (totalAvail >= 20 && level < 100) {
+                    totalAvail -= 20;
+                    level++;
+                }
+                
+                // 수정됨: 만렙일 때 텍스트 구분
+                if (level >= 100) {
+                    res.innerHTML = `[보유 재화 소진 시] 도달 가능 최대 레벨: <strong style="color:#2ecc71;">100레벨 (만렙)</strong><br>남은 횟수(진행도): <strong>${Math.floor(totalAvail)}</strong>`;
+                } else {
+                    res.innerHTML = `[보유 재화 소진 시] 도달 가능 최대 레벨: <strong>${level}레벨</strong><br>남은 횟수(진행도): <strong>${Math.floor(totalAvail)} / 20</strong>`;
+                }
                 drawRarity('rarity-mount', level, mountRarity, RarityNames, RarityColors);
             }
         }
@@ -397,7 +420,8 @@
             let timeAccum = 0;
             let costAccum = 0;
             
-            while (level < 36) {
+            // 수정됨: 36에서 35로 제한하여 오류 방지
+            while (level < 35) {
                 let nextCost = Math.floor(forgeBase[level - 1].c * dis);
                 if (curr >= nextCost) {
                     curr -= nextCost;
@@ -409,7 +433,12 @@
                 }
             }
             
-            res.innerHTML = `[보유 코인 소진 시] 도달 가능 최대 레벨: <strong>${level}레벨</strong><br>총 소모 코인: <strong>${formatNum(costAccum)}</strong><br>사용 후 남은 코인: <strong>${formatNum(curr)}</strong><br>총 소요 시간: <strong>${formatTime(timeAccum / spd)}</strong>`;
+            // 수정됨: 만렙일 때 텍스트 구분
+            if (level >= 35) {
+                res.innerHTML = `[보유 코인 소진 시] 도달 가능 최대 레벨: <strong style="color:#2ecc71;">35레벨 (만렙)</strong><br>총 소모 코인: <strong>${formatNum(costAccum)}</strong><br>사용 후 남은 코인: <strong>${formatNum(curr)}</strong><br>총 소요 시간: <strong>${formatTime(timeAccum / spd)}</strong>`;
+            } else {
+                res.innerHTML = `[보유 코인 소진 시] 도달 가능 최대 레벨: <strong>${level}레벨</strong><br>총 소모 코인: <strong>${formatNum(costAccum)}</strong><br>사용 후 남은 코인: <strong>${formatNum(curr)}</strong><br>총 소요 시간: <strong>${formatTime(timeAccum / spd)}</strong>`;
+            }
             drawRarity('rarity-forge', level, forgeRarity, ForgeNames, ForgeColors);
         }
     }
