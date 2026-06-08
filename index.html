@@ -79,7 +79,7 @@
             <div class="input-group"><label>현재 레벨</label><input type="number" id="s-cur" value="1"></div>
             <div class="input-group"><label>진행도 (사용한 횟수)</label><input type="number" id="s-prog" value="0"></div>
             <div class="input-group mode-target"><label>목표 레벨</label><input type="number" id="s-tar" value="37"></div>
-            <div class="input-group mode-curr" style="display:none;"><label>보유 재화 (k, m, b 입력 가능)</label><input type="text" id="s-curr" value="30k" placeholder="예: 30000, 30k, 1.5m"></div>
+            <div class="input-group mode-curr" style="display:none;"><label>보유 재화 (k 입력 가능)</label><input type="text" id="s-curr" value="30k" placeholder="예: 30000, 30k"></div>
             <div class="input-group full-width"><label>5회 소환 비용</label><input type="number" id="s-cost" value="160"></div>
         </div>
         <button class="calc-btn" onclick="calc('skill')">계산하기</button>
@@ -94,7 +94,7 @@
             <div class="input-group"><label>추가 획득 확률(추탈) %</label><input type="number" id="p-ext" value="0"></div>
             <div class="input-group"><label>진행도 (사용한 횟수)</label><input type="number" id="p-prog" value="0"></div>
             <div class="input-group mode-target"><label>목표 레벨</label><input type="number" id="p-tar" value="37"></div>
-            <div class="input-group mode-curr full-width" style="display:none;"><label>보유 재화 (k, m, b 입력 가능)</label><input type="text" id="p-curr" value="30k" placeholder="예: 30000, 30k, 1.5m"></div>
+            <div class="input-group mode-curr full-width" style="display:none;"><label>보유 재화 (k 입력 가능)</label><input type="text" id="p-curr" value="30k" placeholder="예: 30000, 30k"></div>
         </div>
         <button class="calc-btn" onclick="calc('pet')">계산하기</button>
         <div class="result-box" id="res-pet"></div>
@@ -109,7 +109,7 @@
             <div class="input-group"><label>진행도 (사용한 횟수)</label><input type="number" id="m-prog" value="0"></div>
             <div class="input-group"><label>1회 소환 비용</label><input type="number" id="m-cost" value="35"></div>
             <div class="input-group full-width mode-target"><label>목표 레벨</label><input type="number" id="m-tar" value="37"></div>
-            <div class="input-group full-width mode-curr" style="display:none;"><label>보유 재화 (k, m, b 입력 가능)</label><input type="text" id="m-curr" value="30k" placeholder="예: 30000, 30k, 1.5m"></div>
+            <div class="input-group full-width mode-curr" style="display:none;"><label>보유 재화 (k입력 가능)</label><input type="text" id="m-curr" value="30k" placeholder="예: 30000, 30k"></div>
         </div>
         <button class="calc-btn" onclick="calc('mount')">계산하기</button>
         <div class="result-box" id="res-mount"></div>
@@ -157,9 +157,6 @@
         let num = parseFloat(str);
         if (isNaN(num)) return 0;
         if (str.endsWith('k')) return num * 1000;
-        if (str.endsWith('m')) return num * 1000000;
-        if (str.endsWith('b')) return num * 1000000000;
-        if (str.endsWith('t')) return num * 1000000000000;
         return num;
     }
 
