@@ -52,6 +52,10 @@
         .rarity-title { margin-bottom: 12px; font-weight: bold; color: #fff; font-size: 1.1rem; border-bottom: 1px solid #3f4147; padding-bottom: 8px; }
         .rarity-table { display: grid; gap: 6px; }
         .rarity-row { display: flex; justify-content: space-between; padding: 10px 14px; border-radius: 6px; font-weight: 800; font-size: 0.95rem; }
+
+        body.mode-target .currency-only { display: none !important; }
+        /* '재화 기준' 모드일 때 목표 레벨 숨김 */
+        body.mode-currency .target-only { display: none !important; }
     </style>
 </head>
 <body>
@@ -154,7 +158,10 @@
             });
         });
     };
-
+ 
+    function switchMode(mode) {
+    document.body.className = 'mode-' + mode; // 'mode-target' 또는 'mode-currency'로 변경됨
+}
     // 문자열 숫자 파싱 함수 (k, m, b 단위 지원)
     function parseCurrency(value) {
         if (!value) return 0;
