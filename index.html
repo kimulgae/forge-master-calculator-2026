@@ -16,12 +16,11 @@
         .nav-btn { flex: 1; min-width: 120px; padding: 14px; background-color: #5865F2; color: white; border: none; border-radius: 8px; font-weight: bold; font-size: 1.05rem; cursor: pointer; transition: 0.2s; display: flex; align-items: center; justify-content: center; gap: 6px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
         .nav-btn.active { background-color: #3c45a5; box-shadow: inset 0 0 0 2px rgba(255,255,255,0.4); }
 
-        /* 계산 모드 스위치 */
-        .mode-switch { display: flex; gap: 10px; width: 100%; margin-bottom: 20px; flex-wrap: wrap; }
-        .mode-label { flex: 1; min-width: 120px; padding: 14px; background-color: #5865F2; color: white; border: none; border-radius: 8px; font-weight: bold; font-size: 1.05rem; cursor: pointer; transition: 0.2s; }
-        .mode-label:hover { background-color: #4752c4; }
+         /* 계산 모드 스위치 */
+        .mode-switch { display: flex; background: #1e1f22; border-radius: 8px; overflow: hidden; margin-bottom: 20px; border: 1px solid #3f4147; }
+        .mode-label { flex: 1; text-align: center; padding: 14px; cursor: pointer; color: #949ba4; font-weight: bold; font-size: 1rem; transition: 0.2s; position: relative; }
         .mode-label input { position: absolute; opacity: 0; cursor: pointer; }
-        .mode-label.active { background: #2ecc71; box-shadow: inset 0 0 0 2px color: #1e1f22; }
+        .mode-label.active { background: #2ecc71; color: #1e1f22; }
 
         .card { background-color: #2b2d31; border-radius: 12px; padding: 25px; border-top: 4px solid #5865F2; display: none; margin-bottom: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
         .card.active { display: block; }
@@ -31,11 +30,16 @@
         #card-forge { border-top-color: #e67e22; }
 
         .card h2 { margin-top: 0; color: #ffffff; border-bottom: 1px solid #3f4147; padding-bottom: 15px; margin-bottom: 20px; font-size: 1.3rem; }
-        .input-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px; }
-        .input-group label { display: block; margin-bottom: 8px; font-size: 0.95rem; font-weight: 600; color: #b5bac1; }
-        .input-group input { width: 100%; padding: 12px; background-color: #1e1f22; border: 1px solid #1e1f22; border-radius: 8px; color: #dbdee1; box-sizing: border-box; font-size: 1rem; transition: border-color 0.2s; }
-        .input-group input:focus { outline: none; border-color: #5865F2; }
-        .input-group input::placeholder { color: #5c5f66; }
+        .input-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px; }
+        /* 박스 전체를 가로 정렬(Flex)로 변경 */
+        .input-group { display: flex; align-items: center; justify-content: space-between; background-color: #1e1f22; padding: 12px 16px; border-radius: 8px; border: 1px solid #2b2d31; transition: all 0.2s ease; }
+        /* 입력칸 클릭 시 박스 전체 테두리 강조 */
+        .input-group:focus-within { border-color: #5865F2; }
+        /* 왼쪽 라벨 스타일 */
+        .input-group label { margin: 0; font-size: 0.9rem; font-weight: 600; color: #949ba4; white-space: nowrap; }
+        /* 오른쪽 입력칸 스타일 */
+        .input-group input { width: 50%; padding: 0; background-color: transparent; border: none; color: #ffffff; font-size: 1.05rem; text-align: right; /* 숫자를 오른쪽으로 정렬 */font-weight: bold; }
+        .input-group input:focus { outline: none; }
         .full-width { grid-column: span 2; }
         
         .calc-btn { width: 100%; padding: 16px; background-color: #2ecc71; color: #1e1f22; border: none; border-radius: 8px; font-weight: bold; font-size: 1.15rem; cursor: pointer; transition: 0.2s; box-shadow: 0 4px 6px rgba(46, 204, 113, 0.2); }
@@ -77,11 +81,11 @@
     <div id="card-skill" class="card">
         <h2>🎟️ 스킬 승천 계산기</h2>
         <div class="input-grid">
-            <div class="input-group"><label>현재 레벨</label><input type="number" id="s-cur" value="1"></div>
-            <div class="input-group mode-target"><label>목표 레벨</label><input type="number" id="s-tar" value="37"></div>
-            <div class="input-group mode-curr" style="display:none;"><label>보유 재화 (k, m 입력 가능)</label><input type="text" id="s-curr" value="30k" placeholder="예: 30000, 30k"></div>
-            <div class="input-group"><label>진행도 (사용한 횟수)</label><input type="number" id="s-prog" value="0"></div>
-            <div class="input-group"><label>5회 소환 비용</label><input type="number" id="s-cost" value="160"></div>
+            <div class="input-group"><label>현재 레벨</label><input type="number" id="s-cur" value="1" onfocus="if(this.value===this.defaultValue)this.value='';" onblur="if(this.value==='')this.value=this.defaultValue;"></div>
+            <div class="input-group target-only"><label>목표 레벨 (max 100)</label><input type="number" id="s-tar" value="100" onfocus="if(this.value===this.defaultValue)this.value='';" onblur="if(this.value==='')this.value=this.defaultValue;"></div>
+            <div class="input-group"><label>진행도</label><input type="number" id="s-prog" value="0" onfocus="if(this.value===this.defaultValue)this.value='';" onblur="if(this.value==='')this.value=this.defaultValue;"></div>
+            <div class="input-group"><label>5회 비용</label><input type="number" id="s-cost" value="200" onfocus="if(this.value===this.defaultValue)this.value='';" onblur="if(this.value==='')this.value=this.defaultValue;"></div>
+            <div class="input-group full-width currency-only"><label>보유 재화</label><input type="text" id="s-curr" value="0" onfocus="if(this.value===this.defaultValue)this.value='';" onblur="if(this.value==='')this.value=this.defaultValue;" onkeyup="formatInput(this)"></div>
         </div>
         <button class="calc-btn" onclick="calc('skill')">계산하기</button>
         <div class="result-box" id="res-skill"></div>
@@ -91,11 +95,11 @@
     <div id="card-pet" class="card">
         <h2>🥚 알 승천 계산기</h2>
         <div class="input-grid">
-            <div class="input-group"><label>현재 레벨</label><input type="number" id="p-cur" value="1"></div>
-            <div class="input-group mode-target"><label>목표 레벨</label><input type="number" id="p-tar" value="37"></div>
-            <div class="input-group mode-curr" style="display:none;"><label>보유 재화 (k, m 입력 가능)</label><input type="text" id="p-curr" value="30k" placeholder="예: 30000, 30k"></div>
-            <div class="input-group"><label>진행도 (사용한 횟수)</label><input type="number" id="p-prog" value="0"></div>
-            <div class="input-group"><label>추가 획득 확률(추탈) %</label><input type="number" id="p-ext" value="0"></div>
+            <div class="input-group"><label>현재 레벨</label><input type="number" id="p-cur" value="1" onfocus="if(this.value===this.defaultValue)this.value='';" onblur="if(this.value==='')this.value=this.defaultValue;"></div>
+            <div class="input-group target-only"><label>목표 레벨 (max 100)</label><input type="number" id="p-tar" value="100" onfocus="if(this.value===this.defaultValue)this.value='';" onblur="if(this.value==='')this.value=this.defaultValue;"></div>
+            <div class="input-group"><label>진행도</label><input type="number" id="p-prog" value="0" onfocus="if(this.value===this.defaultValue)this.value='';" onblur="if(this.value==='')this.value=this.defaultValue;"></div>
+            <div class="input-group"><label>추탈 %</label><input type="number" id="p-ext" value="0" onfocus="if(this.value===this.defaultValue)this.value='';" onblur="if(this.value==='')this.value=this.defaultValue;"></div>
+            <div class="input-group full-width currency-only"><label>보유 재화</label><input type="text" id="p-curr" value="0" onfocus="if(this.value===this.defaultValue)this.value='';" onblur="if(this.value==='')this.value=this.defaultValue;" onkeyup="formatInput(this)"></div>
         </div>
         <button class="calc-btn" onclick="calc('pet')">계산하기</button>
         <div class="result-box" id="res-pet"></div>
@@ -105,12 +109,12 @@
     <div id="card-mount" class="card active">
         <h2>🗝️ 탈것 승천 계산기</h2>
         <div class="input-grid">
-            <div class="input-group"><label>현재 레벨</label><input type="number" id="m-cur" value="1"></div>
-            <div class="input-group mode-target"><label>목표 레벨</label><input type="number" id="m-tar" value="37"></div>
-            <div class="input-group mode-curr" style="display:none;"><label>보유 재화 (k, m 입력 가능)</label><input type="text" id="m-curr" value="30k" placeholder="예: 30000, 30k"></div>
-            <div class="input-group"><label>진행도 (사용한 횟수)</label><input type="number" id="m-prog" value="0"></div>
-            <div class="input-group"><label>추가 획득 확률(추탈) %</label><input type="number" id="m-ext" value="25"></div>
-            <div class="input-group full-width"><label>1회 소환 비용</label><input type="number" id="m-cost" value="35"></div>
+            <div class="input-group"><label>현재 레벨</label><input type="number" id="m-cur" value="1" onfocus="if(this.value===this.defaultValue)this.value='';" onblur="if(this.value==='')this.value=this.defaultValue;"></div>
+            <div class="input-group target-only"><label>목표 레벨 (max 100)</label><input type="number" id="m-tar" value="100" onfocus="if(this.value===this.defaultValue)this.value='';" onblur="if(this.value==='')this.value=this.defaultValue;"></div>
+            <div class="input-group"><label>진행도</label><input type="number" id="m-prog" value="0" onfocus="if(this.value===this.defaultValue)this.value='';" onblur="if(this.value==='')this.value=this.defaultValue;"></div>
+            <div class="input-group"><label>추탈 %</label><input type="number" id="m-ext" value="0" onfocus="if(this.value===this.defaultValue)this.value='';" onblur="if(this.value==='')this.value=this.defaultValue;"></div>
+            <div class="input-group"><label>1회 비용</label><input type="number" id="m-cost" value="50" onfocus="if(this.value===this.defaultValue)this.value='';" onblur="if(this.value==='')this.value=this.defaultValue;"></div>
+            <div class="input-group full-width currency-only"><label>보유 재화</label><input type="text" id="m-curr" value="0" onfocus="if(this.value===this.defaultValue)this.value='';" onblur="if(this.value==='')this.value=this.defaultValue;" onkeyup="formatInput(this)"></div>
         </div>
         <button class="calc-btn" onclick="calc('mount')">계산하기</button>
         <div class="result-box" id="res-mount"></div>
@@ -120,11 +124,11 @@
     <div id="card-forge" class="card">
         <h2>⚒️ 대장간 승천 계산기</h2>
         <div class="input-grid">
-            <div class="input-group"><label>현재 레벨</label><input type="number" id="f-cur" value="1"></div>
-            <div class="input-group mode-target"><label>목표 레벨 (Max 36)</label><input type="number" id="f-tar" value="35"></div>
-            <div class="input-group mode-curr" style="display:none;"><label>보유 코인 (k, m 입력 가능)</label><input type="text" id="f-curr" value="1.5m" placeholder="예: 1500000, 1.5m"></div>
-            <div class="input-group"><label>시간 감소율(시감) %</label><input type="number" id="f-spd" value="0"></div>
-            <div class="input-group"><label>비용 감소율(비감) %</label><input type="number" id="f-dis" value="0"></div>
+            <div class="input-group"><label>현재 레벨</label><input type="number" id="f-cur" value="1" onfocus="if(this.value===this.defaultValue)this.value='';" onblur="if(this.value==='')this.value=this.defaultValue;"></div>
+            <div class="input-group target-only"><label>목표 레벨 (max 35)</label><input type="number" id="f-tar" value="35" onfocus="if(this.value===this.defaultValue)this.value='';" onblur="if(this.value==='')this.value=this.defaultValue;"></div>
+            <div class="input-group"><label>비감 %</label><input type="number" id="f-dis" value="0" onfocus="if(this.value===this.defaultValue)this.value='';" onblur="if(this.value==='')this.value=this.defaultValue;"></div>
+            <div class="input-group"><label>시감 %</label><input type="number" id="f-spd" value="0" onfocus="if(this.value===this.defaultValue)this.value='';" onblur="if(this.value==='')this.value=this.defaultValue;"></div>
+            <div class="input-group full-width currency-only"><label>보유 코인</label><input type="text" id="f-curr" value="0" onfocus="if(this.value===this.defaultValue)this.value='';" onblur="if(this.value==='')this.value=this.defaultValue;" onkeyup="formatInput(this)"></div>
         </div>
         <button class="calc-btn" onclick="calcForge()">계산하기</button>
         <div class="result-box" id="res-forge"></div>
