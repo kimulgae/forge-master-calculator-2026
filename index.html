@@ -504,6 +504,36 @@
             drawRarity('rarity-forge', level, forgeRarity, ForgeNames, ForgeColors);
         }
     }
+    // ============================================
+    // 복사 및 저장 방지 스크립트
+    // ============================================
+    
+    // 1. 마우스 우클릭 방지
+    document.addEventListener('contextmenu', function(e) {
+        e.preventDefault();
+    });
+
+    // 2. 주요 단축키 방지
+    document.addEventListener('keydown', function(e) {
+        // F12 (개발자 도구) 차단
+        if (e.keyCode === 123) {
+            e.preventDefault();
+            return false;
+        }
+        // Ctrl 조합 단축키 차단
+        if (e.ctrlKey) {
+            // Ctrl + S (저장), Ctrl + U (소스보기), Ctrl + C (복사), Ctrl + Shift + I (개발자 도구)
+            if (e.keyCode === 83 || e.keyCode === 85 || e.keyCode === 67 || (e.shiftKey && e.keyCode === 73)) {
+                e.preventDefault();
+                return false;
+            }
+        }
+    });
+
+    // 3. 텍스트 드래그 선택 방지
+    document.addEventListener('selectstart', function(e) {
+        e.preventDefault();
+    });
 </script>
 </body>
 </html>
