@@ -81,11 +81,11 @@
     <div id="card-skill" class="card">
         <h2>🎟️ 스킬 승천 계산기</h2>
         <div class="input-grid">
-            <div class="input-group"><label>현재 레벨</label><input type="number" id="s-cur" value="1" onfocus="if(this.value===this.defaultValue)this.value='';" onblur="if(this.value==='')this.value=this.defaultValue;"></div>
-            <div class="input-group target-only"><label>목표 레벨 (max 100)</label><input type="number" id="s-tar" value="100" onfocus="if(this.value===this.defaultValue)this.value='';" onblur="if(this.value==='')this.value=this.defaultValue;"></div>
-            <div class="input-group"><label>진행도</label><input type="number" id="s-prog" value="0" onfocus="if(this.value===this.defaultValue)this.value='';" onblur="if(this.value==='')this.value=this.defaultValue;"></div>
-            <div class="input-group"><label>5회 비용</label><input type="number" id="s-cost" value="200" onfocus="if(this.value===this.defaultValue)this.value='';" onblur="if(this.value==='')this.value=this.defaultValue;"></div>
-            <div class="input-group full-width currency-only"><label>보유 재화</label><input type="text" id="s-curr" value="0" onfocus="if(this.value===this.defaultValue)this.value='';" onblur="if(this.value==='')this.value=this.defaultValue;" onkeyup="formatInput(this)"></div>
+            <div class="input-group"><label>현재 레벨</label><input type="number" id="s-cur" placeholder="1" data-default="1" onfocus="this.placeholder=''" onblur="this.placeholder='1'"></div>
+            <div class="input-group target-only"><label>목표 레벨</label><input type="number" id="s-tar" placeholder="100" data-default="100" onfocus="this.placeholder=''" onblur="this.placeholder='100'"></div>
+            <div class="input-group"><label>진행도</label><input type="number" id="s-prog" placeholder="0" data-default="0" onfocus="this.placeholder=''" onblur="this.placeholder='0'"></div>
+            <div class="input-group"><label>5회 비용</label><input type="number" id="s-cost" placeholder="200" data-default="200" onfocus="this.placeholder=''" onblur="this.placeholder='200'"></div>
+            <div class="input-group full-width currency-only"><label>보유 재화</label><input type="text" id="s-curr" placeholder="0" data-default="0" onfocus="this.placeholder=''" onblur="this.placeholder='0'" onkeyup="formatInput(this)"></div>
         </div>
         <button class="calc-btn" onclick="calc('skill')">계산하기</button>
         <div class="result-box" id="res-skill"></div>
@@ -95,11 +95,11 @@
     <div id="card-pet" class="card">
         <h2>🥚 알 승천 계산기</h2>
         <div class="input-grid">
-            <div class="input-group"><label>현재 레벨</label><input type="number" id="p-cur" value="1" onfocus="if(this.value===this.defaultValue)this.value='';" onblur="if(this.value==='')this.value=this.defaultValue;"></div>
-            <div class="input-group target-only"><label>목표 레벨 (max 100)</label><input type="number" id="p-tar" value="100" onfocus="if(this.value===this.defaultValue)this.value='';" onblur="if(this.value==='')this.value=this.defaultValue;"></div>
-            <div class="input-group"><label>진행도</label><input type="number" id="p-prog" value="0" onfocus="if(this.value===this.defaultValue)this.value='';" onblur="if(this.value==='')this.value=this.defaultValue;"></div>
-            <div class="input-group"><label>추탈 %</label><input type="number" id="p-ext" value="0" onfocus="if(this.value===this.defaultValue)this.value='';" onblur="if(this.value==='')this.value=this.defaultValue;"></div>
-            <div class="input-group full-width currency-only"><label>보유 재화</label><input type="text" id="p-curr" value="0" onfocus="if(this.value===this.defaultValue)this.value='';" onblur="if(this.value==='')this.value=this.defaultValue;" onkeyup="formatInput(this)"></div>
+            <div class="input-group"><label>현재 레벨</label><input type="number" id="p-cur" placeholder="1" data-default="1" onfocus="this.placeholder=''" onblur="this.placeholder='1'"></div>
+            <div class="input-group target-only"><label>목표 레벨</label><input type="number" id="p-tar" placeholder="100" data-default="100" onfocus="this.placeholder=''" onblur="this.placeholder='100'"></div>
+            <div class="input-group"><label>진행도</label><input type="number" id="p-prog" placeholder="0" data-default="0" onfocus="this.placeholder=''" onblur="this.placeholder='0'"></div>
+            <div class="input-group"><label>추탈 %</label><input type="number" id="p-ext" placeholder="0" data-default="0" onfocus="this.placeholder=''" onblur="this.placeholder='0'"></div>
+            <div class="input-group full-width currency-only"><label>보유 재화</label><input type="text" id="p-curr" placeholder="0" data-default="0" onfocus="this.placeholder=''" onblur="this.placeholder='0'" onkeyup="formatInput(this)"></div>
         </div>
         <button class="calc-btn" onclick="calc('pet')">계산하기</button>
         <div class="result-box" id="res-pet"></div>
@@ -109,12 +109,12 @@
     <div id="card-mount" class="card active">
         <h2>🗝️ 탈것 승천 계산기</h2>
         <div class="input-grid">
-            <div class="input-group"><label>현재 레벨</label><input type="number" id="m-cur" value="1" onfocus="if(this.value===this.defaultValue)this.value='';" onblur="if(this.value==='')this.value=this.defaultValue;"></div>
-            <div class="input-group target-only"><label>목표 레벨 (max 100)</label><input type="number" id="m-tar" value="100" onfocus="if(this.value===this.defaultValue)this.value='';" onblur="if(this.value==='')this.value=this.defaultValue;"></div>
-            <div class="input-group"><label>진행도</label><input type="number" id="m-prog" value="0" onfocus="if(this.value===this.defaultValue)this.value='';" onblur="if(this.value==='')this.value=this.defaultValue;"></div>
-            <div class="input-group"><label>추탈 %</label><input type="number" id="m-ext" value="0" onfocus="if(this.value===this.defaultValue)this.value='';" onblur="if(this.value==='')this.value=this.defaultValue;"></div>
-            <div class="input-group"><label>1회 비용</label><input type="number" id="m-cost" value="50" onfocus="if(this.value===this.defaultValue)this.value='';" onblur="if(this.value==='')this.value=this.defaultValue;"></div>
-            <div class="input-group full-width currency-only"><label>보유 재화</label><input type="text" id="m-curr" value="0" onfocus="if(this.value===this.defaultValue)this.value='';" onblur="if(this.value==='')this.value=this.defaultValue;" onkeyup="formatInput(this)"></div>
+            <div class="input-group"><label>현재 레벨</label><input type="number" id="m-cur" placeholder="1" data-default="1" onfocus="this.placeholder=''" onblur="this.placeholder='1'"></div>
+            <div class="input-group target-only"><label>목표 레벨</label><input type="number" id="m-tar" placeholder="100" data-default="100" onfocus="this.placeholder=''" onblur="this.placeholder='100'"></div>
+            <div class="input-group"><label>진행도</label><input type="number" id="m-prog" placeholder="0" data-default="0" onfocus="this.placeholder=''" onblur="this.placeholder='0'"></div>
+            <div class="input-group"><label>추탈 %</label><input type="number" id="m-ext" placeholder="0" data-default="0" onfocus="this.placeholder=''" onblur="this.placeholder='0'"></div>
+            <div class="input-group"><label>1회 비용</label><input type="number" id="m-cost" placeholder="50" data-default="50" onfocus="this.placeholder=''" onblur="this.placeholder='50'"></div>
+            <div class="input-group full-width currency-only"><label>보유 재화</label><input type="text" id="m-curr" placeholder="0" data-default="0" onfocus="this.placeholder=''" onblur="this.placeholder='0'" onkeyup="formatInput(this)"></div>
         </div>
         <button class="calc-btn" onclick="calc('mount')">계산하기</button>
         <div class="result-box" id="res-mount"></div>
@@ -124,11 +124,11 @@
     <div id="card-forge" class="card">
         <h2>⚒️ 대장간 승천 계산기</h2>
         <div class="input-grid">
-            <div class="input-group"><label>현재 레벨</label><input type="number" id="f-cur" value="1" onfocus="if(this.value===this.defaultValue)this.value='';" onblur="if(this.value==='')this.value=this.defaultValue;"></div>
-            <div class="input-group target-only"><label>목표 레벨 (max 35)</label><input type="number" id="f-tar" value="35" onfocus="if(this.value===this.defaultValue)this.value='';" onblur="if(this.value==='')this.value=this.defaultValue;"></div>
-            <div class="input-group"><label>비감 %</label><input type="number" id="f-dis" value="0" onfocus="if(this.value===this.defaultValue)this.value='';" onblur="if(this.value==='')this.value=this.defaultValue;"></div>
-            <div class="input-group"><label>시감 %</label><input type="number" id="f-spd" value="0" onfocus="if(this.value===this.defaultValue)this.value='';" onblur="if(this.value==='')this.value=this.defaultValue;"></div>
-            <div class="input-group full-width currency-only"><label>보유 코인</label><input type="text" id="f-curr" value="0" onfocus="if(this.value===this.defaultValue)this.value='';" onblur="if(this.value==='')this.value=this.defaultValue;" onkeyup="formatInput(this)"></div>
+            <div class="input-group"><label>현재 레벨</label><input type="number" id="f-cur" placeholder="1" data-default="1" onfocus="this.placeholder=''" onblur="this.placeholder='1'"></div>
+            <div class="input-group target-only"><label>목표 레벨</label><input type="number" id="f-tar" placeholder="35" data-default="35" onfocus="this.placeholder=''" onblur="this.placeholder='35'"></div>
+            <div class="input-group"><label>비감 %</label><input type="number" id="f-dis" placeholder="0" data-default="0" onfocus="this.placeholder=''" onblur="this.placeholder='0'"></div>
+            <div class="input-group"><label>시감 %</label><input type="number" id="f-spd" placeholder="0" data-default="0" onfocus="this.placeholder=''" onblur="this.placeholder='0'"></div>
+            <div class="input-group full-width currency-only"><label>보유 코인</label><input type="text" id="f-curr" placeholder="0" data-default="0" onfocus="this.placeholder=''" onblur="this.placeholder='0'" onkeyup="formatInput(this)"></div>
         </div>
         <button class="calc-btn" onclick="calcForge()">계산하기</button>
         <div class="result-box" id="res-forge"></div>
