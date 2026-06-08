@@ -195,7 +195,15 @@
         document.getElementById('btn-' + id).classList.add('active');
     }
 
-    function val(id) { return parseFloat(document.getElementById(id).value) || 0; }
+    function val(id) { 
+    let el = document.getElementById(id);
+    if (!el) return 0;
+    
+    // 핵심: 화면에 숨겨져 있다면(offsetParent가 null이면) 0을 반환하여 계산 방해 방지
+    if (el.offsetParent === null) return 0; 
+    
+    return el.value === "" ? (parseFloat(el.getAttribute('data-default')) || 0) : (parseFloat(el.value) || 0);
+}
 
     // ============================================
     // 1. CSV 기반 소환 횟수/비용 데이터
