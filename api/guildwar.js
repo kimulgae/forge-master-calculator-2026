@@ -13,12 +13,18 @@ const guildForgeData = [
 
 const forgeRarity = [[100.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], [99.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], [98.0, 2.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], [96.0, 4.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], [91.5, 8.0, 0.5, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], [82.0, 16.0, 2.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], [64.0, 32.0, 4.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], [27.8, 64.0, 8.0, 0.2, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], [13.0, 70.0, 16.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], [6.0, 60.0, 32.0, 2.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], [0.0, 31.9, 64.0, 4.0, 0.1, 0.0, 0.0, 0.0, 0.0, 0.0], [0.0, 27.5, 64.0, 8.0, 5.0, 0.0, 0.0, 0.0, 0.0, 0.0], [0.0, 8.0, 75.0, 16.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0], [0.0, 0.0, 66.0, 32.0, 2.0, 0.05, 0.0, 0.0, 0.0, 0.0], [0.0, 0.0, 31.7, 64.0, 4.0, 0.25, 0.0, 0.0, 0.0, 0.0], [0.0, 0.0, 21.5, 70.0, 8.0, 0.5, 0.0, 0.0, 0.0, 0.0], [0.0, 0.0, 0.0, 82.9, 16.0, 1.0, 0.05, 0.0, 0.0, 0.0], [0.0, 0.0, 0.0, 65.7, 32.0, 2.0, 0.25, 0.0, 0.0, 0.0], [0.0, 0.0, 0.0, 31.5, 64.0, 4.0, 0.5, 0.0, 0.0, 0.0], [0.0, 0.0, 0.0, 0.0, 91.0, 8.0, 1.0, 0.05, 0.0, 0.0], [0.0, 0.0, 0.0, 0.0, 81.7, 16.0, 2.0, 0.25, 0.0, 0.0], [0.0, 0.0, 0.0, 0.0, 63.5, 32.0, 4.0, 0.5, 0.0, 0.0], [0.0, 0.0, 0.0, 0.0, 27.0, 64.0, 8.0, 1.0, 0.0, 0.0], [0.0, 0.0, 0.0, 0.0, 0.0, 82.0, 16.0, 2.0, 0.02, 0.0], [0.0, 0.0, 0.0, 0.0, 0.0, 64.0, 32.0, 4.0, 0.05, 0.0], [0.0, 0.0, 0.0, 0.0, 0.0, 43.8, 50.0, 6.0, 0.25, 0.0], [0.0, 0.0, 0.0, 0.0, 0.0, 31.5, 60.0, 8.0, 0.5, 0.0], [0.0, 0.0, 0.0, 0.0, 0.0, 21.0, 65.0, 13.0, 1.0, 0.0], [0.0, 0.0, 0.0, 0.0, 0.0, 6.99, 68.0, 23.0, 2.0, 0.02], [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 60.0, 36.0, 4.0, 0.05], [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 50.8, 41.0, 6.0, 0.25], [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 41.5, 50.0, 8.0, 0.5], [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 28.0, 58.0, 13.0, 1.0], [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 11.0, 64.0, 23.0, 2.0], [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 60.0, 36.0, 4.0]];
 
+function formatKM(num) {
+    if (num >= 1e6) return (num / 1e6).toFixed(2).replace(/\.00$/, '') + 'm';
+    if (num >= 1e3) return (num / 1e3).toFixed(2).replace(/\.00$/, '') + 'k';
+    return num.toLocaleString();
+}
+
 export default function handler(req, res) {
     if (req.method !== 'POST') return res.status(405).json({ message: 'POST 요청만 받습니다.' });
 
-    let { start_level, hammers, forgeCost, coins, gems, useGems,
+    let { start_level, hammers, forgeCost, freeHammerRate, coins, gems, useGems,
           skillOwned, skillCost, mountOwned, mountCost, mountExt,
-          petOwned, petCost, petExt } = req.body;
+          petOwned, petExt } = req.body;
 
     start_level = Math.max(1, Math.min(36, parseInt(start_level) || 1));
     let total_coins_spent = 0;
@@ -28,6 +34,7 @@ export default function handler(req, res) {
     let target_div = 1;
     let stop_reason = "";
 
+    // 대장간 계산 루프
     while (current_level < 36 && coins > 0) {
         let data = guildForgeData[current_level - 1]; 
         if (!data) break;
@@ -80,8 +87,9 @@ export default function handler(req, res) {
         }
     }
 
-    let spentText = `코인 소모: <span style="color:#dbdee1; font-weight:700;">${total_coins_spent.toLocaleString()}</span> <br>` +
-                    `보석 소모: <span style="color:#dbdee1; font-weight:700;">${total_gems_spent.toLocaleString()}</span> (잔여 보석: ${gems.toLocaleString()})`;
+    // 🌟 수정: k, m 포맷을 적용하고 잔여 코인/보석을 표시합니다.
+    let spentText = `코인 소모: <span style="color:#dbdee1; font-weight:700;">${formatKM(total_coins_spent)}</span> (잔여: ${formatKM(coins)})<br>` +
+                    `보석 소모: <span style="color:#dbdee1; font-weight:700;">${formatKM(total_gems_spent)}</span> (잔여: ${formatKM(gems)})`;
 
     let probLevel = Math.max(1, Math.min(36, current_level));
     let idx = Math.min(probLevel - 1, forgeRarity.length - 1);
@@ -93,16 +101,23 @@ export default function handler(req, res) {
 
     let coinScore = Math.floor(total_coins_spent / 1000) * 27;
     let gemScore = total_gems_spent * 50;
+    
+    // 🌟 수정: 무료 망치 확률 적용 로직
     let safeForgeCost = Math.max(1, forgeCost);
-    let forgeCrafts = Math.floor(hammers / safeForgeCost);
+    let baseCrafts = Math.floor(hammers / safeForgeCost); // 원래 칠 수 있는 횟수
+    let safeFreeRate = Math.min(99.9, Math.max(0, freeHammerRate || 0)); // 무한대 에러 방지를 위해 99.9% 제한
+    let effectiveCrafts = Math.floor(baseCrafts / (1 - (safeFreeRate / 100))); // 무료 망치 확률 반영 실사용 횟수
+
     let expectedPtsPerCraft = (p1 * 1) + (p2 * 2) + (p3 * 3);
-    let hammerScore = Math.floor(forgeCrafts * expectedPtsPerCraft);
+    let hammerScore = Math.floor(effectiveCrafts * expectedPtsPerCraft);
     let totalForge = hammerScore + coinScore + gemScore;
 
     let totalSkill = Math.floor(skillOwned / Math.max(1, skillCost)) * 125;
     let totalMountPulls = Math.floor(mountOwned / Math.max(1, mountCost)) * (1 + mountExt / 100);
     let mountScore = Math.floor(totalMountPulls) * 600;
-    let totalPetPulls = Math.floor(petOwned / Math.max(1, petCost)) * (1 + petExt / 100);
+    
+    // 🌟 수정: 펫 소환 비용 100으로 고정
+    let totalPetPulls = Math.floor(petOwned / 100) * (1 + petExt / 100);
     let petScore = Math.floor(totalPetPulls) * 1250;
     let totalPet = mountScore + petScore;
 
