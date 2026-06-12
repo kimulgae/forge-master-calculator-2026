@@ -3,7 +3,6 @@ function toggleSidebar() {
     document.getElementById('sidebar').classList.toggle('show');
     document.getElementById('sidebar-overlay').classList.toggle('show');
 }
-// guildwar.js
 function parseCurrency(value) {
     if (!value) return 0;
     let str = value.toString().toLowerCase().replace(/,/g, '').trim();
@@ -20,25 +19,28 @@ function formatInput(input) {
     if (!isNaN(value) && value !== '') input.value = Number(value).toLocaleString('ko-KR');
 }
 
-function val(id) { return parseFloat(document.getElementById(id).value) || 0; }
+// 🌟 수정: HTML에서 지워진 칸이 있어도 에러 없이 0으로 넘어가도록 안전 장치 추가
+function val(id) { 
+    const el = document.getElementById(id);
+    return el ? (parseFloat(el.value) || 0) : 0; 
+}
 
 // 서버(/api/guildwar)로 통신 요청
 async function calculateGuildWar() {
     const orderData = {
         start_level: val('forge-level'),
-        hammers: parseCurrency(document.getElementById('forge-hammers').value),
-        forgeCost: val('forge-cost'),
-        freeHammerRate: val('free-hammer'), // 신규: 무료망치 확률 추가
-        coins: parseCurrency(document.getElementById('coins-owned').value),
-        gems: parseCurrency(document.getElementById('gems-owned').value),
-        useGems: document.getElementById('use-gems').checked,
-        skillOwned: parseCurrency(document.getElementById('skill-owned').value),
+        hammers: parseCurrency(document.getElementById('forge-hammers')?.value || '0'),
+        freeHammerRate: val('free-hammer'), // 대장간 비용(forgeCost) 삭제 후 무료 망치 확률 유지
+        coins: parseCurrency(document.getElementById('coins-owned')?.value || '0'),
+        gems: parseCurrency(document.getElementById('gems-owned')?.value || '0'),
+        useGems: document.getElementById('use-gems')?.checked ?? true,
+        skillOwned: parseCurrency(document.getElementById('skill-owned')?.value || '0'),
         skillCost: val('skill-cost'),
-        mountOwned: parseCurrency(document.getElementById('mount-owned').value),
+        mountOwned: parseCurrency(document.getElementById('mount-owned')?.value || '0'),
         mountCost: val('mount-cost'),
         mountExt: val('mount-ext'),
-        petOwned: parseCurrency(document.getElementById('pet-owned').value),
-        petExt: val('pet-ext') // 변경: 펫 비용은 서버에서 100으로 고정 처리함
+        petOwned: parseCurrency(document.getElementById('pet-owned')?.value || '0'),
+        petExt: val('pet-ext')
     };
 
     try {
@@ -47,7 +49,7 @@ async function calculateGuildWar() {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(orderData)
         });
-        
+
         const result = await response.json();
 
         if (result.success) {
@@ -62,7 +64,8 @@ async function calculateGuildWar() {
             document.getElementById('grand-total').innerText = result.grandTotal;
         }
     } catch (error) {
-        document.getElementById('res-forge-status').innerText = "서버 통신 에러가 발생했습니다.";
+        const statusEl = document.getElementById('res-forge-status');
+        if(statusEl) statusEl.innerText = "서버 통신 에러가 발생했습니다.";
     }
 }
 
