@@ -302,7 +302,7 @@ function calcForge() {
 
     if (currentMode === 'target') {
         let tar = val('f-tar');
-        if (tar > 36 || cur >= tar) return res.innerHTML = `<span style="color:#ed4245; font-weight:bold;">목표 레벨을 올바르게 입력하세요 (현재보다 크고 36 이하).</span>`;
+        if (tar > 36 || cur >= tar) return res.innerHTML = `<span style="color:#ed4245; font-weight:bold;">목표 레벨을 올바르게 입력하세요 (현재보다 크고 35 이하).</span>`;
         
         let c = 0, t = 0, s = 0;
         for (let i = cur - 1; i < tar - 1 && i < forgeBase.length; i++) {
@@ -319,7 +319,7 @@ function calcForge() {
         let costAccum = 0;
         
         // 대장간 만렙(36) 한계
-        while (level < 36) {
+        while (level < 35) {
             let nextCost = Math.floor(forgeBase[level - 1].c * dis);
             if (curr >= nextCost) {
                 curr -= nextCost;
@@ -331,8 +331,8 @@ function calcForge() {
             }
         }
         
-        if (level >= 36) {
-            res.innerHTML = `[보유 코인 소진 시] 도달 가능 최대 레벨: <strong style="color:#2ecc71;">36레벨 (만렙)</strong><br>총 소모 코인: <strong>${formatNum(costAccum)}</strong><br>만렙 후 남은 코인: <strong>${formatNum(curr)}</strong><br>총 소요 시간: <strong>${formatTime(timeAccum / spd)}</strong>`;
+        if (level >= 35) {
+            res.innerHTML = `[보유 코인 소진 시] 도달 가능 최대 레벨: <strong style="color:#2ecc71;">35레벨 (만렙)</strong><br>총 소모 코인: <strong>${formatNum(costAccum)}</strong><br>만렙 후 남은 코인: <strong>${formatNum(curr)}</strong><br>총 소요 시간: <strong>${formatTime(timeAccum / spd)}</strong>`;
         } else {
             res.innerHTML = `[보유 코인 소진 시] 도달 가능 최대 레벨: <strong>${level}레벨</strong><br>총 소모 코인: <strong>${formatNum(costAccum)}</strong><br>사용 후 남은 코인: <strong>${formatNum(curr)}</strong><br>총 소요 시간: <strong>${formatTime(timeAccum / spd)}</strong>`;
         }
@@ -343,16 +343,6 @@ function calcForge() {
 // ============================================
 // 복사 및 저장 방지 스크립트
 // ============================================
-document.addEventListener('contextmenu', function(e) { e.preventDefault(); });
-document.addEventListener('keydown', function(e) {
-    if (e.keyCode === 123) { e.preventDefault(); return false; }
-    if (e.ctrlKey) {
-        if (e.keyCode === 83 || e.keyCode === 85 || e.keyCode === 67 || (e.shiftKey && e.keyCode === 73)) {
-            e.preventDefault(); return false;
-        }
-    }
-});
-document.addEventListener('selectstart', function(e) { e.preventDefault(); });
 
 // ============================================
 // Supabase 데이터 연동 설정
