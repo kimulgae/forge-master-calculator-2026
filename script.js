@@ -27,12 +27,10 @@ function parseCurrency(value) {
     return num;
 }
 
-// 보유 재화 포맷팅 함수 (누락된 괄호 수정됨)
+// 보유 재화 포맷팅 함수 (닫는 괄호 수정 완료)
 function formatInput(input) {
     let value = input.value.replace(/,/g, '');
-    // k나 m이 포함된 경우 콤마 처리 생략 (그대로 둠)
     if (value.toLowerCase().includes('k') || value.toLowerCase().includes('m')) return;
-    // 숫자만 있는 경우 콤마 찍기
     if (!isNaN(value) && value !== '') {
         input.value = Number(value).toLocaleString('ko-KR');
     }
@@ -47,7 +45,6 @@ function toggleMode() {
     document.querySelectorAll('.mode-target').forEach(el => el.style.display = currentMode === 'target' ? 'block' : 'none');
     document.querySelectorAll('.mode-curr').forEach(el => el.style.display = currentMode === 'curr' ? 'block' : 'none');
     
-    // 모드 변경 시 기존 결과창 초기화
     document.querySelectorAll('.result-box').forEach(el => el.style.display = 'none');
     document.querySelectorAll('.rarity-container').forEach(el => el.style.display = 'none');
 }
@@ -346,33 +343,16 @@ function calcForge() {
 // ============================================
 // 복사 및 저장 방지 스크립트
 // ============================================
-
-// 1. 마우스 우클릭 방지
-document.addEventListener('contextmenu', function(e) {
-    e.preventDefault();
-});
-
-// 2. 주요 단축키 방지
+document.addEventListener('contextmenu', function(e) { e.preventDefault(); });
 document.addEventListener('keydown', function(e) {
-    // F12 (개발자 도구) 차단
-    if (e.keyCode === 123) {
-        e.preventDefault();
-        return false;
-    }
-    // Ctrl 조합 단축키 차단
+    if (e.keyCode === 123) { e.preventDefault(); return false; }
     if (e.ctrlKey) {
-        // Ctrl + S (저장), Ctrl + U (소스보기), Ctrl + C (복사), Ctrl + Shift + I (개발자 도구)
         if (e.keyCode === 83 || e.keyCode === 85 || e.keyCode === 67 || (e.shiftKey && e.keyCode === 73)) {
-            e.preventDefault();
-            return false;
+            e.preventDefault(); return false;
         }
     }
 });
-
-// 3. 텍스트 드래그 선택 방지
-document.addEventListener('selectstart', function(e) {
-    e.preventDefault();
-});
+document.addEventListener('selectstart', function(e) { e.preventDefault(); });
 
 // ============================================
 // Supabase 데이터 연동 설정
@@ -380,13 +360,14 @@ document.addEventListener('selectstart', function(e) {
 const SUPABASE_URL = 'https://exoghsmbjaehcsjakrij.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImV4b2doc21iamFlaGNzamFrcmlqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODExNzc2OTUsImV4cCI6MjA5Njc1MzY5NX0.Kq8VJ_QDQkN0xOWhdJyEC3hfwaHyOs_LPUHcQrIbb_s';
 
-const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+// 'supabase' 대신 'supabaseClient'라는 이름을 사용하여 충돌을 방지합니다.
+const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 const TEST_USER_ID = '123e4567-e89b-12d3-a456-426614174000';
 
 async function loadUserProfile() {
   try {
-    const { data, error } = await supabase
+    const { data, error } = await supabaseClient
       .from('user_profiles')
       .select('*')
       .eq('id', TEST_USER_ID)
@@ -398,26 +379,22 @@ async function loadUserProfile() {
     }
 
     if (data) {
-      // 스킬 데이터 연동
       if (data.skill_level !== null) document.getElementById('s-cur').value = data.skill_level;
       if (data.skill_progress !== null) document.getElementById('s-prog').value = data.skill_progress;
       if (data.skill_cost !== null) document.getElementById('s-cost').value = data.skill_cost;
       if (data.skill_currency !== null) document.getElementById('s-curr').value = data.skill_currency;
 
-      // 알(펫) 데이터 연동
       if (data.pet_level !== null) document.getElementById('p-cur').value = data.pet_level;
       if (data.pet_progress !== null) document.getElementById('p-prog').value = data.pet_progress;
       if (data.pet_ext_rate !== null) document.getElementById('p-ext').value = data.pet_ext_rate;
       if (data.pet_currency !== null) document.getElementById('p-curr').value = data.pet_currency;
 
-      // 탈것 데이터 연동
       if (data.mount_level !== null) document.getElementById('m-cur').value = data.mount_level;
       if (data.mount_progress !== null) document.getElementById('m-prog').value = data.mount_progress;
       if (data.mount_ext_rate !== null) document.getElementById('m-ext').value = data.mount_ext_rate;
       if (data.mount_cost !== null) document.getElementById('m-cost').value = data.mount_cost;
       if (data.mount_currency !== null) document.getElementById('m-curr').value = data.mount_currency;
 
-      // 대장간 데이터 연동
       if (data.forge_level !== null) document.getElementById('f-cur').value = data.forge_level;
       if (data.forge_spd_rate !== null) document.getElementById('f-spd').value = data.forge_spd_rate;
       if (data.forge_dis_rate !== null) document.getElementById('f-dis').value = data.forge_dis_rate;
@@ -430,7 +407,6 @@ async function loadUserProfile() {
   }
 }
 
-// 페이지가 새로고침되어 열릴 때 자동으로 위 함수를 실행
 window.addEventListener('DOMContentLoaded', () => {
   loadUserProfile();
 });
