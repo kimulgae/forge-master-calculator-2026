@@ -129,3 +129,6 @@ header p { color: var(--text-muted); font-size: 14px; line-height: 1.5; }
     .input-grid { grid-template-columns: 1fr; }
     .prob-grid { grid-template-columns: 1fr; }
 }
+.container {
+    margin-bottom: 180px !important; 
+}
