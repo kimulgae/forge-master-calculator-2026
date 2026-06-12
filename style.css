@@ -50,32 +50,25 @@ h1 { color: #ffffff; text-align: center; margin-bottom: 5px; font-size: 1.8rem; 
     h1 { font-size: 1.4rem; margin-top: 10px; }
     .subtitle { font-size: 0.85rem; margin-bottom: 15px; }
     
-    /* 네비게이션 버튼 2열로 정리 */
     .nav-buttons { gap: 8px; margin-bottom: 15px; }
     .nav-btn { min-width: calc(50% - 4px); padding: 12px; font-size: 0.95rem; }
     
-    /* 모드 스위치 크기 조절 */
     .mode-label { padding: 12px; font-size: 0.9rem; }
     
-    /* 카드 여백 및 폰트 축소 */
     .card { padding: 15px; margin-bottom: 15px; }
     .card h2 { font-size: 1.15rem; margin-bottom: 15px; padding-bottom: 10px; }
     
-    /* 그리드를 1열(세로)로 변경하여 스마트폰 꽉 차게 변경 */
     .input-grid { grid-template-columns: 1fr; gap: 12px; margin-bottom: 15px; }
     .full-width { grid-column: span 1; }
     
-    /* 입력창 크기 미세 조정 */
     .input-group label { font-size: 0.85rem; margin-bottom: 5px; }
     .input-group input { padding: 10px; font-size: 0.95rem; }
     
     .calc-btn { padding: 14px; font-size: 1.05rem; }
     
-    /* 결과창 텍스트 최적화 */
     .result-box { margin-top: 15px; padding: 15px; font-size: 0.95rem; line-height: 1.6; }
     .result-box strong { font-size: 1.05rem; }
     
-    /* 확률표 크기 조정 */
     .rarity-container { margin-top: 15px; }
     .rarity-title { font-size: 1rem; margin-bottom: 10px; }
     .rarity-row { padding: 8px 12px; font-size: 0.85rem; }
