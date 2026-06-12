@@ -28,6 +28,7 @@ async function calculateGuildWar() {
         start_level: val('forge-level'),
         hammers: parseCurrency(document.getElementById('forge-hammers').value),
         forgeCost: val('forge-cost'),
+        freeHammerRate: val('free-hammer'), // 신규: 무료망치 확률 추가
         coins: parseCurrency(document.getElementById('coins-owned').value),
         gems: parseCurrency(document.getElementById('gems-owned').value),
         useGems: document.getElementById('use-gems').checked,
@@ -37,8 +38,7 @@ async function calculateGuildWar() {
         mountCost: val('mount-cost'),
         mountExt: val('mount-ext'),
         petOwned: parseCurrency(document.getElementById('pet-owned').value),
-        petCost: val('pet-cost'),
-        petExt: val('pet-ext')
+        petExt: val('pet-ext') // 변경: 펫 비용은 서버에서 100으로 고정 처리함
     };
 
     try {
@@ -47,7 +47,7 @@ async function calculateGuildWar() {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(orderData)
         });
-
+        
         const result = await response.json();
 
         if (result.success) {
