@@ -5,8 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>포마 승천 통합 계산기</title>
     
+    <!-- Supabase 라이브러리 -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     
+    <!-- 분리된 CSS 파일 연결 -->
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -33,6 +35,7 @@
         <button class="nav-btn" id="btn-forge" onclick="tab('forge')">⚒️ 대장간</button>
     </div>
 
+    <!-- 스킬 계산기 -->
     <div id="card-skill" class="card">
         <h2>🎟️ 스킬 승천 계산기</h2>
         <div class="input-grid">
@@ -47,6 +50,7 @@
         <div class="rarity-container" id="rarity-skill"></div>
     </div>
 
+    <!-- 펫 계산기 -->
     <div id="card-pet" class="card">
         <h2>🥚 알 승천 계산기</h2>
         <div class="input-grid">
@@ -61,6 +65,7 @@
         <div class="rarity-container" id="rarity-pet"></div>
     </div>
 
+    <!-- 탈것 계산기 -->
     <div id="card-mount" class="card active">
         <h2>🗝️ 탈것 승천 계산기</h2>
         <div class="input-grid">
@@ -76,6 +81,7 @@
         <div class="rarity-container" id="rarity-mount"></div>
     </div>
 
+    <!-- 대장간 계산기 -->
     <div id="card-forge" class="card">
         <h2>⚒️ 대장간 승천 계산기</h2>
         <div class="input-grid">
@@ -91,6 +97,7 @@
     </div>
 </div>
 
+<!-- 분리된 JS 파일 연결 (반드시 body 끝나기 직전에 위치!) -->
 <script src="script.js"></script>
 </body>
 </html>
