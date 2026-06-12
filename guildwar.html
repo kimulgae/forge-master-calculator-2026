@@ -51,6 +51,10 @@
 
             <div class="input-grid">
                 <div class="input-group">
+                    <label>무료 망치 확률 (%)</label>
+                    <input type="number" id="free-hammer" placeholder="0" data-default="0" onfocus="this.placeholder=''" onblur="this.placeholder='0'" min="0" oninput="calculateGuildWar()">
+                </div>
+                <div class="input-group">
                     <label>보유 코인 (k, m 단위 입력)</label>
                     <input type="text" id="coins-owned" placeholder="0" data-default="0" onfocus="this.placeholder=''" onblur="this.placeholder='0'" placeholder="예: 2.12m" oninput="calculateGuildWar()" onkeyup="formatInput(this)">
                 </div>
@@ -146,10 +150,6 @@
                 <div class="input-group">
                     <label>보유 펫(알) 뽑기 재화</label>
                     <input type="text" id="pet-owned" placeholder="0" data-default="0" onfocus="this.placeholder=''" onblur="this.placeholder='0'" placeholder="예: 20k" oninput="calculateGuildWar()" onkeyup="formatInput(this)">
-                </div>
-                <div class="input-group">
-                    <label>펫 1회 소환 비용</label>
-                    <input type="number" id="pet-cost" placeholder="100" data-default="100" onfocus="this.placeholder=''" onblur="this.placeholder='100'" min="1" oninput="calculateGuildWar()">
                 </div>
                 <div class="input-group">
                     <label>추가 획득 확률(추탈) %</label>
