@@ -13,10 +13,19 @@
 </head>
 <body>
     <nav class="top-nav">
-        <a href="index.html" class="nav-link active">🚀 승천 계산기</a>
-        <a href="guildwar.html" class="nav-link">⚔️ 길드전 계산기</a>
+        <button class="hamburger-btn" onclick="toggleSidebar()">☰</button>
+        <span class="nav-title">포지마스터 툴즈</span>
     </nav>
 
+    <div class="sidebar-overlay" id="sidebar-overlay" onclick="toggleSidebar()"></div>
+    <div class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <h2>메뉴</h2>
+            <button class="close-btn" onclick="toggleSidebar()">×</button>
+        </div>
+        <a href="index.html" class="sidebar-link active">🚀 승천 계산기</a>
+        <a href="guildwar.html" class="sidebar-link">⚔️ 길드전 계산기</a>
+    </div>
 <div class="container">
     <h1>포마 승천 통합 계산기</h1>
     <p class="subtitle">모든 데이터 및 보유 재화 기반 연산 통합 버전</p>
