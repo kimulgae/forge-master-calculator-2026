@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>길드전 점수 심화 계산기</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <nav class="top-nav">
+        <a href="index.html" class="nav-link">🚀 승천 계산기</a>
+        <a href="guildwar.html" class="nav-link active">⚔️ 길드전 계산기</a>
+    </nav>
+
+    <div class="container">
+        <header>
+            <h1>길드전 점수 심화 계산기</h1>
+            <p class="subtitle">분할차수(칸) 및 대기 시간 스킵 메커니즘 100% 재현</p>
+        </header>
+
+        <div class="card active">
+            <h2>⚒️ 대장간 (Forge) 상세 설정</h2>
+            <div class="input-grid">
+                <div class=\"input-group\"><label>시작 대장간 레벨 (1~35)</label><input type="number" id="forge-level" value="26" min="1" max="35" oninput="calculateGuildWar()"></div>
+                <div class=\"input-group\"><label>보유 망치 개수 (k 입력 가능)</label><input type="text" id="forge-hammers" value="0" placeholder="예: 30k" onkeyup="formatInput(this)" oninput="calculateGuildWar()"></div>
+                <div class=\"input-group\"><label>1회 두드리기 소모 망치 수</label><input type="number" id="forge-cost" value="50" min="1" oninput="calculateGuildWar()"></div>
+                <div class=\"input-group\"><label>보유 코인 (k 입력 가능)</label><input type="text" id="coins-owned" value="0" placeholder="예: 100k" onkeyup="formatInput(this)" oninput="calculateGuildWar()"></div>
+                <div class=\"input-group\"><label>보유 보석 (k 입력 가능)</label><input type="text" id="gems-owned" value="0" placeholder="예: 5k" onkeyup="formatInput(this)" oninput="calculateGuildWar()"></div>
+                <div class=\"input-group\" style="display: flex; align-items: center; gap: 10px; margin-top: 25px;">
+                    <input type="checkbox" id="use-gems" checked onchange="calculateGuildWar()" style="width: 20px; height: 20px;">
+                    <label for="use-gems" style="margin: 0;">대기시간 보석 스킵 사용</label>
+                </div>
+            </div>
+
+            <div class="result-box" style="display: block;">
+                <strong>대장간 시뮬레이션 결과</strong><br>
+                <span id="res-forge-status">값을 입력해주세요.</span><br>
+                <span id="res-forge-spent"></span>
+            </div>
+            
+            <div class="rarity-container" style="display: block; margin-top: 15px;">
+                <div class="rarity-title">도달 레벨 기준 망치 1회당 출현 확률</div>
+                <div class="input-grid">
+                    <div class="input-group"><label>일반~서사 (1점)</label><input type="text" id="prob-1" readonly disabled></div>
+                    <div class="input-group"><label>전설~신화 (2점)</label><input type="text" id="prob-2" readonly disabled></div>
+                    <div class="input-group full-width"><label>다중우주 이상 (3점)</label><input type="text" id="prob-3" readonly disabled></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card active">
+            <h2>🎟️ 스킬 / 🗝️ 탈것 / 🥚 펫 설정</h2>
+            <div class="input-grid">
+                <div class=\"input-group\"><label>보유 스킬 뽑기 재화</label><input type="text" id="skill-owned" value="0" onkeyup="formatInput(this)" oninput="calculateGuildWar()"></div>
+                <div class=\"input-group\"><label>스킬 5회 소환 비용</label><input type="number" id="skill-cost" value="200" oninput="calculateGuildWar()"></div>
+                
+                <div class=\"input-group\"><label>보유 탈것 뽑기 재화</label><input type="text" id="mount-owned" value="0" onkeyup="formatInput(this)" oninput="calculateGuildWar()"></div>
+                <div class=\"input-group\"><label>탈것 1회 소환 비용</label><input type="number" id="mount-cost" value="50" oninput="calculateGuildWar()"></div>
+                <div class=\"input-group\"><label>탈것 추탈 (%)</label><input type="number" id="mount-ext" value="0" oninput="calculateGuildWar()"></div>
+                <div></div>
+
+                <div class=\"input-group\"><label>보유 펫(알) 뽑기 재화</label><input type="text" id="pet-owned" value="0" onkeyup="formatInput(this)" oninput="calculateGuildWar()"></div>
+                <div class=\"input-group\"><label>펫 1회 소환 비용</label><input type="number" id="pet-cost" value="100" oninput="calculateGuildWar()"></div>
+                <div class=\"input-group\"><label>펫 추탈 (%)</label><input type="number" id="pet-ext" value="0" oninput="calculateGuildWar()"></div>
+            </div>
+        </div>
+        
+        <div style="position: fixed; bottom: 0; left: 0; width: 100%; background: #111827; padding: 15px; border-top: 2px solid #5865F2; display: flex; justify-content: space-around; z-index: 100;">
+            <div style="text-align: center;"><span style="color:#94a3b8; font-size: 0.85rem;">대장간 점수</span><br><strong style="color:#38bdf8;" id="res-forge">0 점</strong></div>
+            <div style="text-align: center;"><span style="color:#94a3b8; font-size: 0.85rem;">스킬 점수</span><br><strong style="color:#fbbf24;" id="res-skill">0 점</strong></div>
+            <div style="text-align: center;"><span style="color:#94a3b8; font-size: 0.85rem;">탈것+펫 점수</span><br><strong style="color:#34d399;" id="res-pet">0 점</strong></div>
+            <div style="text-align: center;"><span style="color:#94a3b8; font-size: 0.85rem;">총합</span><br><strong style="color:#fff; font-size: 1.2rem;" id="grand-total">0 점</strong></div>
+        </div>
+    </div>
+    
+    <script src="guildwar.js"></script>
+</body>
+</html>
