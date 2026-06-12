@@ -1,3 +1,8 @@
+// 햄버거 메뉴(사이드바) 열기/닫기 함수
+function toggleSidebar() {
+    document.getElementById('sidebar').classList.toggle('show');
+    document.getElementById('sidebar-overlay').classList.toggle('show');
+}
 // ============================================
 // 0. 초기화 및 이벤트 리스너
 // ============================================
