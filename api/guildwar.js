@@ -1,4 +1,3 @@
-// api/guildwar.js
 const guildForgeData = [
     { c: 400, div: 1, s: 0 }, { c: 700, div: 1, s: 0 }, { c: 1500, div: 1, s: 0 }, { c: 3500, div: 1, s: 8 },
     { c: 10000, div: 1, s: 17 }, { c: 25000, div: 1, s: 63 }, { c: 50000, div: 1, s: 109 }, { c: 99000, div: 1, s: 155 },
@@ -22,7 +21,8 @@ function formatKM(num) {
 export default function handler(req, res) {
     if (req.method !== 'POST') return res.status(405).json({ message: 'POST 요청만 받습니다.' });
 
-    let { start_level, hammers, forgeCost, freeHammerRate, coins, gems, useGems,
+    // 🌟 수정: forgeCost는 이제 프론트엔드에서 받지 않음
+    let { start_level, hammers, freeHammerRate, coins, gems, useGems,
           skillOwned, skillCost, mountOwned, mountCost, mountExt,
           petOwned, petExt } = req.body;
 
@@ -34,7 +34,6 @@ export default function handler(req, res) {
     let target_div = 1;
     let stop_reason = "";
 
-    // 대장간 계산 루프
     while (current_level < 36 && coins > 0) {
         let data = guildForgeData[current_level - 1]; 
         if (!data) break;
@@ -87,7 +86,6 @@ export default function handler(req, res) {
         }
     }
 
-    // 🌟 수정: k, m 포맷을 적용하고 잔여 코인/보석을 표시합니다.
     let spentText = `코인 소모: <span style="color:#dbdee1; font-weight:700;">${formatKM(total_coins_spent)}</span> (잔여: ${formatKM(coins)})<br>` +
                     `보석 소모: <span style="color:#dbdee1; font-weight:700;">${formatKM(total_gems_spent)}</span> (잔여: ${formatKM(gems)})`;
 
@@ -102,11 +100,10 @@ export default function handler(req, res) {
     let coinScore = Math.floor(total_coins_spent / 1000) * 27;
     let gemScore = total_gems_spent * 50;
     
-    // 🌟 수정: 무료 망치 확률 적용 로직
-    let safeForgeCost = Math.max(1, forgeCost);
-    let baseCrafts = Math.floor(hammers / safeForgeCost); // 원래 칠 수 있는 횟수
-    let safeFreeRate = Math.min(99.9, Math.max(0, freeHammerRate || 0)); // 무한대 에러 방지를 위해 99.9% 제한
-    let effectiveCrafts = Math.floor(baseCrafts / (1 - (safeFreeRate / 100))); // 무료 망치 확률 반영 실사용 횟수
+    // 🌟 수정: 대장간 소모 비용은 무조건 1로 고정하여 계산
+    let baseCrafts = hammers; 
+    let safeFreeRate = Math.min(99.9, Math.max(0, freeHammerRate || 0));
+    let effectiveCrafts = Math.floor(baseCrafts / (1 - (safeFreeRate / 100))); 
 
     let expectedPtsPerCraft = (p1 * 1) + (p2 * 2) + (p3 * 3);
     let hammerScore = Math.floor(effectiveCrafts * expectedPtsPerCraft);
@@ -116,7 +113,6 @@ export default function handler(req, res) {
     let totalMountPulls = Math.floor(mountOwned / Math.max(1, mountCost)) * (1 + mountExt / 100);
     let mountScore = Math.floor(totalMountPulls) * 600;
     
-    // 🌟 수정: 펫 소환 비용 100으로 고정
     let totalPetPulls = Math.floor(petOwned / 100) * (1 + petExt / 100);
     let petScore = Math.floor(totalPetPulls) * 1250;
     let totalPet = mountScore + petScore;
