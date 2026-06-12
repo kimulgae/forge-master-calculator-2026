@@ -59,6 +59,44 @@ function tab(id) {
 
 function val(id) { return parseFloat(document.getElementById(id).value) || 0; }
 
+// [ script.js ] - 유저의 브라우저에서 실행되는 화면 조작용 코드
+
+async function calc(type) {
+    let resBox = document.getElementById('res-' + type);
+    resBox.style.display = 'block';
+    resBox.innerHTML = "서버에서 계산 중입니다... ⏳"; // 로딩 메시지
+
+    // 1. 유저가 입력한 값들을 가져옵니다. (주문서 작성)
+    const orderData = {
+        type: type,
+        currentMode: currentMode,
+        currentLevel: val(`${type.charAt(0)}-cur`),
+        targetLevel: val(`${type.charAt(0)}-tar`),
+        progress: val(`${type.charAt(0)}-prog`),
+        cost: val(`${type.charAt(0)}-cost`),
+        currentCurrency: parseCurrency(document.getElementById(`${type.charAt(0)}-curr`).value)
+    };
+
+    try {
+        // 2. 서버의 주방(api/calculate)으로 주문서를 보냅니다. (fetch 사용)
+        const response = await fetch('/api/calculate', {
+            method: 'POST',           // "데이터를 보낼게!" 라는 뜻
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(orderData) // 주문서를 텍스트로 포장
+        });
+
+        // 3. 주방에서 완성된 요리(결과)를 받아옵니다.
+        const result = await response.json();
+
+        // 4. 받은 결과를 화면에 띄워줍니다.
+        if (result.success) {
+            resBox.innerHTML = result.message;
+            // (확률표 그리는 함수인 drawRarity 등도 여기서 실행)
+        }
+    } catch (error) {
+        resBox.innerHTML = "<span style='color:red;'>서버 통신 중 에러가 발생했습니다.</span>";
+    }
+}
 // ============================================
 // 3. UI 및 포맷팅 유틸리티
 // ============================================
