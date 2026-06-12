@@ -149,11 +149,7 @@ async function calcForge() {
 // ============================================
 // 복사 방지 및 Supabase (이전 내용 유지)
 // ============================================
-document.addEventListener('contextmenu', e => e.preventDefault());
-document.addEventListener('keydown', e => {
-    if (e.keyCode === 123) { e.preventDefault(); return false; }
-    if (e.ctrlKey && [83, 85, 67, 73].includes(e.keyCode)) { e.preventDefault(); return false; }
-});
+
 document.addEventListener('selectstart', e => e.preventDefault());
 
 const SUPABASE_URL = 'https://exoghsmbjaehcsjakrij.supabase.co';
