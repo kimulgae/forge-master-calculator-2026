@@ -37,15 +37,15 @@
             <div class="input-grid three-col">
                 <div class="input-group">
                     <label>시작 대장간 레벨 (1~35)</label>
-                    <input type="number" id="forge-level" value="1" min="1" max="35" oninput="calculateGuildWar()">
+                    <input type="number" id="forge-level"placeholder="1" data-default="1" onfocus="this.placeholder=''" onblur="this.placeholder='1'" min="1" max="35" oninput="calculateGuildWar()">
                 </div>
                 <div class="input-group">
                     <label>보유 망치 개수 (총량)</label>
-                    <input type="text" id="forge-hammers" value="0" placeholder="예: 30k" oninput="calculateGuildWar()" onkeyup="formatInput(this)">
+                    <input type="text" id="forge-hammers" placeholder="1" data-default="1" onfocus="this.placeholder=''" onblur="this.placeholder='1'" placeholder="예: 30k" oninput="calculateGuildWar()" onkeyup="formatInput(this)">
                 </div>
                 <div class="input-group">
                     <label>1회 두드리기 소모 망치 수</label>
-                    <input type="number" id="forge-cost" value="1" min="1" oninput="calculateGuildWar()">
+                    <input type="number" id="forge-cost" placeholder="1" data-default="1" onfocus="this.placeholder=''" onblur="this.placeholder='1'" min="1" oninput="calculateGuildWar()">
                 </div>
             </div>
 
