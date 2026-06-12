@@ -52,11 +52,11 @@
             <div class="input-grid">
                 <div class="input-group">
                     <label>보유 코인 (k, m 단위 입력)</label>
-                    <input type="text" id="coins-owned" value="0" placeholder="예: 2.12m" oninput="calculateGuildWar()" onkeyup="formatInput(this)">
+                    <input type="text" id="coins-owned" placeholder="0" data-default="0" onfocus="this.placeholder=''" onblur="this.placeholder='0'" placeholder="예: 2.12m" oninput="calculateGuildWar()" onkeyup="formatInput(this)">
                 </div>
                 <div class="input-group">
                     <label>보유 보석 (스킵용)</label>
-                    <input type="text" id="gems-owned" value="0" placeholder="예: 10k" oninput="calculateGuildWar()" onkeyup="formatInput(this)">
+                    <input type="text" id="gems-owned" placeholder="0" data-default="0" onfocus="this.placeholder=''" onblur="this.placeholder='0'" placeholder="예: 10k" oninput="calculateGuildWar()" onkeyup="formatInput(this)">
                 </div>
             </div>
             
@@ -108,11 +108,11 @@
             <div class="input-grid">
                 <div class="input-group">
                     <label>보유 스킬 뽑기 재화</label>
-                    <input type="text" id="skill-owned" value="0" placeholder="예: 30k" oninput="calculateGuildWar()" onkeyup="formatInput(this)">
+                    <input type="text" id="skill-owned" placeholder="1" data-default="1" onfocus="this.placeholder=''" onblur="this.placeholder='1'" placeholder="예: 30k" oninput="calculateGuildWar()" onkeyup="formatInput(this)">
                 </div>
                 <div class="input-group">
                     <label>스킬 5회 소환 비용</label>
-                    <input type="number" id="skill-cost" value="200" min="1" oninput="calculateGuildWar()">
+                    <input type="number" id="skill-cost" placeholder="1" data-default="1" onfocus="this.placeholder=''" onblur="this.placeholder='1'"" min="1" oninput="calculateGuildWar()">
                 </div>
             </div>
 
@@ -130,30 +130,30 @@
             <div class="input-grid three-col">
                 <div class="input-group">
                     <label>보유 탈것 뽑기 재화</label>
-                    <input type="text" id="mount-owned" value="0" placeholder="예: 10k" oninput="calculateGuildWar()" onkeyup="formatInput(this)">
+                    <input type="text" id="mount-owned" placeholder="0" data-default="0" onfocus="this.placeholder=''" onblur="this.placeholder='0'" placeholder="예: 10k" oninput="calculateGuildWar()" onkeyup="formatInput(this)">
                 </div>
                 <div class="input-group">
                     <label>탈것 1회 소환 비용</label>
-                    <input type="number" id="mount-cost" value="50" min="1" oninput="calculateGuildWar()">
+                    <input type="number" id="mount-cost" placeholder="50" data-default="50" onfocus="this.placeholder=''" onblur="this.placeholder='50'" min="0" oninput="calculateGuildWar()">
                 </div>
                 <div class="input-group">
                     <label>추가 획득 확률(추탈) %</label>
-                    <input type="number" id="mount-ext" value="0" min="0" oninput="calculateGuildWar()">
+                    <input type="number" id="mount-ext" placeholder="0" data-default="0" onfocus="this.placeholder=''" onblur="this.placeholder='0'" min="0" oninput="calculateGuildWar()">
                 </div>
             </div>
 
             <div class="input-grid three-col">
                 <div class="input-group">
                     <label>보유 펫(알) 뽑기 재화</label>
-                    <input type="text" id="pet-owned" value="0" placeholder="예: 20k" oninput="calculateGuildWar()" onkeyup="formatInput(this)">
+                    <input type="text" id="pet-owned" placeholder="0" data-default="0" onfocus="this.placeholder=''" onblur="this.placeholder='0'" placeholder="예: 20k" oninput="calculateGuildWar()" onkeyup="formatInput(this)">
                 </div>
                 <div class="input-group">
                     <label>펫 1회 소환 비용</label>
-                    <input type="number" id="pet-cost" value="100" min="1" oninput="calculateGuildWar()">
+                    <input type="number" id="pet-cost" placeholder="100" data-default="100" onfocus="this.placeholder=''" onblur="this.placeholder='100'" min="1" oninput="calculateGuildWar()">
                 </div>
                 <div class="input-group">
                     <label>추가 획득 확률(추탈) %</label>
-                    <input type="number" id="pet-ext" value="0" min="0" oninput="calculateGuildWar()">
+                    <input type="number" id="pet-ext" placeholder="0" data-default="0" onfocus="this.placeholder=''" onblur="this.placeholder='0'" min="0" oninput="calculateGuildWar()">
                 </div>
             </div>
 
