@@ -3,20 +3,30 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>길드전 점수 심화 계산기 (분할차수 통합)</title>
+    <title>길드전 점수 심화 계산기</title>
     <link rel="stylesheet" href="guildwar.css">
 </head>
 <body>
 
     <nav class="top-nav">
-        <a href="index.html" class="nav-link">🚀 승천 계산기</a>
-        <a href="guildwar.html" class="nav-link active">⚔️ 길드전 계산기</a>
+        <button class="hamburger-btn" onclick="toggleSidebar()">☰</button>
+        <span class="nav-title">FMcalc</span>
     </nav>
 
+    <div class="sidebar-overlay" id="sidebar-overlay" onclick="toggleSidebar()"></div>
+    <div class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <h2>메뉴</h2>
+            <button class="close-btn" onclick="toggleSidebar()">×</button>
+        </div>
+        <a href="index.html" class="sidebar-link active">🚀 승천 계산기</a>
+        <a href="guildwar.html" class="sidebar-link">⚔️ 길드전 계산기</a>
+    </div>
+    
     <div class="container">
         <header>
             <h1>길드전 점수 심화 계산기</h1>
-            <p>분할차수(칸) 및 대기 시간 스킵 메커니즘을 100% 재현하여<br>가장 정확한 예상 점수를 산출합니다.</p>
+            <p></p>
         </header>
 
         <div class="category-card">
