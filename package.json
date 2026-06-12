@@ -1,0 +1,20 @@
+{
+  "name": "forge-master-calculator-2026",
+  "version": "1.0.0",
+  "description": "포마 승천 통합 계산기 - Forge Master Calculator",
+  "type": "module",
+  "scripts": {
+    "dev": "npx serve .",
+    "build": "echo 'Static site - no build needed'",
+    "lint": "echo 'No linter configured'"
+  },
+  "keywords": [
+    "calculator",
+    "forge-master"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "@vercel/speed-insights": "^1.0.12"
+  }
+}
