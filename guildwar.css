@@ -1,0 +1,83 @@
+/* guildwar.css */
+@import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css');
+
+:root {
+    --bg-color: #0f172a;
+    --card-bg: #1e293b;
+    --card-inner-bg: #334155;
+    --border-color: #475569;
+    --text-main: #f8fafc;
+    --text-muted: #94a3b8;
+    --accent-blue: #38bdf8;
+    --accent-amber: #fbbf24;
+    --accent-green: #34d399;
+    --input-bg: #0f172a;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+}
+
+body {
+    background-color: var(--bg-color);
+    color: var(--text-main);
+    padding: 90px 20px 20px 20px; /* 상단 메뉴바가 들어갈 공간 확보 */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+}
+
+/* 🌟 공통 상단 네비게이션 바 */
+.top-nav { position: fixed; top: 0; left: 0; width: 100%; background: #1e1f22; display: flex; justify-content: center; gap: 15px; padding: 15px; border-bottom: 1px solid #3f4147; z-index: 1000; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+.nav-link { color: #949ba4; text-decoration: none; font-weight: bold; font-size: 1.05rem; padding: 10px 20px; border-radius: 8px; transition: 0.2s; }
+.nav-link:hover { background: #3f4147; color: #fff; }
+.nav-link.active { background: #5865F2; color: #fff; box-shadow: inset 0 0 0 2px rgba(255,255,255,0.4); }
+
+.container {
+    width: 100%;
+    max-width: 800px;
+    margin-bottom: 100px;
+}
+
+header { text-align: center; margin-bottom: 30px; padding: 20px 0; }
+header h1 { font-size: 26px; font-weight: 700; color: var(--text-main); margin-bottom: 8px; }
+header p { color: var(--text-muted); font-size: 14px; line-height: 1.5; }
+
+.category-card { background-color: var(--card-bg); border: 1px solid var(--border-color); border-radius: 12px; padding: 24px; margin-bottom: 24px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); }
+.category-title { font-size: 20px; font-weight: 700; margin-bottom: 20px; padding-bottom: 10px; border-bottom: 2px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; }
+.category-title.forge { color: var(--accent-blue); border-bottom-color: var(--accent-blue); }
+.category-title.skill { color: var(--accent-green); border-bottom-color: var(--accent-green); }
+.category-title.pet { color: #c084fc; border-bottom-color: #c084fc; }
+
+.input-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+.input-grid.three-col { grid-template-columns: 1fr 1fr 1fr; }
+.input-group { display: flex; flex-direction: column; }
+.input-group label { font-size: 13px; color: var(--text-muted); margin-bottom: 6px; font-weight: 500; }
+.input-group input { background-color: var(--input-bg); border: 1px solid var(--border-color); color: var(--text-main); padding: 10px 12px; border-radius: 6px; font-size: 15px; transition: border-color 0.2s; }
+.input-group input:focus { outline: none; border-color: var(--accent-amber); }
+
+.checkbox-group { display: flex; align-items: center; gap: 10px; margin-top: 10px; margin-bottom: 10px; font-size: 14px; color: var(--text-main); }
+.checkbox-group input { width: 18px; height: 18px; cursor: pointer; }
+
+.prob-box { background-color: var(--card-inner-bg); padding: 16px; border-radius: 8px; margin-bottom: 16px; }
+.prob-box h4 { font-size: 14px; color: var(--accent-amber); margin-bottom: 12px; }
+.prob-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+
+.result-row { display: flex; justify-content: space-between; align-items: center; background-color: rgba(0,0,0,0.2); padding: 12px 16px; border-radius: 6px; margin-top: 10px; }
+.result-label { font-size: 14px; color: var(--text-muted); }
+.result-value { font-size: 18px; font-weight: 700; color: var(--text-main); }
+
+.total-sticky-bar { position: fixed; bottom: 0; left: 0; width: 100%; background-color: #111827; border-top: 2px solid var(--border-color); padding: 20px; display: flex; justify-content: center; align-items: center; z-index: 1000; box-shadow: 0 -10px 25px -5px rgba(0, 0, 0, 0.5); }
+.total-box { display: flex; justify-content: space-between; align-items: center; width: 100%; max-width: 760px; }
+.total-title { font-size: 18px; font-weight: 600; color: var(--text-muted); }
+.total-score { font-size: 32px; font-weight: 800; color: var(--accent-amber); text-shadow: 0 0 10px rgba(251, 191, 36, 0.2); }
+
+@media (max-width: 600px) {
+    .input-grid.three-col { grid-template-columns: 1fr; }
+    .input-grid { grid-template-columns: 1fr; }
+    .prob-grid { grid-template-columns: 1fr; }
+}
