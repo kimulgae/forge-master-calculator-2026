@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>포마 승천 통합 계산기</title>
+    
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="container">
+    <h1>포마 승천 통합 계산기</h1>
+    <p class="subtitle">모든 데이터 및 보유 재화 기반 연산 통합 버전</p>
+
+    <div class="mode-switch">
+        <label class="mode-label active" id="lbl-target">
+            <input type="radio" name="calcMode" value="target" checked onchange="toggleMode()">
+            <span>🎯 목표 레벨 기준</span>
+        </label>
+        <label class="mode-label" id="lbl-curr">
+            <input type="radio" name="calcMode" value="curr" onchange="toggleMode()">
+            <span>💰 보유 재화 기준</span>
+        </label>
+    </div>
+
+    <div class="nav-buttons">
+        <button class="nav-btn" id="btn-skill" onclick="tab('skill')">🎟️ 스킬</button>
+        <button class="nav-btn" id="btn-pet" onclick="tab('pet')">🥚 알</button>
+        <button class="nav-btn active" id="btn-mount" onclick="tab('mount')">🗝️ 탈것</button>
+        <button class="nav-btn" id="btn-forge" onclick="tab('forge')">⚒️ 대장간</button>
+    </div>
+
+    <div id="card-skill" class="card">
+        <h2>🎟️ 스킬 승천 계산기</h2>
+        <div class="input-grid">
+            <div class="input-group"><label>현재 레벨</label><input type="number" id="s-cur" placeholder="1" data-default="1" onfocus="this.placeholder=''" onblur="this.placeholder='1'"></div>
+            <div class="input-group mode-target"><label>목표 레벨</label><input type="number" id="s-tar" placeholder="100" data-default="100" onfocus="this.placeholder=''" onblur="this.placeholder='100'"></div>
+            <div class="input-group mode-curr" style="display:none;"><label>보유 재화 (k 입력 가능)</label><input type="text" id="s-curr" placeholder="예: 30000, 30k" data-default="예: 30000, 30k" onfocus="this.placeholder=''" onblur="this.placeholder='예: 30000, 30k'" onkeyup="formatInput(this)"></div>
+            <div class="input-group"><label>진행도 (사용한 횟수)</label><input type="number" id="s-prog" placeholder="0" data-default="0" onfocus="this.placeholder=''" onblur="this.placeholder='0'"></div>
+            <div class="input-group"><label>5회 소환 비용</label><input type="number" id="s-cost" placeholder="200" data-default="200" onfocus="this.placeholder=''" onblur="this.placeholder='200'"></div>
+        </div>
+        <button class="calc-btn" onclick="calc('skill')">계산하기</button>
+        <div class="result-box" id="res-skill"></div>
+        <div class="rarity-container" id="rarity-skill"></div>
+    </div>
+
+    <div id="card-pet" class="card">
+        <h2>🥚 알 승천 계산기</h2>
+        <div class="input-grid">
+            <div class="input-group"><label>현재 레벨</label><input type="number" id="p-cur" placeholder="1" data-default="1" onfocus="this.placeholder=''" onblur="this.placeholder='1'"></div>
+            <div class="input-group mode-target"><label>목표 레벨</label><input type="number" id="p-tar" placeholder="100" data-default="100" onfocus="this.placeholder=''" onblur="this.placeholder='100'"></div>
+            <div class="input-group mode-curr" style="display:none;"><label>보유 재화 (k 입력 가능)</label><input type="text" id="p-curr" placeholder="예: 30000, 30k" data-default="예: 30000, 30k" onfocus="this.placeholder=''" onblur="this.placeholder='예: 30000, 30k'" onkeyup="formatInput(this)"></div>
+            <div class="input-group"><label>진행도 (사용한 횟수)</label><input type="number" id="p-prog" placeholder="0" data-default="0" onfocus="this.placeholder=''" onblur="this.placeholder='0'"></div>
+            <div class="input-group"><label>추가 획득 확률(추탈) %</label><input type="number" id="p-ext" placeholder="0" data-default="0" onfocus="this.placeholder=''" onblur="this.placeholder='0'"></div>
+        </div>
+        <button class="calc-btn" onclick="calc('pet')">계산하기</button>
+        <div class="result-box" id="res-pet"></div>
+        <div class="rarity-container" id="rarity-pet"></div>
+    </div>
+
+    <div id="card-mount" class="card active">
+        <h2>🗝️ 탈것 승천 계산기</h2>
+        <div class="input-grid">
+            <div class="input-group"><label>현재 레벨</label><input type="number" id="m-cur" placeholder="1" data-default="1" onfocus="this.placeholder=''" onblur="this.placeholder='1'"></div>
+            <div class="input-group mode-target"><label>목표 레벨</label><input type="number" id="m-tar" placeholder="100" data-default="100" onfocus="this.placeholder=''" onblur="this.placeholder='100'"></div>
+            <div class="input-group mode-curr" style="display:none;"><label>보유 재화 (k 입력 가능)</label><input type="text" id="m-curr" placeholder="예: 30000, 30k" data-default="예: 30000, 30k" onfocus="this.placeholder=''" onblur="this.placeholder='예: 30000, 30k'" onkeyup="formatInput(this)"></div>
+            <div class="input-group"><label>진행도 (사용한 횟수)</label><input type="number" id="m-prog" placeholder="0" data-default="0" onfocus="this.placeholder=''" onblur="this.placeholder='0'"></div>
+            <div class="input-group"><label>추가 획득 확률(추탈) %</label><input type="number" id="m-ext" placeholder="0" data-default="0" onfocus="this.placeholder=''" onblur="this.placeholder='0'"></div>
+            <div class="input-group full-width"><label>1회 소환 비용</label><input type="number" id="m-cost" placeholder="50" data-default="50" onfocus="this.placeholder=''" onblur="this.placeholder='50'"></div>
+        </div>
+        <button class="calc-btn" onclick="calc('mount')">계산하기</button>
+        <div class="result-box" id="res-mount"></div>
+        <div class="rarity-container" id="rarity-mount"></div>
+    </div>
+
+    <div id="card-forge" class="card">
+        <h2>⚒️ 대장간 승천 계산기</h2>
+        <div class="input-grid">
+            <div class="input-group"><label>현재 레벨</label><input type="number" id="f-cur" placeholder="1" data-default="1" onfocus="this.placeholder=''" onblur="this.placeholder='1'"></div>
+            <div class="input-group mode-target"><label>목표 레벨 (Max 36)</label><input type="number" id="f-tar" placeholder="35" data-default="35" onfocus="this.placeholder=''" onblur="this.placeholder='35'"></div>
+            <div class="input-group mode-curr" style="display:none;"><label>보유 코인 (k, m 입력 가능)</label><input type="text" id="f-curr" placeholder="예: 1500000, 1.5m" data-default="예: 1500000, 1.5m" onfocus="this.placeholder=''" onblur="this.placeholder='예: 1500000, 1.5m'" onkeyup="formatInput(this)"></div>
+            <div class="input-group"><label>시간 감소율(시감) %</label><input type="number" id="f-spd" placeholder="0" data-default="0" onfocus="this.placeholder=''" onblur="this.placeholder='0'"></div>
+            <div class="input-group"><label>비용 감소율(비감) %</label><input type="number" id="f-dis" placeholder="0" data-default="0" onfocus="this.placeholder=''" onblur="this.placeholder='0'"></div>
+        </div>
+        <button class="calc-btn" onclick="calcForge()">계산하기</button>
+        <div class="result-box" id="res-forge"></div>
+        <div class="rarity-container" id="rarity-forge"></div>
+    </div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
