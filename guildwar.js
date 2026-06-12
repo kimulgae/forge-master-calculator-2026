@@ -1,3 +1,8 @@
+// 햄버거 메뉴(사이드바) 열기/닫기 함수
+function toggleSidebar() {
+    document.getElementById('sidebar').classList.toggle('show');
+    document.getElementById('sidebar-overlay').classList.toggle('show');
+}
 // guildwar.js
 function parseCurrency(value) {
     if (!value) return 0;
