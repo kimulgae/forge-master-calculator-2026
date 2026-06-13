@@ -58,7 +58,10 @@ function tab(id) {
     document.getElementById('btn-' + id).classList.add('active');
 }
 
-function val(id) { return parseFloat(document.getElementById(id).value) || 0; }
+function val(id) { 
+    const el = document.getElementById(id);
+    return el ? (parseFloat(el.value) || 0) : 0; 
+}
 
 // ============================================
 // 1. 서버 통신 (API) 계산 로직 - 스킬, 알, 탈것
@@ -78,7 +81,7 @@ async function calc(type) {
         cur: val(`${type.charAt(0)}-cur`),
         tar: val(`${type.charAt(0)}-tar`),
         prog: val(`${type.charAt(0)}-prog`),
-        curr: parseCurrency(document.getElementById(`${type.charAt(0)}-curr`).value),
+        curr: parseCurrency(document.getElementById(`${type.charAt(0)}-curr`)?.value || '0'),
         cost: val(`${type.charAt(0)}-cost`),
         ext: val(`${type.charAt(0)}-ext`) // 추탈(펫, 탈것)
     };
