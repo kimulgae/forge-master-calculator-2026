@@ -51,14 +51,17 @@
 
         <div class="card active" style="display: block;">
             <h2>⚙️ 내 기술트리 및 기초스탯</h2>
-            <div class="input-grid">
-                <div class="input-group"><label>대장간 비용감소(%)</label><input type="number" id="db-forge-dis"></div>
-                <div class="input-group"><label>대장간 시간감소(%)</label><input type="number" id="db-forge-spd"></div>
-                <div class="input-group"><label>스킬 소환비용</label><input type="number" id="db-skill-cost"></div>
-                <div class="input-group"><label>탈것 소환비용</label><input type="number" id="db-mount-cost"></div>
-                <div class="input-group"><label>추탈(%) (펫/탈것 공통)</label><input type="number" id="db-ext-rate"></div>
-                <div class="input-group"><label>무료 망치 확률(%)</label><input type="number" id="db-free-hammer"></div>
-            </div>
+           <div class="input-grid">
+            <div class="input-group"><label>대장간 비용감소(%)</label><input type="number" id="db-forge-dis"></div>
+            <div class="input-group"><label>대장간 시간감소(%)</label><input type="number" id="db-forge-spd"></div>
+            <div class="input-group"><label>스킬 소환비용</label><input type="number" id="db-skill-cost"></div>
+            <div class="input-group"><label>탈것 소환비용</label><input type="number" id="db-mount-cost"></div>
+            
+            <div class="input-group"><label>탈것 추탈(%)</label><input type="number" id="db-mount-ext"></div>
+            <div class="input-group"><label>펫(알) 추탈(%)</label><input type="number" id="db-pet-ext"></div>
+            
+            <div class="input-group"><label>무료 망치 확률(%)</label><input type="number" id="db-free-hammer"></div>
+        </div>
             <button onclick="saveTechTree()" class="calc-btn" style="margin-top: 15px;">💾 저장 및 연동하기</button>
         </div>
     </div>
