@@ -133,19 +133,39 @@ body { padding-top: 80px; }
 .sidebar-link.active { color: #5865F2; background: #1e1f22; border-left: 4px solid #5865F2; }
 .top-nav { justify-content: space-between; } 
 
-.top-login-btn { display: flex; align-items: center; gap: 6px; background: #fff; color: #3c4043; border: none; padding: 6px 12px; border-radius: 20px; font-weight: bold; cursor: pointer; font-size: 0.9rem; transition: 0.2s; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+/* =======================================
+   🌟 수정: 상단 바 & 프로필 짤림 방지 완벽 정렬
+   ======================================= */
+.top-nav {
+    position: fixed; top: 0; left: 0; width: 100%; height: 60px;
+    background: #1e1f22; display: flex; align-items: center; justify-content: space-between;
+    padding: 0 20px; box-sizing: border-box; /* 🌟 핵심: 여백을 높이 계산에 포함시켜 삐져나감 방지 */
+    border-bottom: 1px solid #3f4147; z-index: 1000; box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+.top-right-auth { 
+    position: relative; display: flex; align-items: center; height: 100%; 
+}
+
+.top-login-btn { 
+    display: flex; align-items: center; gap: 6px; background: #fff; color: #3c4043; 
+    border: none; padding: 6px 12px; border-radius: 6px; font-weight: bold; 
+    cursor: pointer; font-size: 0.9rem; transition: 0.2s; box-shadow: 0 2px 4px rgba(0,0,0,0.1); 
+}
 .top-login-btn:hover { background: #f1f3f4; }
 
-/* 🌟 나무위키 스타일의 둥근 사각형 프사 */
-.profile-avatar { width: 38px; height: 38px; border-radius: 8px; cursor: pointer; object-fit: cover; transition: 0.2s; border: 1px solid #3f4147; display: block; }
+/* 🌟 나무위키 스타일 둥근 사각형 프사 (크기 미세조정 및 중앙 강제 정렬) */
+.profile-avatar { 
+    width: 36px; height: 36px; border-radius: 8px; cursor: pointer; 
+    object-fit: cover; transition: 0.2s; border: 1px solid #3f4147; 
+    display: block; margin: auto 0; /* 위아래 여백을 동일하게 주어 무조건 정중앙에 위치 */
+}
 .profile-avatar:hover { filter: brightness(1.2); }
 
 /* 리스트형 메뉴창 본체 */
-.profile-dropdown { display: none; position: absolute; top: 50px; right: 0; background: #2b2d31; border: 1px solid #3f4147; border-radius: 8px; width: 220px; box-shadow: 0 8px 16px rgba(0,0,0,0.5); flex-direction: column; overflow: hidden; z-index: 2000; }
+.profile-dropdown { 
+    display: none; position: absolute; top: 50px; right: 0; background: #2b2d31; 
+    border: 1px solid #3f4147; border-radius: 8px; width: 220px; 
+    box-shadow: 0 8px 16px rgba(0,0,0,0.5); flex-direction: column; overflow: hidden; z-index: 2000; 
+}
 .profile-dropdown.show { display: flex; animation: fadeIn 0.2s ease; }
-
-.dropdown-header { padding: 15px; border-bottom: 1px solid #3f4147; background: #1e1f22; line-height: 1.4; }
-.dropdown-list { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; }
-.dropdown-list li { padding: 12px 15px; color: #dbdee1; font-size: 0.95rem; cursor: pointer; transition: 0.2s; display: flex; align-items: center; gap: 10px; }
-.dropdown-list li:hover { background: #3f4147; color: #fff; }
-.dropdown-divider { height: 1px; background: #3f4147; margin: 0; }
