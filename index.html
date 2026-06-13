@@ -25,9 +25,15 @@
                 <img id="profile-img" src="" alt="프로필" onclick="toggleProfileMenu()" class="profile-avatar">
                 
                 <div id="profile-menu-top" class="profile-dropdown">
-                    <div class="dropdown-header"><span id="user-name-top"></span>님 환영합니다</div>
-                    <button onclick="openTechModal()">⚙️ 프로필 설정</button>
-                    <button onclick="signOut()" style="color: #ed4245;">🚪 로그아웃</button>
+                    <div class="dropdown-header">
+                        <span style="font-size: 0.8rem; color: #949ba4;">사용자</span><br>
+                        <strong id="user-name-top" style="font-size: 1.1rem; color: #fff;"></strong>
+                    </div>
+                    <ul class="dropdown-list">
+                        <li onclick="openTechModal()">⚙️ 프로필 설정</li>
+                        <div class="dropdown-divider"></div>
+                        <li onclick="signOut()">🚪 로그아웃</li>
+                    </ul>
                 </div>
             </div>
         </div>
