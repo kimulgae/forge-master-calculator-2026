@@ -3,6 +3,7 @@ function toggleSidebar() {
     document.getElementById('sidebar').classList.toggle('show');
     document.getElementById('sidebar-overlay').classList.toggle('show');
 }
+
 // ============================================
 // 0. 초기화 및 이벤트 리스너
 // ============================================
@@ -20,13 +21,12 @@ window.onload = () => {
         });
     });
 
-    // 🌟 2. 신규 추가: 사이트 접속 즉시 서버 몰래 깨우기 (절전모드 방어)
+    // 🌟 2. 절전모드 깨우기 (기상나팔)
     fetch('/api/ascension', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ type: 'wakeup' })
     }).catch(() => { 
-        // 에러가 나도 유저 화면에는 안 보이게 조용히 넘어감
         console.log("기상 신호 전송 완료"); 
     });
 };
@@ -79,12 +79,14 @@ function val(id) {
 async function calc(type) {
     let resBox = document.getElementById('res-' + type);
     let rarityBox = document.getElementById('rarity-' + type);
+    let btn = document.querySelector(`#card-${type} .calc-btn`);
     
     resBox.style.display = 'block';
     rarityBox.style.display = 'none';
     resBox.innerHTML = "서버에서 계산 중입니다... ⏳"; 
 
-    // 서버가 요구하는 이름(cur, tar 등)에 맞춰 주문서 작성
+    if(btn) { btn.disabled = true; btn.style.opacity = '0.5'; }
+
     const orderData = {
         type: type,
         currentMode: currentMode,
@@ -93,7 +95,7 @@ async function calc(type) {
         prog: val(`${type.charAt(0)}-prog`),
         curr: parseCurrency(document.getElementById(`${type.charAt(0)}-curr`)?.value || '0'),
         cost: val(`${type.charAt(0)}-cost`),
-        ext: val(`${type.charAt(0)}-ext`) // 추탈(펫, 탈것)
+        ext: val(`${type.charAt(0)}-ext`)
     };
 
     try {
@@ -103,20 +105,23 @@ async function calc(type) {
             body: JSON.stringify(orderData)
         });
 
+        if (!response.ok) throw new Error(`상태 코드 ${response.status}`); 
+
         const result = await response.json();
 
         if (result.success) {
             resBox.innerHTML = result.message;
-            // 서버가 그려준 확률표 HTML을 받아서 화면에 넣기
             if (result.rarityData) {
                 rarityBox.innerHTML = result.rarityData;
                 rarityBox.style.display = 'block';
             }
         } else {
-            resBox.innerHTML = result.message; // 에러 메시지 
+            resBox.innerHTML = `<span style='color:#ed4245; font-weight:bold;'>${result.message}</span>`; 
         }
     } catch (error) {
-        resBox.innerHTML = "<span style='color:#ed4245;'>서버 통신 중 에러가 발생했습니다.</span>";
+        resBox.innerHTML = `<span style='color:#ed4245; font-weight:bold;'>서버 지연/오류: ${error.message}<br>잠시 후 다시 버튼을 눌러주세요.</span>`;
+    } finally {
+        if(btn) { btn.disabled = false; btn.style.opacity = '1'; }
     }
 }
 
@@ -126,10 +131,13 @@ async function calc(type) {
 async function calcForge() {
     let resBox = document.getElementById('res-forge');
     let rarityBox = document.getElementById('rarity-forge');
+    let btn = document.querySelector('#card-forge .calc-btn');
     
     resBox.style.display = 'block';
     rarityBox.style.display = 'none';
     resBox.innerHTML = "서버에서 계산 중입니다... ⏳"; 
+
+    if(btn) { btn.disabled = true; btn.style.opacity = '0.5'; }
 
     const orderData = {
         type: 'forge',
@@ -137,8 +145,8 @@ async function calcForge() {
         cur: val('f-cur'),
         tar: val('f-tar'),
         curr: parseCurrency(document.getElementById('f-curr').value),
-        spd: val('f-spd'), // 시간 감소율
-        dis: val('f-dis')  // 비용 감소율
+        spd: val('f-spd'),
+        dis: val('f-dis')
     };
 
     try {
@@ -147,6 +155,8 @@ async function calcForge() {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(orderData)
         });
+
+        if (!response.ok) throw new Error(`상태 코드 ${response.status}`);
 
         const result = await response.json();
 
@@ -157,14 +167,19 @@ async function calcForge() {
                 rarityBox.style.display = 'block';
             }
         } else {
-            resBox.innerHTML = result.message;
+            resBox.innerHTML = `<span style='color:#ed4245; font-weight:bold;'>${result.message}</span>`;
         }
     } catch (error) {
-        resBox.innerHTML = "<span style='color:#ed4245;'>서버 통신 중 에러가 발생했습니다.</span>";
+        resBox.innerHTML = `<span style='color:#ed4245; font-weight:bold;'>서버 지연/오류: ${error.message}<br>잠시 후 다시 버튼을 눌러주세요.</span>`;
+    } finally {
+        if(btn) { btn.disabled = false; btn.style.opacity = '1'; }
     }
 }
 
-document.addEventListener('selectstart', e => e.preventDefault());
+// ============================================
+// 3. 구글 로그인 및 설정 연동 (Supabase)
+// ============================================
+document.addEventListener('selectstart', e => e.preventDefault()); // 복사 방지
 
 const SUPABASE_URL = 'https://exoghsmbjaehcsjakrij.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImV4b2doc21iamFlaGNzamFrcmlqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODExNzc2OTUsImV4cCI6MjA5Njc1MzY5NX0.Kq8VJ_QDQkN0xOWhdJyEC3hfwaHyOs_LPUHcQrIbb_s';
@@ -215,17 +230,6 @@ async function signOut() {
     location.reload();
 }
 
-function openTechModal() {
-    document.getElementById('tech-modal').classList.add('show');
-    document.getElementById('tech-modal-overlay').classList.add('show');
-    document.getElementById('profile-menu-top').classList.remove('show'); // 메뉴 닫기
-}
-
-function closeTechModal() {
-    document.getElementById('tech-modal').classList.remove('show');
-    document.getElementById('tech-modal-overlay').classList.remove('show');
-}
-
 async function fetchMyTechTree() {
     if (!currentUser) return;
     const { data } = await supabaseClient.from('user_profiles').select('*').eq('id', currentUser.id).maybeSingle();
@@ -238,39 +242,6 @@ async function fetchMyTechTree() {
         if (document.getElementById('m-ext') && data.tech_ext_rate !== null) {
             document.getElementById('m-ext').value = data.tech_ext_rate;
             if(document.getElementById('p-ext')) document.getElementById('p-ext').value = data.tech_ext_rate;
-
-        if (document.getElementById('f-dis') && data.tech_forge_dis !== null) document.getElementById('f-dis').value = data.tech_forge_dis;
-        if (document.getElementById('f-spd') && data.tech_forge_spd !== null) document.getElementById('f-spd').value = data.tech_forge_spd;
-        if (document.getElementById('s-cost') && data.tech_skill_cost !== null) document.getElementById('s-cost').value = data.tech_skill_cost;
-        if (document.getElementById('m-cost') && data.tech_mount_cost !== null) document.getElementById('m-cost').value = data.tech_mount_cost;
-        if (document.getElementById('m-ext') && data.tech_ext_rate !== null) {
-            document.getElementById('m-ext').value = data.tech_ext_rate;
-            if(document.getElementById('p-ext')) document.getElementById('p-ext').value = data.tech_ext_rate;
         }
-    }
-}
-
-async function saveTechTree() {
-    if (!currentUser) return alert("로그인이 필요합니다.");
-    
-    const saveData = {
-        id: currentUser.id,
-        tech_forge_dis: val('db-forge-dis'),
-        tech_forge_spd: val('db-forge-spd'),
-        tech_skill_cost: val('db-skill-cost'),
-        tech_mount_cost: val('db-mount-cost'),
-        tech_ext_rate: val('db-ext-rate'),
-        tech_free_hammer: val('db-free-hammer'),
-        updated_at: new Date()
-    };
-
-    const { error } = await supabaseClient.from('user_profiles').upsert(saveData);
-    
-    if (error) {
-        alert("저장 실패: " + error.message);
-    } else {
-        alert("기술트리가 저장되었습니다! 🚀");
-        fetchMyTechTree(); 
-        closeTechModal();
     }
 }
