@@ -41,7 +41,11 @@ async function fetchSettings() {
         if (data.tech_forge_spd !== null) document.getElementById('db-forge-spd').value = data.tech_forge_spd;
         if (data.tech_skill_cost !== null) document.getElementById('db-skill-cost').value = data.tech_skill_cost;
         if (data.tech_mount_cost !== null) document.getElementById('db-mount-cost').value = data.tech_mount_cost;
-        if (data.tech_ext_rate !== null) document.getElementById('db-ext-rate').value = data.tech_ext_rate;
+        
+        // 🌟 수정됨: 분리된 추탈 데이터 불러오기
+        if (data.tech_mount_ext !== null) document.getElementById('db-mount-ext').value = data.tech_mount_ext;
+        if (data.tech_pet_ext !== null) document.getElementById('db-pet-ext').value = data.tech_pet_ext;
+        
         if (data.tech_free_hammer !== null) document.getElementById('db-free-hammer').value = data.tech_free_hammer;
     }
 }
@@ -50,11 +54,17 @@ async function saveTechTree() {
     if (!currentUser) return alert("로그인이 필요합니다.");
     const saveData = {
         id: currentUser.id,
-        tech_forge_dis: val('db-forge-dis'), tech_forge_spd: val('db-forge-spd'),
-        tech_skill_cost: val('db-skill-cost'), tech_mount_cost: val('db-mount-cost'),
-        tech_ext_rate: val('db-ext-rate'), tech_free_hammer: val('db-free-hammer'),
-        updated_at: new Date()
+        tech_forge_dis: val('db-forge-dis'), 
+        tech_forge_spd: val('db-forge-spd'),
+        tech_skill_cost: val('db-skill-cost'), 
+        tech_mount_cost: val('db-mount-cost'),
+        
+        // 🌟 수정됨: 분리된 추탈 데이터 저장 & 에러 나던 updated_at 항목 삭제!
+        tech_mount_ext: val('db-mount-ext'), 
+        tech_pet_ext: val('db-pet-ext'),
+        tech_free_hammer: val('db-free-hammer')
     };
+    
     const { error } = await supabaseClient.from('user_profiles').upsert(saveData);
     if (error) alert("저장 실패: " + error.message);
     else alert("기술트리가 완벽하게 저장되었습니다! 🚀\n이제 계산기 페이지로 이동하면 자동 적용됩니다.");
