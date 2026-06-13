@@ -273,31 +273,3 @@ async function saveTechTree() {
         closeTechModal();
     }
 }
-
-async function loadUserProfile() {
-  try {
-    const { data, error } = await supabaseClient.from('user_profiles').select('*').eq('id', TEST_USER_ID).maybeSingle();
-    if (error) return console.error("데이터 실패:", error.message);
-    if (data) {
-      if (data.skill_level !== null) document.getElementById('s-cur').value = data.skill_level;
-      if (data.skill_progress !== null) document.getElementById('s-prog').value = data.skill_progress;
-      if (data.skill_cost !== null) document.getElementById('s-cost').value = data.skill_cost;
-      if (data.skill_currency !== null) document.getElementById('s-curr').value = data.skill_currency;
-      if (data.pet_level !== null) document.getElementById('p-cur').value = data.pet_level;
-      if (data.pet_progress !== null) document.getElementById('p-prog').value = data.pet_progress;
-      if (data.pet_ext_rate !== null) document.getElementById('p-ext').value = data.pet_ext_rate;
-      if (data.pet_currency !== null) document.getElementById('p-curr').value = data.pet_currency;
-      if (data.mount_level !== null) document.getElementById('m-cur').value = data.mount_level;
-      if (data.mount_progress !== null) document.getElementById('m-prog').value = data.mount_progress;
-      if (data.mount_ext_rate !== null) document.getElementById('m-ext').value = data.mount_ext_rate;
-      if (data.mount_cost !== null) document.getElementById('m-cost').value = data.mount_cost;
-      if (data.mount_currency !== null) document.getElementById('m-curr').value = data.mount_currency;
-      if (data.forge_level !== null) document.getElementById('f-cur').value = data.forge_level;
-      if (data.forge_spd_rate !== null) document.getElementById('f-spd').value = data.forge_spd_rate;
-      if (data.forge_dis_rate !== null) document.getElementById('f-dis').value = data.forge_dis_rate;
-      if (data.forge_currency !== null) document.getElementById('f-curr').value = data.forge_currency;
-      console.log("포지마스터 스펙 데이터 불러오기 완료!");
-    }
-  } catch (err) { console.error("통신 에러:", err); }
-}
-window.addEventListener('DOMContentLoaded', () => loadUserProfile());
