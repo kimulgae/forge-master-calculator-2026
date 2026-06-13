@@ -84,7 +84,7 @@ async function calc(type) {
     };
 
     try {
-        const response = await fetch('/api/calculate', {
+        const response = await fetch('/api/ascension', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(orderData)
@@ -129,7 +129,7 @@ async function calcForge() {
     };
 
     try {
-        const response = await fetch('/api/calculate', {
+        const response = await fetch('/api/ascension', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(orderData)
@@ -151,10 +151,6 @@ async function calcForge() {
     }
 }
 
-// ============================================
-// 복사 방지 및 Supabase (이전 내용 유지)
-// ============================================
-
 document.addEventListener('selectstart', e => e.preventDefault());
 
 const SUPABASE_URL = 'https://exoghsmbjaehcsjakrij.supabase.co';
@@ -164,7 +160,7 @@ const TEST_USER_ID = '123e4567-e89b-12d3-a456-426614174000';
 
 async function loadUserProfile() {
   try {
-    const { data, error } = await supabaseClient.from('user_profiles').select('*').eq('id', TEST_USER_ID).single();
+    const { data, error } = await supabaseClient.from('user_profiles').select('*').eq('id', TEST_USER_ID).maybeSingle();
     if (error) return console.error("데이터 실패:", error.message);
     if (data) {
       if (data.skill_level !== null) document.getElementById('s-cur').value = data.skill_level;
