@@ -239,9 +239,9 @@ async function fetchMyTechTree() {
         if (document.getElementById('f-spd') && data.tech_forge_spd !== null) document.getElementById('f-spd').value = data.tech_forge_spd;
         if (document.getElementById('s-cost') && data.tech_skill_cost !== null) document.getElementById('s-cost').value = data.tech_skill_cost;
         if (document.getElementById('m-cost') && data.tech_mount_cost !== null) document.getElementById('m-cost').value = data.tech_mount_cost;
-        if (document.getElementById('m-ext') && data.tech_ext_rate !== null) {
-            document.getElementById('m-ext').value = data.tech_ext_rate;
-            if(document.getElementById('p-ext')) document.getElementById('p-ext').value = data.tech_ext_rate;
-        }
+        
+        // 🌟 탈것과 펫 추탈을 각자의 칸에 분리해서 꽂아줌
+        if (document.getElementById('m-ext') && data.tech_mount_ext !== null) document.getElementById('m-ext').value = data.tech_mount_ext;
+        if (document.getElementById('p-ext') && data.tech_pet_ext !== null) document.getElementById('p-ext').value = data.tech_pet_ext;
     }
 }
