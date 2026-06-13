@@ -9,7 +9,7 @@ function toggleSidebar() {
 let currentMode = 'target';
 
 window.onload = () => {
-    // 엔터키 즉시 연산 바인딩
+    // 1. 엔터키 즉시 연산 바인딩
     document.querySelectorAll('input').forEach(input => {
         input.addEventListener('keypress', function(e) {
             if (e.key === 'Enter') {
@@ -18,6 +18,16 @@ window.onload = () => {
                 if(activeCard) activeCard.querySelector('.calc-btn').click();
             }
         });
+    });
+
+    // 🌟 2. 신규 추가: 사이트 접속 즉시 서버 몰래 깨우기 (절전모드 방어)
+    fetch('/api/ascension', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ type: 'wakeup' })
+    }).catch(() => { 
+        // 에러가 나도 유저 화면에는 안 보이게 조용히 넘어감
+        console.log("기상 신호 전송 완료"); 
     });
 };
 
