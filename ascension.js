@@ -158,8 +158,42 @@ document.addEventListener('selectstart', e => e.preventDefault());
 
 const SUPABASE_URL = 'https://exoghsmbjaehcsjakrij.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImV4b2doc21iamFlaGNzamFrcmlqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODExNzc2OTUsImV4cCI6MjA5Njc1MzY5NX0.Kq8VJ_QDQkN0xOWhdJyEC3hfwaHyOs_LPUHcQrIbb_s';
-const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-const TEST_USER_ID = '123e4567-e89b-12d3-a456-426614174000';
+// 1. 유저 로그인 상태 감지
+supabaseClient.auth.onAuthStateChange((event, session) => {
+    const user = session?.user;
+    currentUser = user;
+    
+    if (user) {
+        document.getElementById('login-btn-top').style.display = 'none';
+        document.getElementById('user-info-top').style.display = 'block';
+        
+        // 🌟 구글 프로필 사진 가져오기 (만약 없으면 기본 회색 얼굴 아이콘 띄우기)
+        const avatarUrl = user.user_metadata.avatar_url || 'https://cdn-icons-png.flaticon.com/512/149/149071.png';
+        document.getElementById('profile-img').src = avatarUrl;
+        document.getElementById('user-name-top').innerText = user.user_metadata.full_name || '용사';
+        
+        fetchMyTechTree(); // 내 기술트리 DB 불러오기
+    } else {
+        document.getElementById('login-btn-top').style.display = 'flex';
+        document.getElementById('user-info-top').style.display = 'none';
+    }
+});
+
+// 프로필 드롭다운 메뉴 열기/닫기
+function toggleProfileMenu() {
+    document.getElementById('profile-menu-top').classList.toggle('show');
+}
+
+// 🌟 화면 아무 곳이나 누르면 프로필 메뉴 자동으로 닫히게 하기
+window.addEventListener('click', function(e) {
+    const userInfoTop = document.getElementById('user-info-top');
+    const profileMenu = document.getElementById('profile-menu-top');
+    
+    // 클릭한 곳이 프사나 메뉴창 안쪽이 아니라면 닫기
+    if (userInfoTop && !userInfoTop.contains(e.target)) {
+        if(profileMenu) profileMenu.classList.remove('show');
+    }
+});
 
 async function loadUserProfile() {
   try {
