@@ -180,5 +180,21 @@
     </div>
 
     <script src="guildwar.js"></script>
+    <div id="tech-modal-overlay" class="modal-overlay" onclick="closeTechModal()"></div>
+<div id="tech-modal" class="modal-content">
+    <div class="modal-header">
+        <h3>⚙️ 내 기술트리 / 기초스탯 저장</h3>
+        <button onclick="closeTechModal()" style="background:none; border:none; color:#dbdee1; font-size:24px; cursor:pointer;">×</button>
+    </div>
+    <div class="modal-body input-grid">
+        <div class="input-group"><label>대장간 비용감소(%)</label><input type="number" id="db-forge-dis"></div>
+        <div class="input-group"><label>대장간 시간감소(%)</label><input type="number" id="db-forge-spd"></div>
+        <div class="input-group"><label>스킬 소환비용</label><input type="number" id="db-skill-cost"></div>
+        <div class="input-group"><label>탈것 소환비용</label><input type="number" id="db-mount-cost"></div>
+        <div class="input-group"><label>추탈(%) (펫/탈것 공통)</label><input type="number" id="db-ext-rate"></div>
+        <div class="input-group"><label>무료 망치 확률(%)</label><input type="number" id="db-free-hammer"></div>
+    </div>
+    <button onclick="saveTechTree()" style="width: 100%; padding: 14px; background: #2ecc71; color: #1e1f22; border: none; border-radius: 8px; font-weight: bold; font-size: 1.1rem; cursor: pointer; margin-top: 15px;">💾 저장 및 연동하기</button>
+</div>
 </body>
 </html>
