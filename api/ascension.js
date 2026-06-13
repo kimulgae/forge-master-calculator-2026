@@ -231,6 +231,9 @@ export default function handler(req, res) {
     // ----------------------------------------
     // 대장간 계산
     // ----------------------------------------
+   // ----------------------------------------
+    // 대장간 계산 (여기서부터 끝까지 덮어씌우세요!)
+    // ----------------------------------------
     else if (type === 'forge') {
         let actualDis = 1 - (dis / 100);
         let actualSpd = 1 + (spd / 100);
@@ -254,19 +257,23 @@ export default function handler(req, res) {
             let remainingCurr = curr;
             
             while (level < 36) {
-                let nextCost = Math.floor(forgeBase[level - 1].c * actualDis);
+                let baseData = forgeBase[level - 1];
+                if (!baseData) break; // 🌟 핵심 에러 방지 코드: 데이터가 없으면 즉시 중단!
+
+                let nextCost = Math.floor(baseData.c * actualDis);
                 if (remainingCurr >= nextCost) {
                     remainingCurr -= nextCost;
                     costAccum += nextCost;
-                    timeAccum += forgeBase[level - 1].t;
+                    timeAccum += baseData.t;
                     level++;
                 } else {
                     break;
                 }
             }
             
-            if (level >= 36) {
-                resHTML = `[보유 코인 소진 시] 도달 가능 최대 레벨: <strong style="color:#2ecc71;">36레벨 (만렙)</strong><br>총 소모 코인: <strong>${formatNum(costAccum)}</strong><br>만렙 후 남은 코인: <strong>${formatNum(remainingCurr)}</strong><br>총 소요 시간: <strong>${formatTime(timeAccum / actualSpd)}</strong>`;
+            let maxPossibleLevel = forgeBase.length + 1; // 최대 35레벨
+            if (level >= maxPossibleLevel) {
+                resHTML = `[보유 코인 소진 시] 도달 가능 최대 레벨: <strong style="color:#2ecc71;">${maxPossibleLevel}레벨 (만렙)</strong><br>총 소모 코인: <strong>${formatNum(costAccum)}</strong><br>만렙 후 남은 코인: <strong>${formatNum(remainingCurr)}</strong><br>총 소요 시간: <strong>${formatTime(timeAccum / actualSpd)}</strong>`;
             } else {
                 resHTML = `[보유 코인 소진 시] 도달 가능 최대 레벨: <strong>${level}레벨</strong><br>총 소모 코인: <strong>${formatNum(costAccum)}</strong><br>사용 후 남은 코인: <strong>${formatNum(remainingCurr)}</strong><br>총 소요 시간: <strong>${formatTime(timeAccum / actualSpd)}</strong>`;
             }
