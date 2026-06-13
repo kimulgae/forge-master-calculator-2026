@@ -78,9 +78,13 @@ function generateRarityHTML(level, probData, names, colors) {
 // 4. 메인 핸들러 (서버에서 요청을 받고 응답하는 곳)
 // ============================================
 export default function handler(req, res) {
-    // 만약 데이터가 잘못 들어왔을 경우 튕겨냅니다.
     if (req.method !== 'POST') {
         return res.status(405).json({ message: 'POST 요청만 받습니다.' });
+    }
+
+    // 🌟 신규 추가: 절전모드 깨우기(기상나팔) 신호가 오면 바로 대답하고 끝냄
+    if (req.body.type === 'wakeup') {
+        return res.status(200).json({ success: true, message: '서버 기상 완료!' });
     }
 
     // 유저가 보낸 정보(주문서)를 뜯어봅니다.
