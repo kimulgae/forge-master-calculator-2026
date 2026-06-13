@@ -138,16 +138,19 @@ function closeTechModal() {
 
 async function fetchMyTechTree() {
     if (!currentUser) return;
-    const { data, error } = await supabaseClient.from('user_profiles').select('*').eq('id', currentUser.id).maybeSingle();
+    const { data } = await supabaseClient.from('user_profiles').select('*').eq('id', currentUser.id).maybeSingle();
     
     if (data) {
-        // 모달창 칸 채워주기
-        if (data.tech_forge_dis !== null) document.getElementById('db-forge-dis').value = data.tech_forge_dis;
-        if (data.tech_forge_spd !== null) document.getElementById('db-forge-spd').value = data.tech_forge_spd;
-        if (data.tech_skill_cost !== null) document.getElementById('db-skill-cost').value = data.tech_skill_cost;
-        if (data.tech_mount_cost !== null) document.getElementById('db-mount-cost').value = data.tech_mount_cost;
-        if (data.tech_ext_rate !== null) document.getElementById('db-ext-rate').value = data.tech_ext_rate;
-        if (data.tech_free_hammer !== null) document.getElementById('db-free-hammer').value = data.tech_free_hammer;
+        if (document.getElementById('f-dis') && data.tech_forge_dis !== null) document.getElementById('f-dis').value = data.tech_forge_dis;
+        if (document.getElementById('f-spd') && data.tech_forge_spd !== null) document.getElementById('f-spd').value = data.tech_forge_spd;
+        if (document.getElementById('s-cost') && data.tech_skill_cost !== null) document.getElementById('s-cost').value = data.tech_skill_cost;
+        if (document.getElementById('m-cost') && data.tech_mount_cost !== null) document.getElementById('m-cost').value = data.tech_mount_cost;
+        if (document.getElementById('m-ext') && data.tech_ext_rate !== null) {
+            document.getElementById('m-ext').value = data.tech_ext_rate;
+            if(document.getElementById('p-ext')) document.getElementById('p-ext').value = data.tech_ext_rate;
+        }
+    }
+}
 
         // 길드전 계산기 칸에 정보 꽂아주기
         if (document.getElementById('free-hammer') && data.tech_free_hammer !== null) document.getElementById('free-hammer').value = data.tech_free_hammer;
