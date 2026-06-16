@@ -109,15 +109,15 @@ export default function handler(req, res) {
     let hammerScore = Math.floor(effectiveCrafts * expectedPtsPerCraft);
     let totalForge = hammerScore + coinScore + gemScore;
 
-    let totalSkill = Math.floor(skillOwned / Math.max(1, skillCost)) * 125;
+    // 🌟 스킬 5회 뽑기 적용 (125점)
+    let totalSkill = Math.floor(skillOwned / Math.max(1, skillCost)) * 5 * 125;
+    
+    // 🌟 펫 관련 계산 삭제, 탈것 점수만 남김 (600점)
     let totalMountPulls = Math.floor(mountOwned / Math.max(1, mountCost)) * (1 + mountExt / 100);
     let mountScore = Math.floor(totalMountPulls) * 600;
-    
-    let totalPetPulls = Math.floor(petOwned / 100) * (1 + petExt / 100);
-    let petScore = Math.floor(totalPetPulls) * 1250;
-    let totalPet = mountScore + petScore;
 
-    let grandTotal = totalForge + totalSkill + totalPet;
+    // 🌟 총점 합산에서 펫 제외
+    let grandTotal = totalForge + totalSkill + mountScore;
 
     return res.status(200).json({
         success: true,
@@ -128,7 +128,7 @@ export default function handler(req, res) {
         prob3: (p3 * 100).toFixed(2) + "%",
         totalForge: totalForge.toLocaleString() + ' 점',
         totalSkill: totalSkill.toLocaleString() + ' 점',
-        totalPet: totalPet.toLocaleString() + ' 점',
+        totalMount: mountScore.toLocaleString() + ' 점', // 펫 대신 탈것 점수로 이름 변경
         grandTotal: grandTotal.toLocaleString() + ' 점'
     });
 }
