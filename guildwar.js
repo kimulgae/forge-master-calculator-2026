@@ -30,7 +30,7 @@ async function calculateGuildWar() {
     const orderData = {
         start_level: val('forge-level'),
         hammers: parseCurrency(document.getElementById('forge-hammers')?.value || '0'),
-        freeHammerRate: val('free-hammer'), // 대장간 비용(forgeCost) 삭제 후 무료 망치 확률 유지
+        freeHammerRate: val('free-hammer'),
         coins: parseCurrency(document.getElementById('coins-owned')?.value || '0'),
         gems: parseCurrency(document.getElementById('gems-owned')?.value || '0'),
         useGems: document.getElementById('use-gems')?.checked ?? true,
@@ -38,9 +38,8 @@ async function calculateGuildWar() {
         skillCost: val('skill-cost'),
         mountOwned: parseCurrency(document.getElementById('mount-owned')?.value || '0'),
         mountCost: val('mount-cost'),
-        mountExt: val('mount-ext'),
-        petOwned: parseCurrency(document.getElementById('pet-owned')?.value || '0'),
-        petExt: val('pet-ext')
+        mountExt: val('mount-ext')
+        // 🌟 펫 관련 데이터 전송 삭제 완료!
     };
 
     try {
@@ -60,7 +59,11 @@ async function calculateGuildWar() {
             document.getElementById('prob-3').value = result.prob3;
             document.getElementById('res-forge').innerText = result.totalForge;
             document.getElementById('res-skill').innerText = result.totalSkill;
-            document.getElementById('res-pet').innerText = result.totalPet;
+            
+            // 🌟 펫 대신 탈것 점수만 표시하도록 변경 (HTML의 id가 res-mount인 곳에 꽂아줌)
+            const mountRes = document.getElementById('res-mount') || document.getElementById('res-pet');
+            if (mountRes) mountRes.innerText = result.totalMount;
+            
             document.getElementById('grand-total').innerText = result.grandTotal;
         }
     } catch (error) {
