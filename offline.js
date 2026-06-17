@@ -111,9 +111,11 @@ async function fetchMyTechTree() {
     if (!currentUser) return;
     const { data } = await supabaseClient.from('user_profiles').select('*').eq('id', currentUser.id).maybeSingle();
     
-    // DB에 저장된 무료 망치 확률을 자동으로 꽂아줌
-    if (data && data.tech_free_hammer !== null) {
-        document.getElementById('freeSummonPercent').value = data.tech_free_hammer;
+    // DB에 저장된 정보들을 오프라인 계산기 빈칸에 자동으로 꽂아줌
+    if (data) {
+        if (data.tech_free_hammer !== null) document.getElementById('freeSummonPercent').value = data.tech_free_hammer;
+        // 🌟 추가됨: 대장간 스피드 테크도 연동!
+        if (data.tech_forge_spd !== null) document.getElementById('forgeSpeedTech').value = data.tech_forge_spd;
     }
     
     // 정보 세팅 후 자동 계산 1회 돌려주기
