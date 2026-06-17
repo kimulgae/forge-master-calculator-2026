@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>대장간 계산기</title>
+    <title>오프라인 & 대장간 계산기</title>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <link rel="stylesheet" href="style.css">
 </head>
@@ -14,9 +14,7 @@
             <span class="nav-title">FMcalc</span>
         </div>
         <div class="top-right-auth">
-            <button id="login-btn-top" onclick="signInWithGoogle()" class="top-login-btn">
-                <span>로그인</span>
-            </button>
+            <button id="login-btn-top" onclick="signInWithGoogle()" class="top-login-btn"><span>로그인</span></button>
             <div id="user-info-top" style="display: none; position: relative;">
                 <img id="profile-img" src="" alt="프로필" onclick="toggleProfileMenu()" class="profile-avatar">
                 <div id="profile-menu-top" class="profile-dropdown">
@@ -42,41 +40,67 @@
         </div>
         <a href="index.html" class="sidebar-link">🚀 승천 계산기</a>
         <a href="guildwar.html" class="sidebar-link">⚔️ 길드전 계산기</a>
-        <a href="pvp.html" class="sidebar-link">🔥 PvP 계산기</a>
-        <a href="offline.html" class="sidebar-link active">💤 오프라인 계산기</a>
-        <a href="settings.html" class="sidebar-link">⚙️ 프로필 설정</a>
+        <a href="offline.html" class="sidebar-link active">💤 오프라인 & 대장간</a>
     </div>
 
     <div class="container">
-        <h1>대장간 계산기</h1>
-        <p class="subtitle">모루 타격 횟수와 오프라인 누적 시간을 최적화하세요.</p>
+        <h1>재화 획득 계산기</h1>
+        <p class="subtitle">내 스펙과 기술트리 레벨을 입력해 정확히 계산하세요.</p>
 
-        <div class="card active" style="display: block; border-top-color: #3498db;">
-            <h2>📊 내 스펙 입력</h2>
+        <div class="card active" id="card-offline" style="display: block; margin-bottom: 20px;">
+            <h2>💤 오프라인 방치 보상</h2>
+            <div class="input-grid">
+                <div class="input-group">
+                    <label>방치할 시간 (시간 단위)</label>
+                    <input type="number" id="off-hours" value="4">
+                </div>
+                <div class="input-group">
+                    <label>1시간 기본 코인 생산량</label>
+                    <input type="text" id="off-base-coin" placeholder="예: 1.5m">
+                </div>
+                <div class="input-group">
+                    <label>1시간 기본 망치 생산량</label>
+                    <input type="text" id="off-base-hammer" placeholder="예: 250">
+                </div>
+                <div class="input-group">
+                    <label>코인 획득 기술 (레벨)</label>
+                    <input type="number" id="off-coin-tech" value="0">
+                </div>
+                <div class="input-group">
+                    <label>망치 획득 기술 (레벨)</label>
+                    <input type="number" id="off-hammer-tech" value="0">
+                </div>
+            </div>
+            <button class="calc-btn" onclick="calcOffline()" style="margin-top: 10px;">💤 방치 보상 계산하기</button>
+            <div class="result-box" id="res-offline"></div>
+        </div>
+
+        <div class="card active" id="card-forge" style="display: block; border-top-color: #e74c3c;">
+            <h2>🔨 대장간 수동 타격</h2>
             <div class="input-grid">
                 <div class="input-group">
                     <label>보유 망치 개수</label>
-                    <input type="number" id="hammerCount" value="0">
+                    <input type="text" id="fg-hammers" placeholder="예: 1.5k">
                 </div>
                 <div class="input-group">
-                    <label>무료 모루질 확률 (%)</label>
-                    <input type="number" id="freeSummonPercent" value="0" step="0.1">
+                    <label>1회 타격 소모 망치 (최대 18)</label>
+                    <input type="number" id="fg-cost" value="1" max="18" min="1">
                 </div>
                 <div class="input-group">
-                    <label>모루 속도 스피드 테크 (0~50)</label>
-                    <input type="number" id="forgeSpeedTech" value="0">
+                    <label>장비 1개 기본 판매가</label>
+                    <input type="text" id="fg-base-sell" placeholder="예: 2.5k">
                 </div>
                 <div class="input-group">
-                    <label>오프라인 누적 테크 (0~25)</label>
-                    <input type="number" id="offlineTech" value="0">
+                    <label>장비 판매가 기술 (레벨)</label>
+                    <input type="number" id="fg-sell-tech" value="0">
+                </div>
+                <div class="input-group">
+                    <label>무료 모루질 기술 (레벨)</label>
+                    <input type="number" id="fg-free-tech" value="0">
                 </div>
             </div>
-            
-            <button class="calc-btn" onclick="fetchCalculation()" style="margin-top: 10px; background-color: #3498db; box-shadow: 0 4px 6px rgba(52, 152, 219, 0.2);">
-                🛠️ 서버 연산하기
-            </button>
-            
-            <div class="result-box" id="res-box" style="border-left-color: #3498db;"></div>
+            <button class="calc-btn" onclick="calcForge()" style="margin-top: 10px; background-color: #e74c3c; box-shadow: 0 4px 6px rgba(231, 76, 60, 0.2);">🔨 모루질 효율 계산하기</button>
+            <div class="result-box" id="res-forge" style="border-left-color: #e74c3c;"></div>
         </div>
     </div>
 
