@@ -1,32 +1,50 @@
 // api/offline.js
 export default function handler(req, res) {
-    if (req.method !== 'POST') {
-        return res.status(405).json({ message: 'POST 요청만 받습니다.' });
+    if (req.method !== 'POST') return res.status(405).json({ message: 'POST 요청만 받습니다.' });
+    if (req.body.type === 'wakeup') return res.status(200).json({ success: true });
+
+    const {
+        calcType, 
+        offHours, baseCoin, baseHammer, offCoinTech, offHammerTech, // 오프라인용
+        hammerCount, strikeCost, baseSellPrice, freeTech, sellTech  // 대장간용
+    } = req.body;
+
+    // ==========================================
+    // 💤 1. 오프라인 방치 보상 계산
+    // ==========================================
+    if (calcType === 'offline') {
+        const totalCoins = (offHours * baseCoin) * (1 + (offCoinTech * 0.01));
+        const totalHammers = (offHours * baseHammer) * (1 + (offHammerTech * 0.01));
+
+        return res.status(200).json({
+            success: true,
+            coins: Math.floor(totalCoins),
+            hammers: Math.floor(totalHammers)
+        });
     }
 
-    // 절전모드 깨우기용 신호
-    if (req.body.type === 'wakeup') {
-        return res.status(200).json({ success: true, message: '서버 기상 완료!' });
+    // ==========================================
+    // 🔨 2. 대장간 수동 타격 계산
+    // ==========================================
+    if (calcType === 'forge') {
+        // FreeForgeChance: 레벨당 1% (0.01)
+        const freeMultiplier = 1 / (1 - (freeTech * 0.01));
+        const effectiveHammers = hammerCount * freeMultiplier;
+        const actualStrikes = Math.floor(effectiveHammers / strikeCost);
+
+        // 시간 계산: 속도 기술 제외, 고정 0.25초
+        const totalTimeSeconds = actualStrikes * 0.25;
+
+        // EquipmentSellPrice: 레벨당 1% (0.01)
+        const totalCoins = actualStrikes * baseSellPrice * (1 + (sellTech * 0.01));
+
+        return res.status(200).json({
+            success: true,
+            actualStrikes: actualStrikes,
+            totalTimeSeconds: totalTimeSeconds,
+            totalCoins: Math.floor(totalCoins)
+        });
     }
 
-    // 1. 프론트엔드에서 보낸 데이터 받기
-    const { hammerCount, freeSummonPercent, forgeSpeedTech, offlineTech } = req.body;
-
-    // 2. 조작 불가능한 핵심 수식 계산 (유저가 작성하신 식 그대로 적용)
-    const freeMultiplier = 1 / (1 - ((freeSummonPercent || 0) / 100));
-    const effectiveHammers = (hammerCount || 0) * freeMultiplier;
-
-    const speedMultiplier = 1 + ((forgeSpeedTech || 0) * 0.02);
-    const baseTimeSeconds = effectiveHammers * 0.25; 
-    const totalTimeSeconds = baseTimeSeconds / speedMultiplier;
-
-    const maxOfflineHours = 4 * (1 + ((offlineTech || 0) * 0.16));
-
-    // 3. 계산된 결과 클라이언트로 응답
-    res.status(200).json({
-        success: true,
-        effectiveHammers: Math.floor(effectiveHammers),
-        totalTimeSeconds: totalTimeSeconds,
-        maxOfflineHours: maxOfflineHours
-    });
+    return res.status(400).json({ success: false, message: '잘못된 계산 요청입니다.' });
 }
