@@ -26,12 +26,12 @@ function formatTime(totalSeconds) {
 // 1. 오프라인 계산 요청
 async function calcOffline() {
     let resBox = document.getElementById('res-offline');
+    resBox.style.display = 'block'; 
     resBox.innerHTML = "계산 중... ⏳";
 
     const payload = {
         calcType: 'offline',
-        secBaseCoin: parseCurrency(document.getElementById('off-sec-coin').value) || 0,     
-        minBaseHammer: parseCurrency(document.getElementById('off-min-hammer').value) || 0, 
+        // 🌟 생산량 입력은 삭제되었으므로 시간과 기술 레벨만 전송
         offHours: parseFloat(document.getElementById('off-hours').value) || 0,
         offCoinTech: parseFloat(document.getElementById('off-coin-tech').value) || 0,
         offHammerTech: parseFloat(document.getElementById('off-hammer-tech').value) || 0
@@ -46,12 +46,13 @@ async function calcOffline() {
                 <div><span style="color:#949ba4;">예상 획득 망치:</span> <strong style="color:#bdc3c7;">${formatKM(data.hammers)} 개</strong></div>
             `;
         }
-    } catch (e) { resBox.innerHTML = "서버 에러 발생"; }
+    } catch (e) { resBox.innerHTML = "<span style='color:#ed4245;'>서버 에러 발생</span>"; }
 }
 
 // 2. 대장간 모루질 계산 요청
 async function calcForge() {
     let resBox = document.getElementById('res-forge');
+    resBox.style.display = 'block';
     resBox.innerHTML = "계산 중... ⏳";
 
     const payload = {
@@ -73,7 +74,7 @@ async function calcForge() {
                 <div><span style="color:#949ba4;">소요 시간:</span> <strong style="color:#e74c3c;">${formatTime(data.totalTimeSeconds)}</strong></div>
             `;
         }
-    } catch (e) { resBox.innerHTML = "서버 에러 발생"; }
+    } catch (e) { resBox.innerHTML = "<span style='color:#ed4245;'>서버 에러 발생</span>"; }
 }
 
 // 공통 기능 (로그인, 메뉴 등)
