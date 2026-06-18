@@ -1,5 +1,6 @@
 export default function handler(req, res) {
     if (req.method !== 'POST') return res.status(405).json({ message: 'POST 요청만 받습니다.' });
+    if (req.body.type === 'wakeup') return res.status(200).json({ success: true });
     
     const { 
         calcType, 
@@ -16,7 +17,11 @@ export default function handler(req, res) {
         // 분당 망치 * 60분 * 시간 + 기술 적용
         const totalHammers = (minBaseHammer * 60 * offHours) * (1 + (offHammerTech * 0.01));
 
-        return res.status(200).json({ success: true, coins: Math.floor(totalCoins), hammers: Math.floor(totalHammers) });
+        return res.status(200).json({ 
+            success: true, 
+            coins: Math.floor(totalCoins), 
+            hammers: Math.floor(totalHammers) 
+        });
     }
 
     // 🔨 대장간 계산 (장비 판매가 자동 계산 적용)
@@ -32,6 +37,14 @@ export default function handler(req, res) {
         const totalTimeSeconds = actualStrikes * 0.25;
         const totalCoins = actualStrikes * baseSellPrice * (1 + (sellTech * 0.01));
 
-        return res.status(200).json({ success: true, actualStrikes, totalTimeSeconds, totalCoins: Math.floor(totalCoins), message: '잘못된 계산 요청입니다. });
+        return res.status(200).json({ 
+            success: true, 
+            actualStrikes, 
+            totalTimeSeconds, 
+            totalCoins: Math.floor(totalCoins) 
+        });
     }
+
+    // 오타 수정 완료
+    return res.status(400).json({ success: false, message: '잘못된 계산 요청입니다.' });
 }
