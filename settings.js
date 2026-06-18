@@ -2,6 +2,7 @@ function toggleSidebar() {
     document.getElementById('sidebar').classList.toggle('show');
     document.getElementById('sidebar-overlay').classList.toggle('show');
 }
+
 function val(id) { 
     const el = document.getElementById(id); 
     if(!el) return 0;
@@ -14,7 +15,6 @@ const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBh
 const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 let currentUser = null;
 
-// 🌟 강력한 연동 시스템 (타이밍 에러 방지)
 supabaseClient.auth.getSession().then(({ data: { session } }) => {
     if (session && session.user) {
         setLoginUI(session.user);
@@ -64,6 +64,16 @@ async function fetchSettings() {
         if (data.tech_off_hammer !== null) document.getElementById('db-off-hammer').value = data.tech_off_hammer;
         if (data.fg_sell_tech !== null) document.getElementById('db-sell-tech').value = data.fg_sell_tech;
         if (data.tech_free_hammer !== null) document.getElementById('db-free-hammer').value = data.tech_free_hammer;
+
+        // 8종 장비 레벨 불러오기
+        if (data.eq_wpn !== null) document.getElementById('db-eq-wpn').value = data.eq_wpn;
+        if (data.eq_helm !== null) document.getElementById('db-eq-helm').value = data.eq_helm;
+        if (data.eq_glove !== null) document.getElementById('db-eq-glove').value = data.eq_glove;
+        if (data.eq_chest !== null) document.getElementById('db-eq-chest').value = data.eq_chest;
+        if (data.eq_neck !== null) document.getElementById('db-eq-neck').value = data.eq_neck;
+        if (data.eq_shoe !== null) document.getElementById('db-eq-shoe').value = data.eq_shoe;
+        if (data.eq_ring !== null) document.getElementById('db-eq-ring').value = data.eq_ring;
+        if (data.eq_belt !== null) document.getElementById('db-eq-belt').value = data.eq_belt;
     }
 }
 
@@ -81,7 +91,17 @@ async function saveTechTree() {
         tech_off_coin: val('db-off-coin'),
         tech_off_hammer: val('db-off-hammer'),
         fg_sell_tech: val('db-sell-tech'),
-        tech_free_hammer: val('db-free-hammer')
+        tech_free_hammer: val('db-free-hammer'),
+
+        // 8종 장비 레벨 저장
+        eq_wpn: val('db-eq-wpn'),
+        eq_helm: val('db-eq-helm'),
+        eq_glove: val('db-eq-glove'),
+        eq_chest: val('db-eq-chest'),
+        eq_neck: val('db-eq-neck'),
+        eq_shoe: val('db-eq-shoe'),
+        eq_ring: val('db-eq-ring'),
+        eq_belt: val('db-eq-belt')
     };
     
     const { error } = await supabaseClient.from('user_profiles').upsert(saveData);
