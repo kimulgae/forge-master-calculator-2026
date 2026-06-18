@@ -23,6 +23,13 @@ function formatTime(totalSeconds) {
     return `${s}초`;
 }
 
+function getVal(id) {
+    const el = document.getElementById(id);
+    if (!el) return 0;
+    if (el.value !== "") return parseFloat(el.value);
+    return parseFloat(el.getAttribute('data-default')) || 0;
+}
+
 // 1. 오프라인 계산 요청
 async function calcOffline() {
     let resBox = document.getElementById('res-offline');
@@ -31,10 +38,9 @@ async function calcOffline() {
 
     const payload = {
         calcType: 'offline',
-        // 🌟 생산량 입력은 삭제되었으므로 시간과 기술 레벨만 전송
-        offHours: parseFloat(document.getElementById('off-hours').value) || 0,
-        offCoinTech: parseFloat(document.getElementById('off-coin-tech').value) || 0,
-        offHammerTech: parseFloat(document.getElementById('off-hammer-tech').value) || 0
+        offHours: getVal('off-hours'),
+        offCoinTech: getVal('off-coin-tech'),
+        offHammerTech: getVal('off-hammer-tech')
     };
 
     try {
@@ -57,11 +63,11 @@ async function calcForge() {
 
     const payload = {
         calcType: 'forge',
-        forgeLevel: parseInt(document.getElementById('fg-level').value) || 1,
+        forgeLevel: getVal('fg-level'),
         hammerCount: parseCurrency(document.getElementById('fg-hammers').value) || 0,
-        strikeCost: Math.min(18, Math.max(1, parseInt(document.getElementById('fg-cost').value) || 1)),
-        sellTech: parseFloat(document.getElementById('fg-sell-tech').value) || 0,
-        freeTech: parseFloat(document.getElementById('fg-free-tech').value) || 0
+        strikeCost: Math.min(18, Math.max(1, getVal('fg-cost'))),
+        sellTech: getVal('fg-sell-tech'),
+        freeTech: getVal('fg-free-tech')
     };
 
     try {
@@ -77,7 +83,6 @@ async function calcForge() {
     } catch (e) { resBox.innerHTML = "<span style='color:#ed4245;'>서버 에러 발생</span>"; }
 }
 
-// 공통 기능 (로그인, 메뉴 등)
 function toggleSidebar() { document.getElementById('sidebar').classList.toggle('show'); document.getElementById('sidebar-overlay').classList.toggle('show'); }
 function toggleProfileMenu() { document.getElementById('profile-menu-top').classList.toggle('show'); }
 
@@ -86,15 +91,43 @@ const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBh
 const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 let currentUser = null;
 
-supabaseClient.auth.onAuthStateChange((event, session) => {
-    currentUser = session?.user;
-    if (currentUser) {
-        document.getElementById('login-btn-top').style.display = 'none';
-        document.getElementById('user-info-top').style.display = 'block';
-        document.getElementById('profile-img').src = currentUser.user_metadata.avatar_url || 'https://cdn-icons-png.flaticon.com/512/149/149071.png';
-        document.getElementById('user-name-top').innerText = currentUser.user_metadata.full_name || '용사';
+// 🌟 강력한 연동 시스템 1: 페이지 로드 시 즉시 확인
+supabaseClient.auth.getSession().then(({ data: { session } }) => {
+    if (session && session.user) {
+        setLoginUI(session.user);
+        fetchMyTechTree();
     }
 });
 
+// 🌟 강력한 연동 시스템 2: 상태 변화 시 확인
+supabaseClient.auth.onAuthStateChange((event, session) => {
+    if (session && session.user) {
+        setLoginUI(session.user);
+        fetchMyTechTree();
+    }
+});
+
+function setLoginUI(user) {
+    currentUser = user;
+    document.getElementById('login-btn-top').style.display = 'none';
+    document.getElementById('user-info-top').style.display = 'block';
+    document.getElementById('profile-img').src = user.user_metadata.avatar_url || 'https://cdn-icons-png.flaticon.com/512/149/149071.png';
+    document.getElementById('user-name-top').innerText = user.user_metadata.full_name || '용사';
+}
+
 async function signInWithGoogle() { await supabaseClient.auth.signInWithOAuth({ provider: 'google', options: { redirectTo: window.location.origin + '/offline.html' } }); }
 async function signOut() { await supabaseClient.auth.signOut(); location.reload(); }
+
+async function fetchMyTechTree() {
+    if (!currentUser) return;
+    const { data } = await supabaseClient.from('user_profiles').select('*').eq('id', currentUser.id).maybeSingle();
+    
+    // 🌟 연동 확인 코드
+    if (data) {
+        if (data.forge_level !== null) document.getElementById('fg-level').value = data.forge_level;
+        if (data.tech_off_coin !== null) document.getElementById('off-coin-tech').value = data.tech_off_coin;
+        if (data.tech_off_hammer !== null) document.getElementById('off-hammer-tech').value = data.tech_off_hammer;
+        if (data.fg_sell_tech !== null) document.getElementById('fg-sell-tech').value = data.fg_sell_tech;
+        if (data.tech_free_hammer !== null) document.getElementById('fg-free-tech').value = data.tech_free_hammer;
+    }
+}
