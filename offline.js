@@ -23,6 +23,7 @@ function formatTime(totalSeconds) {
     return `${s}초`;
 }
 
+// 🌟 빈칸이면 data-default 값을 반환하는 스마트 함수
 function getVal(id) {
     const el = document.getElementById(id);
     if (!el) return 0;
@@ -83,6 +84,7 @@ async function calcForge() {
     } catch (e) { resBox.innerHTML = "<span style='color:#ed4245;'>서버 에러 발생</span>"; }
 }
 
+// 공통 기능
 function toggleSidebar() { document.getElementById('sidebar').classList.toggle('show'); document.getElementById('sidebar-overlay').classList.toggle('show'); }
 function toggleProfileMenu() { document.getElementById('profile-menu-top').classList.toggle('show'); }
 
@@ -91,7 +93,7 @@ const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBh
 const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 let currentUser = null;
 
-// 🌟 강력한 연동 시스템 1: 페이지 로드 시 즉시 확인
+// 🌟 강력한 연동 (타이밍 이슈 해결)
 supabaseClient.auth.getSession().then(({ data: { session } }) => {
     if (session && session.user) {
         setLoginUI(session.user);
@@ -99,7 +101,6 @@ supabaseClient.auth.getSession().then(({ data: { session } }) => {
     }
 });
 
-// 🌟 강력한 연동 시스템 2: 상태 변화 시 확인
 supabaseClient.auth.onAuthStateChange((event, session) => {
     if (session && session.user) {
         setLoginUI(session.user);
@@ -122,7 +123,6 @@ async function fetchMyTechTree() {
     if (!currentUser) return;
     const { data } = await supabaseClient.from('user_profiles').select('*').eq('id', currentUser.id).maybeSingle();
     
-    // 🌟 연동 확인 코드
     if (data) {
         if (data.forge_level !== null) document.getElementById('fg-level').value = data.forge_level;
         if (data.tech_off_coin !== null) document.getElementById('off-coin-tech').value = data.tech_off_coin;
