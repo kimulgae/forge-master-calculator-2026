@@ -52,7 +52,6 @@ async function fetchSettings() {
         if (data.tech_pet_ext !== null) document.getElementById('db-pet-ext').value = data.tech_pet_ext;
         
         // 🌟 신규 연동 데이터 불러오기
-        if (data.forge_level !== null) document.getElementById('db-forge-level').value = data.forge_level;
         if (data.tech_off_coin !== null) document.getElementById('db-off-coin').value = data.tech_off_coin;
         if (data.tech_off_hammer !== null) document.getElementById('db-off-hammer').value = data.tech_off_hammer;
         if (data.fg_sell_tech !== null) document.getElementById('db-sell-tech').value = data.fg_sell_tech;
@@ -72,7 +71,6 @@ async function saveTechTree() {
         tech_pet_ext: val('db-pet-ext'),
         
         // 🌟 신규 연동 데이터 저장
-        forge_level: val('db-forge-level'),
         tech_off_coin: val('db-off-coin'),
         tech_off_hammer: val('db-off-hammer'),
         fg_sell_tech: val('db-sell-tech'),
