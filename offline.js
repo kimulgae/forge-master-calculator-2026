@@ -23,7 +23,6 @@ function formatTime(totalSeconds) {
     return `${s}초`;
 }
 
-// 🌟 빈칸이면 data-default 값을 반환하는 스마트 함수
 function getVal(id) {
     const el = document.getElementById(id);
     if (!el) return 0;
@@ -31,7 +30,9 @@ function getVal(id) {
     return parseFloat(el.getAttribute('data-default')) || 0;
 }
 
-// 1. 오프라인 계산 요청
+// 🌟 서버로 몰래 전달할 8종 장비 레벨업 기술 보관함
+let userEquipTechLevels = { wpn: 0, helm: 0, glove: 0, chest: 0, neck: 0, shoe: 0, ring: 0, belt: 0 };
+
 async function calcOffline() {
     let resBox = document.getElementById('res-offline');
     resBox.style.display = 'block'; 
@@ -56,7 +57,6 @@ async function calcOffline() {
     } catch (e) { resBox.innerHTML = "<span style='color:#ed4245;'>서버 에러 발생</span>"; }
 }
 
-// 2. 대장간 모루질 계산 요청
 async function calcForge() {
     let resBox = document.getElementById('res-forge');
     resBox.style.display = 'block';
@@ -68,7 +68,8 @@ async function calcForge() {
         hammerCount: parseCurrency(document.getElementById('fg-hammers').value) || 0,
         strikeCost: Math.min(18, Math.max(1, getVal('fg-cost'))),
         sellTech: getVal('fg-sell-tech'),
-        freeTech: getVal('fg-free-tech')
+        freeTech: getVal('fg-free-tech'),
+        equipTechLevels: userEquipTechLevels // 🌟 서버로 장비 스탯 몰래 전달!
     };
 
     try {
@@ -84,7 +85,6 @@ async function calcForge() {
     } catch (e) { resBox.innerHTML = "<span style='color:#ed4245;'>서버 에러 발생</span>"; }
 }
 
-// 공통 기능
 function toggleSidebar() { document.getElementById('sidebar').classList.toggle('show'); document.getElementById('sidebar-overlay').classList.toggle('show'); }
 function toggleProfileMenu() { document.getElementById('profile-menu-top').classList.toggle('show'); }
 
@@ -93,7 +93,6 @@ const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBh
 const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 let currentUser = null;
 
-// 🌟 강력한 연동 (타이밍 이슈 해결)
 supabaseClient.auth.getSession().then(({ data: { session } }) => {
     if (session && session.user) {
         setLoginUI(session.user);
@@ -129,5 +128,15 @@ async function fetchMyTechTree() {
         if (data.tech_off_hammer !== null) document.getElementById('off-hammer-tech').value = data.tech_off_hammer;
         if (data.fg_sell_tech !== null) document.getElementById('fg-sell-tech').value = data.fg_sell_tech;
         if (data.tech_free_hammer !== null) document.getElementById('fg-free-tech').value = data.tech_free_hammer;
+
+        // 🌟 DB에서 가져온 8종 장비 데이터를 보관함에 넣기
+        if (data.eq_wpn !== null) userEquipTechLevels.wpn = data.eq_wpn;
+        if (data.eq_helm !== null) userEquipTechLevels.helm = data.eq_helm;
+        if (data.eq_glove !== null) userEquipTechLevels.glove = data.eq_glove;
+        if (data.eq_chest !== null) userEquipTechLevels.chest = data.eq_chest;
+        if (data.eq_neck !== null) userEquipTechLevels.neck = data.eq_neck;
+        if (data.eq_shoe !== null) userEquipTechLevels.shoe = data.eq_shoe;
+        if (data.eq_ring !== null) userEquipTechLevels.ring = data.eq_ring;
+        if (data.eq_belt !== null) userEquipTechLevels.belt = data.eq_belt;
     }
 }
