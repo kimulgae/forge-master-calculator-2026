@@ -53,15 +53,15 @@
             <div class="input-grid">
                 <div class="input-group">
                     <label>코인 획득 기술 (레벨)</label>
-                    <input type="number" id="off-coin-tech" value="0">
+                    <input type="number" id="off-coin-tech" placeholder="0" data-default="0" onfocus="this.placeholder=''" onblur="this.placeholder='0'">
                 </div>
                 <div class="input-group">
                     <label>망치 획득 기술 (레벨)</label>
-                    <input type="number" id="off-hammer-tech" value="0">
+                    <input type="number" id="off-hammer-tech" placeholder="0" data-default="0" onfocus="this.placeholder=''" onblur="this.placeholder='0'">
                 </div>
                 <div class="input-group full-width">
                     <label>방치할 시간 (시간 단위)</label>
-                    <input type="number" id="off-hours" value="4">
+                    <input type="number" id="off-hours" placeholder="4" data-default="4" onfocus="this.placeholder=''" onblur="this.placeholder='4'">
                 </div>
             </div>
             <button class="calc-btn" onclick="calcOffline()" style="margin-top: 10px;">💤 방치 보상 계산하기</button>
@@ -74,19 +74,19 @@
             <div class="input-grid">
                 <div class="input-group">
                     <label>대장간 레벨 (1~35)</label>
-                    <input type="number" id="fg-level" value="1" min="1" max="35">
+                    <input type="number" id="fg-level" min="1" max="35" placeholder="1" data-default="1" onfocus="this.placeholder=''" onblur="this.placeholder='1'">
                 </div>
                 <div class="input-group">
                     <label>1회 타격 소모 망치 (최대 18)</label>
-                    <input type="number" id="fg-cost" value="1" max="18" min="1">
+                    <input type="number" id="fg-cost" max="18" min="1" placeholder="1" data-default="1" onfocus="this.placeholder=''" onblur="this.placeholder='1'">
                 </div>
                 <div class="input-group">
                     <label>장비 판매가</label>
-                    <input type="number" id="fg-sell-tech" value="0">
+                    <input type="number" id="fg-sell-tech" placeholder="0" data-default="0" onfocus="this.placeholder=''" onblur="this.placeholder='0'">
                 </div>
                 <div class="input-group">
                     <label>무료 망치 확률</label>
-                    <input type="number" id="fg-free-tech" value="0">
+                    <input type="number" id="fg-free-tech" placeholder="0" data-default="0" onfocus="this.placeholder=''" onblur="this.placeholder='0'">
                 </div>
                 <div class="input-group full-width">
                     <label>보유 망치 개수</label>
