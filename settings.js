@@ -2,7 +2,14 @@ function toggleSidebar() {
     document.getElementById('sidebar').classList.toggle('show');
     document.getElementById('sidebar-overlay').classList.toggle('show');
 }
-function val(id) { const el = document.getElementById(id); return el ? (parseFloat(el.value) || 0) : 0; }
+
+// 🌟 빈칸일 때 스마트 Placeholder(data-default) 값으로 인식하도록 로직 수정
+function val(id) { 
+    const el = document.getElementById(id); 
+    if(!el) return 0;
+    if(el.value !== "") return parseFloat(el.value);
+    return parseFloat(el.getAttribute('data-default')) || 0;
+}
 
 const SUPABASE_URL = 'https://exoghsmbjaehcsjakrij.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImV4b2doc21iamFlaGNzamFrcmlqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODExNzc2OTUsImV4cCI6MjA5Njc1MzY5NX0.Kq8VJ_QDQkN0xOWhdJyEC3hfwaHyOs_LPUHcQrIbb_s';
@@ -41,11 +48,14 @@ async function fetchSettings() {
         if (data.tech_forge_spd !== null) document.getElementById('db-forge-spd').value = data.tech_forge_spd;
         if (data.tech_skill_cost !== null) document.getElementById('db-skill-cost').value = data.tech_skill_cost;
         if (data.tech_mount_cost !== null) document.getElementById('db-mount-cost').value = data.tech_mount_cost;
-        
-        // 🌟 수정됨: 분리된 추탈 데이터 불러오기
         if (data.tech_mount_ext !== null) document.getElementById('db-mount-ext').value = data.tech_mount_ext;
         if (data.tech_pet_ext !== null) document.getElementById('db-pet-ext').value = data.tech_pet_ext;
         
+        // 🌟 신규 연동 데이터 불러오기
+        if (data.forge_level !== null) document.getElementById('db-forge-level').value = data.forge_level;
+        if (data.tech_off_coin !== null) document.getElementById('db-off-coin').value = data.tech_off_coin;
+        if (data.tech_off_hammer !== null) document.getElementById('db-off-hammer').value = data.tech_off_hammer;
+        if (data.fg_sell_tech !== null) document.getElementById('db-sell-tech').value = data.fg_sell_tech;
         if (data.tech_free_hammer !== null) document.getElementById('db-free-hammer').value = data.tech_free_hammer;
     }
 }
@@ -58,14 +68,18 @@ async function saveTechTree() {
         tech_forge_spd: val('db-forge-spd'),
         tech_skill_cost: val('db-skill-cost'), 
         tech_mount_cost: val('db-mount-cost'),
-        
-        // 🌟 수정됨: 분리된 추탈 데이터 저장 & 에러 나던 updated_at 항목 삭제!
         tech_mount_ext: val('db-mount-ext'), 
         tech_pet_ext: val('db-pet-ext'),
+        
+        // 🌟 신규 연동 데이터 저장
+        forge_level: val('db-forge-level'),
+        tech_off_coin: val('db-off-coin'),
+        tech_off_hammer: val('db-off-hammer'),
+        fg_sell_tech: val('db-sell-tech'),
         tech_free_hammer: val('db-free-hammer')
     };
     
     const { error } = await supabaseClient.from('user_profiles').upsert(saveData);
     if (error) alert("저장 실패: " + error.message);
-    else alert("기술트리가 완벽하게 저장되었습니다! 🚀\n이제 계산기 페이지로 이동하면 자동 적용됩니다.");
+    else alert("프로필 스펙이 완벽하게 저장되었습니다! 🚀\n이제 계산기 페이지로 이동하면 자동 적용됩니다.");
 }
