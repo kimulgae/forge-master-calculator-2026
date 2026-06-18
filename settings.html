@@ -50,19 +50,31 @@
         <p class="subtitle">계산기에 자동으로 적용될 나의 기본 스펙을 저장해두세요.</p>
 
         <div class="card active" style="display: block;">
-            <h2>⚙️ 내 기술트리 및 기초스탯</h2>
-           <div class="input-grid">
-            <div class="input-group"><label>대장간 비용감소(%)</label><input type="number" id="db-forge-dis"></div>
-            <div class="input-group"><label>대장간 시간감소(%)</label><input type="number" id="db-forge-spd"></div>
-            <div class="input-group"><label>스킬 소환비용</label><input type="number" id="db-skill-cost"></div>
-            <div class="input-group"><label>탈것 소환비용</label><input type="number" id="db-mount-cost"></div>
             
-            <div class="input-group"><label>탈것 추탈(%)</label><input type="number" id="db-mount-ext"></div>
-            <div class="input-group"><label>펫(알) 추탈(%)</label><input type="number" id="db-pet-ext"></div>
-            
-            <div class="input-group"><label>무료 망치 확률(%)</label><input type="number" id="db-free-hammer"></div>
-        </div>
-            <button onclick="saveTechTree()" class="calc-btn" style="margin-top: 15px;">💾 저장 및 연동하기</button>
+            <h3 style="margin-top: 10px; border-bottom: 1px solid #3f4147; padding-bottom: 10px; color: #e74c3c;">🔨 대장간</h3>
+            <div class="input-grid">
+                <div class="input-group"><label>오프라인 코인 획득 (레벨)</label><input type="number" id="db-off-coin" placeholder="0" data-default="0" onfocus="this.placeholder=''" onblur="this.placeholder='0'"></div>
+                <div class="input-group"><label>오프라인 망치 획득 (레벨)</label><input type="number" id="db-off-hammer" placeholder="0" data-default="0" onfocus="this.placeholder=''" onblur="this.placeholder='0'"></div>
+                <div class="input-group"><label>대장간 시간감소(%)</label><input type="number" id="db-forge-spd" placeholder="0" data-default="0" onfocus="this.placeholder=''" onblur="this.placeholder='0'"></div>
+                <div class="input-group"><label>대장간 비용감소(%)</label><input type="number" id="db-forge-dis" placeholder="0" data-default="0" onfocus="this.placeholder=''" onblur="this.placeholder='0'"></div>
+            </div>
+
+            <h3 style="margin-top: 30px; border-bottom: 1px solid #3f4147; padding-bottom: 10px; color: #2ecc71;">🐾 스킬, 펫 & 기술</h3>
+            <div class="input-grid">
+                <div class="input-group"><label>스킬 소환비용</label><input type="number" id="db-skill-cost" placeholder="150" data-default="150" onfocus="this.placeholder=''" onblur="this.placeholder='150'"></div>
+                <div class="input-group"><label>탈것 소환비용</label><input type="number" id="db-mount-cost" placeholder="50" data-default="50" onfocus="this.placeholder=''" onblur="this.placeholder='50'"></div>
+                <div class="input-group"><label>펫(알) 추탈(%)</label><input type="number" id="db-pet-ext" placeholder="0" data-default="0" onfocus="this.placeholder=''" onblur="this.placeholder='0'"></div>
+                <div class="input-group"><label>탈것 추탈(%)</label><input type="number" id="db-mount-ext" placeholder="0" data-default="0" onfocus="this.placeholder=''" onblur="this.placeholder='0'"></div>
+            </div>
+
+            <h3 style="margin-top: 30px; border-bottom: 1px solid #3f4147; padding-bottom: 10px; color: #f1c40f;">💪 힘</h3>
+            <div class="input-grid">
+                <div class="input-group"><label>대장간 레벨</label><input type="number" id="db-forge-level" placeholder="1" data-default="1" onfocus="this.placeholder=''" onblur="this.placeholder='1'"></div>
+                <div class="input-group"><label>장비 판매가 기술 (레벨)</label><input type="number" id="db-sell-tech" placeholder="0" data-default="0" onfocus="this.placeholder=''" onblur="this.placeholder='0'"></div>
+                <div class="input-group full-width"><label>무료 망치 확률 (%)</label><input type="number" id="db-free-hammer" placeholder="0" data-default="0" onfocus="this.placeholder=''" onblur="this.placeholder='0'"></div>
+            </div>
+
+            <button onclick="saveTechTree()" class="calc-btn" style="margin-top: 25px;">💾 저장 및 연동하기</button>
         </div>
     </div>
 
