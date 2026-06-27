@@ -3,6 +3,7 @@ function toggleSidebar() {
     document.getElementById('sidebar').classList.toggle('show');
     document.getElementById('sidebar-overlay').classList.toggle('show');
 }
+
 function parseCurrency(value) {
     if (!value) return 0;
     let str = value.toString().toLowerCase().replace(/,/g, '').trim();
@@ -19,7 +20,7 @@ function formatInput(input) {
     if (!isNaN(value) && value !== '') input.value = Number(value).toLocaleString('ko-KR');
 }
 
-// 🌟 수정: HTML에서 지워진 칸이 있어도 에러 없이 0으로 넘어가도록 안전 장치 추가
+// HTML에서 지워진 칸이 있어도 에러 없이 0으로 넘어가도록 안전 장치
 function val(id) { 
     const el = document.getElementById(id);
     return el ? (parseFloat(el.value) || 0) : 0; 
@@ -39,7 +40,6 @@ async function calculateGuildWar() {
         mountOwned: parseCurrency(document.getElementById('mount-owned')?.value || '0'),
         mountCost: val('mount-cost'),
         mountExt: val('mount-ext')
-        // 🌟 펫 관련 데이터 전송 삭제 완료!
     };
 
     try {
@@ -60,11 +60,25 @@ async function calculateGuildWar() {
             document.getElementById('res-forge').innerText = result.totalForge;
             document.getElementById('res-skill').innerText = result.totalSkill;
             
-            // 🌟 펫 대신 탈것 점수만 표시하도록 변경 (HTML의 id가 res-mount인 곳에 꽂아줌)
-            const mountRes = document.getElementById('res-mount') || document.getElementById('res-pet');
-            if (mountRes) mountRes.innerText = result.totalMount;
+            // 🌟 [핵심] 탈것 점수 가로채기 및 x2 합치기 로직
+            // 1. 서버가 준 문자열(콤마 포함)을 진짜 숫자로 변환
+            let numForge = Number(result.totalForge.toString().replace(/,/g, '')) || 0;
+            let numSkill = Number(result.totalSkill.toString().replace(/,/g, '')) || 0;
+            let numMount = Number(result.totalMount.toString().replace(/,/g, '')) || 0;
             
-            document.getElementById('grand-total').innerText = result.grandTotal;
+            // 2. 체크박스가 체크되어 있다면 탈것 점수 2배!
+            const isCombine = document.getElementById('mount-combine')?.checked;
+            if (isCombine) {
+                numMount *= 2; 
+            }
+            
+            // 3. 2배가 적용된(혹은 그대로인) 탈것 점수를 화면에 출력
+            const mountRes = document.getElementById('res-mount') || document.getElementById('res-pet');
+            if (mountRes) mountRes.innerText = numMount.toLocaleString('ko-KR');
+            
+            // 4. 합산 점수(Grand Total)도 새롭게 계산해서 출력
+            let finalGrandTotal = numForge + numSkill + numMount;
+            document.getElementById('grand-total').innerText = finalGrandTotal.toLocaleString('ko-KR');
         }
     } catch (error) {
         const statusEl = document.getElementById('res-forge-status');
@@ -72,10 +86,17 @@ async function calculateGuildWar() {
     }
 }
 
-// 엔터키 및 초기 연산 바인딩
+// 🌟 엔터키 및 초기 연산 바인딩 (이벤트 리스너 추가)
 window.onload = () => {
     calculateGuildWar();
+    
+    // 탈것 합치기 체크박스를 누르면 즉각적으로 다시 계산되도록 설정
+    const combineCb = document.getElementById('mount-combine');
+    if(combineCb) {
+        combineCb.addEventListener('change', calculateGuildWar);
+    }
 };
+
 // ============================================
 // 구글 로그인 및 기술트리 DB (Supabase) 연동 (길드전용)
 // ============================================
@@ -139,7 +160,6 @@ function closeTechModal() {
     document.getElementById('tech-modal-overlay').classList.remove('show');
 }
 
-// 🌟 길드전(guildwar.js) 파일용 깔끔한 정답 코드
 async function fetchMyTechTree() {
     if (!currentUser) return;
     const { data } = await supabaseClient.from('user_profiles').select('*').eq('id', currentUser.id).maybeSingle();
@@ -149,34 +169,14 @@ async function fetchMyTechTree() {
         if (document.getElementById('skill-cost') && data.tech_skill_cost !== null) document.getElementById('skill-cost').value = data.tech_skill_cost;
         if (document.getElementById('mount-cost') && data.tech_mount_cost !== null) document.getElementById('mount-cost').value = data.tech_mount_cost;
         
-        // 🌟 탈것과 펫 추탈 분리 연동
         if (document.getElementById('mount-ext') && data.tech_mount_ext !== null) document.getElementById('mount-ext').value = data.tech_mount_ext;
         if (document.getElementById('pet-ext') && data.tech_pet_ext !== null) document.getElementById('pet-ext').value = data.tech_pet_ext;
         
         if(typeof calculateGuildWar === 'function') calculateGuildWar();
     }
 }
+
 async function saveTechTree() {
     if (!currentUser) return alert("로그인이 필요합니다.");
     
-    const saveData = {
-        id: currentUser.id,
-        tech_forge_dis: val('db-forge-dis'),
-        tech_forge_spd: val('db-forge-spd'),
-        tech_skill_cost: val('db-skill-cost'),
-        tech_mount_cost: val('db-mount-cost'),
-        tech_ext_rate: val('db-ext-rate'),
-        tech_free_hammer: val('db-free-hammer'),
-        updated_at: new Date()
-    };
-
-    const { error } = await supabaseClient.from('user_profiles').upsert(saveData);
-    
-    if (error) {
-        alert("저장 실패: " + error.message);
-    } else {
-        alert("기술트리가 완벽하게 연동되었습니다! 🚀");
-        fetchMyTechTree(); 
-        closeTechModal();
-    }
-}
+    //
