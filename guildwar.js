@@ -59,12 +59,24 @@ async function calculateGuildWar() {
             document.getElementById('prob-3').value = result.prob3;
             document.getElementById('res-forge').innerText = result.totalForge;
             document.getElementById('res-skill').innerText = result.totalSkill;
+
+            // 🌟 2배 합치기 안전 로직 (기존 점수 오염 방어)
+            let finalMountScore = result.totalMount;
+            let finalGrandTotal = result.grandTotal;
+
+            const isCombine = document.getElementById('mount-combine')?.checked;
+            if (isCombine) {
+                // 천단위 콤마가 있어도 안전하게 숫자로 변환해서 2배 계산
+                let numForge = parseInt(String(result.totalForge).replace(/[^0-9-]/g, ''), 10) || 0;
+                let numSkill = parseInt(String(result.totalSkill).replace(/[^0-9-]/g, ''), 10) || 0;
+                let numMount = parseInt(String(result.totalMount).replace(/[^0-9-]/g, ''), 10) || 0;
+                
+                finalMountScore = (numMount * 2).toLocaleString('ko-KR');
+                finalGrandTotal = (numForge + numSkill + (numMount * 2)).toLocaleString('ko-KR');
+            }
             
-            // 🌟 펫 대신 탈것 점수만 표시하도록 변경 (HTML의 id가 res-mount인 곳에 꽂아줌)
             const mountRes = document.getElementById('res-mount') || document.getElementById('res-pet');
-            if (mountRes) mountRes.innerText = result.totalMount;
-            
-            document.getElementById('grand-total').innerText = result.grandTotal;
+            if (mountRes) mountRes.innerText = finalMountScore;
         }
     } catch (error) {
         const statusEl = document.getElementById('res-forge-status');
