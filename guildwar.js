@@ -20,7 +20,7 @@ function formatInput(input) {
     if (!isNaN(value) && value !== '') input.value = Number(value).toLocaleString('ko-KR');
 }
 
-// HTML에서 지워진 칸이 있어도 에러 없이 0으로 넘어가도록 안전 장치
+// HTML에서 지워진 칸이 있어도 에러 없이 0으로 넘어가도록 안전 장치 추가
 function val(id) { 
     const el = document.getElementById(id);
     return el ? (parseFloat(el.value) || 0) : 0; 
@@ -52,33 +52,33 @@ async function calculateGuildWar() {
         const result = await response.json();
 
         if (result.success) {
-            document.getElementById('res-forge-status').innerHTML = result.statusText;
-            document.getElementById('res-forge-spent').innerHTML = result.spentText;
-            document.getElementById('prob-1').value = result.prob1;
-            document.getElementById('prob-2').value = result.prob2;
-            document.getElementById('prob-3').value = result.prob3;
-            document.getElementById('res-forge').innerText = result.totalForge;
-            document.getElementById('res-skill').innerText = result.totalSkill;
+            if (document.getElementById('res-forge-status')) document.getElementById('res-forge-status').innerHTML = result.statusText;
+            if (document.getElementById('res-forge-spent')) document.getElementById('res-forge-spent').innerHTML = result.spentText;
+            if (document.getElementById('prob-1')) document.getElementById('prob-1').value = result.prob1;
+            if (document.getElementById('prob-2')) document.getElementById('prob-2').value = result.prob2;
+            if (document.getElementById('prob-3')) document.getElementById('prob-3').value = result.prob3;
+            if (document.getElementById('res-forge')) document.getElementById('res-forge').innerText = result.totalForge;
+            if (document.getElementById('res-skill')) document.getElementById('res-skill').innerText = result.totalSkill;
             
-            // 🌟 [핵심] 탈것 점수 가로채기 및 x2 합치기 로직
-            // 1. 서버가 준 문자열(콤마 포함)을 진짜 숫자로 변환
-            let numForge = Number(result.totalForge.toString().replace(/,/g, '')) || 0;
-            let numSkill = Number(result.totalSkill.toString().replace(/,/g, '')) || 0;
-            let numMount = Number(result.totalMount.toString().replace(/,/g, '')) || 0;
-            
-            // 2. 체크박스가 체크되어 있다면 탈것 점수 2배!
+            // 🌟 2배 합치기 안전 로직 (기존 점수 오염 방어)
+            let finalMountScore = result.totalMount;
+            let finalGrandTotal = result.grandTotal;
+
             const isCombine = document.getElementById('mount-combine')?.checked;
             if (isCombine) {
-                numMount *= 2; 
+                // 천단위 콤마가 있어도 안전하게 숫자로 변환해서 2배 계산
+                let numForge = parseInt(String(result.totalForge).replace(/[^0-9-]/g, ''), 10) || 0;
+                let numSkill = parseInt(String(result.totalSkill).replace(/[^0-9-]/g, ''), 10) || 0;
+                let numMount = parseInt(String(result.totalMount).replace(/[^0-9-]/g, ''), 10) || 0;
+                
+                finalMountScore = (numMount * 2).toLocaleString('ko-KR');
+                finalGrandTotal = (numForge + numSkill + (numMount * 2)).toLocaleString('ko-KR');
             }
             
-            // 3. 2배가 적용된(혹은 그대로인) 탈것 점수를 화면에 출력
             const mountRes = document.getElementById('res-mount') || document.getElementById('res-pet');
-            if (mountRes) mountRes.innerText = numMount.toLocaleString('ko-KR');
+            if (mountRes) mountRes.innerText = finalMountScore;
             
-            // 4. 합산 점수(Grand Total)도 새롭게 계산해서 출력
-            let finalGrandTotal = numForge + numSkill + numMount;
-            document.getElementById('grand-total').innerText = finalGrandTotal.toLocaleString('ko-KR');
+            if (document.getElementById('grand-total')) document.getElementById('grand-total').innerText = finalGrandTotal;
         }
     } catch (error) {
         const statusEl = document.getElementById('res-forge-status');
@@ -86,97 +86,8 @@ async function calculateGuildWar() {
     }
 }
 
-// 🌟 엔터키 및 초기 연산 바인딩 (이벤트 리스너 추가)
+// 엔터키 및 초기 연산 바인딩
 window.onload = () => {
     calculateGuildWar();
-    
-    // 탈것 합치기 체크박스를 누르면 즉각적으로 다시 계산되도록 설정
-    const combineCb = document.getElementById('mount-combine');
-    if(combineCb) {
-        combineCb.addEventListener('change', calculateGuildWar);
-    }
-};
-
-// ============================================
-// 구글 로그인 및 기술트리 DB (Supabase) 연동 (길드전용)
-// ============================================
-const SUPABASE_URL = 'https://exoghsmbjaehcsjakrij.supabase.co';
-const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImV4b2doc21iamFlaGNzamFrcmlqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODExNzc2OTUsImV4cCI6MjA5Njc1MzY5NX0.Kq8VJ_QDQkN0xOWhdJyEC3hfwaHyOs_LPUHcQrIbb_s';
-const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-let currentUser = null;
-
-supabaseClient.auth.onAuthStateChange((event, session) => {
-    const user = session?.user;
-    currentUser = user;
-    
-    if (user) {
-        document.getElementById('login-btn-top').style.display = 'none';
-        document.getElementById('user-info-top').style.display = 'block';
-        
-        const avatarUrl = user.user_metadata.avatar_url || 'https://cdn-icons-png.flaticon.com/512/149/149071.png';
-        document.getElementById('profile-img').src = avatarUrl;
-        document.getElementById('user-name-top').innerText = user.user_metadata.full_name || '용사';
-        
-        fetchMyTechTree(); 
-    } else {
-        document.getElementById('login-btn-top').style.display = 'flex';
-        document.getElementById('user-info-top').style.display = 'none';
-    }
-});
-
-function toggleProfileMenu() {
-    document.getElementById('profile-menu-top').classList.toggle('show');
-}
-
-window.addEventListener('click', function(e) {
-    const userInfoTop = document.getElementById('user-info-top');
-    const profileMenu = document.getElementById('profile-menu-top');
-    if (userInfoTop && !userInfoTop.contains(e.target)) {
-        if(profileMenu) profileMenu.classList.remove('show');
-    }
-});
-
-async function signInWithGoogle() {
-    await supabaseClient.auth.signInWithOAuth({
-        provider: 'google',
-        options: { redirectTo: window.location.origin }
-    });
-}
-
-async function signOut() {
-    await supabaseClient.auth.signOut();
-    alert("로그아웃 되었습니다.");
-    location.reload();
-}
-
-function openTechModal() {
-    document.getElementById('tech-modal').classList.add('show');
-    document.getElementById('tech-modal-overlay').classList.add('show');
-    document.getElementById('profile-menu-top').classList.remove('show'); 
-}
-
-function closeTechModal() {
-    document.getElementById('tech-modal').classList.remove('show');
-    document.getElementById('tech-modal-overlay').classList.remove('show');
-}
-
-async function fetchMyTechTree() {
-    if (!currentUser) return;
-    const { data } = await supabaseClient.from('user_profiles').select('*').eq('id', currentUser.id).maybeSingle();
-    
-    if (data) {
-        if (document.getElementById('free-hammer') && data.tech_free_hammer !== null) document.getElementById('free-hammer').value = data.tech_free_hammer;
-        if (document.getElementById('skill-cost') && data.tech_skill_cost !== null) document.getElementById('skill-cost').value = data.tech_skill_cost;
-        if (document.getElementById('mount-cost') && data.tech_mount_cost !== null) document.getElementById('mount-cost').value = data.tech_mount_cost;
-        
-        if (document.getElementById('mount-ext') && data.tech_mount_ext !== null) document.getElementById('mount-ext').value = data.tech_mount_ext;
-        if (document.getElementById('pet-ext') && data.tech_pet_ext !== null) document.getElementById('pet-ext').value = data.tech_pet_ext;
-        
-        if(typeof calculateGuildWar === 'function') calculateGuildWar();
-    }
-}
-
-async function saveTechTree() {
-    if (!currentUser) return alert("로그인이 필요합니다.");
     
     //
