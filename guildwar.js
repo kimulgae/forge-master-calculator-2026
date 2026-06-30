@@ -14,9 +14,34 @@ function parseCurrency(value) {
 }
 
 function formatInput(input) {
-    let value = input.value.replace(/,/g, '');
-    if (value.toLowerCase().includes('k') || value.toLowerCase().includes('m')) return;
-    if (!isNaN(value) && value !== '') input.value = Number(value).toLocaleString('ko-KR');
+    // 1. 기존 콤마 제거 및 숫자, 소수점(.), k, m 이외의 문자 방지
+    let value = input.value.replace(/,/g, '').replace(/[^0-9.kmKM]/g, '');
+    
+    // 2. k나 m이 포함되어 있으면 계산을 멈추고 그대로 표시 (예: 1.5k)
+    if (value.toLowerCase().includes('k') || value.toLowerCase().includes('m')) {
+        input.value = value;
+        return;
+    }
+
+    // 3. 완전히 지워졌을 때는 빈칸 유지
+    if (value === '') {
+        input.value = '';
+        return;
+    }
+
+    // 4. 대망의 소수점 처리 로직! (소수점이 있는 경우와 없는 경우 나누기)
+    if (value.includes('.')) {
+        let parts = value.split('.');
+        // 정수 부분에만 천 단위 콤마 적용
+        let integerPart = parts[0] ? Number(parts[0]).toLocaleString('ko-KR') : '0';
+        // 소수점 이하 부분은 건드리지 않고 그대로 갖다 붙임
+        let decimalPart = parts.length > 1 ? '.' + parts[1] : ''; 
+        
+        input.value = integerPart + decimalPart;
+    } else {
+        // 소수점이 없는 순수 정수일 경우 기존처럼 처리
+        input.value = Number(value).toLocaleString('ko-KR');
+    }
 }
 
 // 🌟 수정: HTML에서 지워진 칸이 있어도 에러 없이 0으로 넘어가도록 안전 장치 추가
