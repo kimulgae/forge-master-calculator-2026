@@ -77,13 +77,15 @@ async function calculateGuildWar() {
         const result = await response.json();
 
         if (result.success) {
-            document.getElementById('res-forge-status').innerHTML = result.statusText;
-            document.getElementById('res-forge-spent').innerHTML = result.spentText;
-            document.getElementById('prob-1').value = result.prob1;
-            document.getElementById('prob-2').value = result.prob2;
-            document.getElementById('prob-3').value = result.prob3;
-            document.getElementById('res-forge').innerText = result.totalForge;
-            document.getElementById('res-skill').innerText = result.totalSkill;
+            if (document.getElementById('res-forge-status')) document.getElementById('res-forge-status').innerHTML = result.statusText;
+            if (document.getElementById('res-forge-spent')) document.getElementById('res-forge-spent').innerHTML = result.spentText;
+            
+            if (document.getElementById('prob-1')) document.getElementById('prob-1').value = result.prob1;
+            if (document.getElementById('prob-2')) document.getElementById('prob-2').value = result.prob2;
+            if (document.getElementById('prob-3')) document.getElementById('prob-3').value = result.prob3;
+            
+            if (document.getElementById('res-forge')) document.getElementById('res-forge').innerText = result.totalForge;
+            if (document.getElementById('res-skill')) document.getElementById('res-skill').innerText = result.totalSkill;
 
             // 🌟 2배 합치기 안전 로직 (기존 점수 오염 방어)
             let finalMountScore = result.totalMount;
@@ -100,15 +102,19 @@ async function calculateGuildWar() {
                 finalGrandTotal = (numForge + numSkill + (numMount * 2)).toLocaleString('ko-KR');
             }
             
+            // 탈것 개별 점수 화면에 출력
             const mountRes = document.getElementById('res-mount') || document.getElementById('res-pet');
             if (mountRes) mountRes.innerText = finalMountScore;
+
+            // 🚨🚨🚨 누락되었던 핵심 코드 추가! (화면 맨 밑 최종 점수 출력) 🚨🚨🚨
+            const grandTotalRes = document.getElementById('grand-total');
+            if (grandTotalRes) grandTotalRes.innerText = finalGrandTotal;
         }
     } catch (error) {
         const statusEl = document.getElementById('res-forge-status');
         if(statusEl) statusEl.innerText = "서버 통신 에러가 발생했습니다.";
     }
 }
-
 // 엔터키 및 초기 연산 바인딩
 window.onload = () => {
     calculateGuildWar();
