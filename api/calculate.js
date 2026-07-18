@@ -25,20 +25,18 @@ function extractStatsFromText(fullText) {
     totalHealth: 0,
     attackSpeed: 0,
     critRate: 0,
-    critDamage: 1, // 기본값 1배 (100%)
+    critDamage: 1, 
     doubleChance: 0,
     blockChance: 0,
     lifeSteal: 0
   };
 
-  // 1. 총 피해 & 총 체력 추출 (예: "103m 총 피해", "8.42b 총 체력")
   const dmgMatch = fullText.match(/([\d.]+[kmbKMB]?)\s*총\s*피해/);
   if (dmgMatch) stats.totalDamage = parseUnitNumber(dmgMatch[1]);
 
   const hpMatch = fullText.match(/([\d.]+[kmbKMB]?)\s*총\s*체력/);
   if (hpMatch) stats.totalHealth = parseUnitNumber(hpMatch[1]);
 
-  // 2. 퍼센트(%) 기반 상세 스탯 추출
   const parsePercent = (regex) => {
     const match = fullText.match(regex);
     return match ? parseFloat(match[1]) / 100 : 0;
@@ -60,12 +58,10 @@ function extractStatsFromText(fullText) {
 async function performBatchedOCR(imagesArray, apiKey) {
   if (!apiKey) throw new Error("구글 비전 API 키가 설정되지 않았습니다.");
 
-  // Vercel에서 프론트로 받은 [{ "1_상단": "base64...", ... }, ...] 형태를 분석
   const requests = [];
   for (const imageGroup of imagesArray) {
     for (const [key, base64String] of Object.entries(imageGroup)) {
       if (!base64String) continue;
-      // "data:image/jpeg;base64," 접두사 제거
       const base64Data = base64String.replace(/^data:image\/(png|jpeg);base64,/, "");
       
       requests.push({
@@ -89,7 +85,6 @@ async function performBatchedOCR(imagesArray, apiKey) {
     throw new Error(`Google Vision API 에러: ${result.error.message}`);
   }
 
-  // 모든 조각 이미지에서 추출된 텍스트를 하나의 거대한 문자열로 합침
   let combinedText = "";
   if (result.responses) {
     result.responses.forEach(res => {
@@ -165,27 +160,38 @@ function runMonteCarloSimulation(myStats, oppStats, iterations = 1000) {
 }
 
 /**
- * Vercel Serverless API 핸들러 (CommonJS 방식)
+ * Vercel Serverless API 핸들러 (CORS 허용 추가)
  */
 module.exports = async (req, res) => {
+  // 🌟 [핵심] CORS 허용 설정 추가 🌟
+  res.setHeader('Access-Control-Allow-Credentials', true);
+  res.setHeader('Access-Control-Allow-Origin', '*'); // 모든 도메인 접속 허용 (보안을 높이려면 'https://www.fmcalc.co.kr'로 변경)
+  res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS,PATCH,DELETE,POST,PUT');
+  res.setHeader(
+    'Access-Control-Allow-Headers',
+    'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version'
+  );
+
+  // OPTIONS 요청(Preflight)이 오면 정상 통과 처리
+  if (req.method === 'OPTIONS') {
+    res.status(200).end();
+    return;
+  }
+
   if (req.method !== 'POST') return res.status(405).json({ error: 'POST 요청만 지원합니다.' });
 
   try {
     const { myImages, opponentImages } = req.body;
     if (!myImages || !opponentImages) return res.status(400).json({ error: '이미지 데이터가 부족합니다.' });
 
-    // 환경변수에서 구글 비전 API 키 가져오기
     const GOOGLE_API_KEY = process.env.GOOGLE_VISION_API_KEY;
 
-    // 1. 내 이미지와 상대방 이미지를 구글 비전 서버로 보내서 텍스트 추출 (배치 처리)
     const myRawText = await performBatchedOCR(myImages, GOOGLE_API_KEY);
     const oppRawText = await performBatchedOCR(opponentImages, GOOGLE_API_KEY);
 
-    // 2. 추출된 거대한 텍스트 뭉치에서 게임 스탯 숫자만 정교하게 뽑아내기
     const myStats = extractStatsFromText(myRawText);
     const oppStats = extractStatsFromText(oppRawText);
 
-    // 3. 1,000번 반복 시뮬레이션 실행!
     const calculatedWinRate = runMonteCarloSimulation(myStats, oppStats); 
 
     return res.status(200).json({
@@ -201,5 +207,5 @@ module.exports = async (req, res) => {
   }
 };
 
-// Vercel 용량 제한 4MB로 해제
+// Vercel 용량 제한 해제
 module.exports.config = { api: { bodyParser: { sizeLimit: '4mb' } } };
