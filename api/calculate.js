@@ -18,13 +18,12 @@ function parseUnitNumber(text) {
   return num;
 }
 
+
 /**
  * OCR로 추출된 전체 텍스트에서 필요한 스탯을 뽑아내는 함수
  */
 function extractStatsFromText(fullText) {
-  // 🌟 AI(OCR)의 고질적인 오타 강제 교정 🌟
-  // 소수점 뒤에 오는 '6'을 'b'로 변환 (예: "36.16 총 피해" -> "36.1b 총 피해")
-  // 이 게임에서 소수점 뒤에 단위 없이 숫자로만 끝나는 경우는 없으므로 100% 안전한 로직입니다.
+  // 1. OCR의 고질적인 b -> 6 오타 강제 교정 (기존 안전장치 유지)
   fullText = fullText.replace(/(\d+\.\d*)6\s*총/g, '$1b 총');
 
   const stats = {
@@ -38,15 +37,18 @@ function extractStatsFromText(fullText) {
     lifeSteal: 0
   };
 
-  // 단위(k,m,b,t)와 글자 사이 띄어쓰기가 있어도 완벽하게 잡도록 정규식 업그레이드
-  const dmgMatch = fullText.match(/([\d.]+)\s*([kmbtKMBT]?)\s*총\s*피해/i);
+  // 🌟 [업그레이드] 줄바꿈(\n)이나 중간 공백이 꼬여도 앞의 숫자+단위만 정확히 뜯어내는 정규식
+  const dmgMatch = fullText.match(/([\d.]+\s*[kmbtKMBT]?)\s*총\s*피해/i);
   if (dmgMatch) {
-    stats.totalDamage = parseUnitNumber(dmgMatch[1] + (dmgMatch[2] || ''));
+    // 공백을 다 지워버리고 순수 숫자+단위만 추출
+    const cleanDmg = dmgMatch[1].replace(/\s+/g, '');
+    stats.totalDamage = parseUnitNumber(cleanDmg);
   }
 
-  const hpMatch = fullText.match(/([\d.]+)\s*([kmbtKMBT]?)\s*총\s*체력/i);
+  const hpMatch = fullText.match(/([\d.]+\s*[kmbtKMBT]?)\s*총\s*체력/i);
   if (hpMatch) {
-    stats.totalHealth = parseUnitNumber(hpMatch[1] + (hpMatch[2] || ''));
+    const cleanHp = hpMatch[1].replace(/\s+/g, '');
+    stats.totalHealth = parseUnitNumber(cleanHp);
   }
 
   const parsePercent = (regex) => {
@@ -63,6 +65,7 @@ function extractStatsFromText(fullText) {
 
   return stats;
 }
+
 
 
 
