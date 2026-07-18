@@ -1,9 +1,10 @@
 /**
- * 텍스트에서 단위(k, m, b)를 확인하고 실제 숫자로 변환하는 헬퍼 함수
+ * 텍스트에서 단위(k, m, b, t)를 확인하고 실제 숫자로 변환하는 헬퍼 함수
  */
 function parseUnitNumber(text) {
   if (!text) return 0;
-  const match = text.match(/([\d.]+)\s*([kmbKMB]?)/);
+  // 🌟 k, m, b에 이어 t(Trillion) 정규식 추가
+  const match = text.match(/([\d.]+)\s*([kmbtKMBT]?)/);
   if (!match) return 0;
 
   let num = parseFloat(match[1]);
@@ -12,6 +13,7 @@ function parseUnitNumber(text) {
   if (unit === 'k') num *= 1000;
   else if (unit === 'm') num *= 1000000;
   else if (unit === 'b') num *= 1000000000;
+  else if (unit === 't') num *= 1000000000000; // 🌟 1조 단위(Trillion) 추가!
 
   return num;
 }
@@ -31,10 +33,11 @@ function extractStatsFromText(fullText) {
     lifeSteal: 0
   };
 
-  const dmgMatch = fullText.match(/([\d.]+[kmbKMB]?)\s*총\s*피해/);
+  // 🌟 데미지 및 체력 정규식에도 t, T 포함
+  const dmgMatch = fullText.match(/([\d.]+[kmbtKMBT]?)\s*총\s*피해/);
   if (dmgMatch) stats.totalDamage = parseUnitNumber(dmgMatch[1]);
 
-  const hpMatch = fullText.match(/([\d.]+[kmbKMB]?)\s*총\s*체력/);
+  const hpMatch = fullText.match(/([\d.]+[kmbtKMBT]?)\s*총\s*체력/);
   if (hpMatch) stats.totalHealth = parseUnitNumber(hpMatch[1]);
 
   const parsePercent = (regex) => {
@@ -51,6 +54,7 @@ function extractStatsFromText(fullText) {
 
   return stats;
 }
+
 
 /**
  * 구글 비전 API를 호출하여 이미지들에서 텍스트를 추출하는 함수
