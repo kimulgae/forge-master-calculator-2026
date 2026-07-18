@@ -20,11 +20,14 @@ function parseUnitNumber(text) {
 
 
 /**
- * OCR로 추출된 전체 텍스트에서 필요한 스탯을 뽑아내는 함수
+ * OCR로 추출된 전체 텍스트에서 필요한 스탯을 뽑아내는 함수 (무적 버전)
  */
 function extractStatsFromText(fullText) {
-  // 1. OCR의 고질적인 b -> 6 오타 강제 교정 (기존 안전장치 유지)
-  fullText = fullText.replace(/(\d+\.\d*)6\s*총/g, '$1b 총');
+  // 1. 모든 공백 및 줄바꿈 완전 제거 (띄어쓰기 변수 원천 차단)
+  let clean = fullText.replace(/\s+/g, '');
+
+  // 2. 6 -> b 오타 교정 ('36.16총체력' -> '36.1b총체력')
+  clean = clean.replace(/(\d+\.\d*)6([가-힣]+)/g, '$1b$2');
 
   const stats = {
     totalDamage: 0,
@@ -37,35 +40,28 @@ function extractStatsFromText(fullText) {
     lifeSteal: 0
   };
 
-  // 🌟 [업그레이드] 줄바꿈(\n)이나 중간 공백이 꼬여도 앞의 숫자+단위만 정확히 뜯어내는 정규식
-  const dmgMatch = fullText.match(/([\d.]+\s*[kmbtKMBT]?)\s*총\s*피해/i);
-  if (dmgMatch) {
-    // 공백을 다 지워버리고 순수 숫자+단위만 추출
-    const cleanDmg = dmgMatch[1].replace(/\s+/g, '');
-    stats.totalDamage = parseUnitNumber(cleanDmg);
-  }
+  // 🌟 데미지 파싱 (앞에 '+'가 없는 '숫자+단위+아무한글+피해' 완벽 추출)
+  const dmgMatch = clean.match(/(?:^|[^+])([\d.]+[kmbtKMBT]?)[가-힣]*피해/i);
+  if (dmgMatch) stats.totalDamage = parseUnitNumber(dmgMatch[1]);
 
-  const hpMatch = fullText.match(/([\d.]+\s*[kmbtKMBT]?)\s*총\s*체력/i);
-  if (hpMatch) {
-    const cleanHp = hpMatch[1].replace(/\s+/g, '');
-    stats.totalHealth = parseUnitNumber(cleanHp);
-  }
+  // 🌟 체력 파싱 (앞에 '+'가 없는 '숫자+단위+아무한글+체력' 완벽 추출)
+  const hpMatch = clean.match(/(?:^|[^+])([\d.]+[kmbtKMBT]?)[가-힣]*체력/i);
+  if (hpMatch) stats.totalHealth = parseUnitNumber(hpMatch[1]);
 
   const parsePercent = (regex) => {
-    const match = fullText.match(regex);
+    const match = clean.match(regex);
     return match ? parseFloat(match[1]) / 100 : 0;
   };
 
-  stats.attackSpeed = parsePercent(/\+([\d.]+)%\s*공격\s*속도/);
-  stats.critRate = parsePercent(/\+([\d.]+)%\s*치명타\s*확률/);
-  stats.critDamage = parsePercent(/\+([\d.]+)%\s*치명타\s*피해/);
-  stats.doubleChance = parsePercent(/\+([\d.]+)%\s*더블\s*찬스/);
-  stats.blockChance = parsePercent(/\+([\d.]+)%\s*블록\s*확률/);
-  stats.lifeSteal = parsePercent(/\+([\d.]+)%\s*생명력\s*흡수/);
+  stats.attackSpeed = parsePercent(/\+([\d.]+)%공격속도/);
+  stats.critRate = parsePercent(/\+([\d.]+)%치명타확률/);
+  stats.critDamage = parsePercent(/\+([\d.]+)%치명타피해/);
+  stats.doubleChance = parsePercent(/\+([\d.]+)%더블찬스/);
+  stats.blockChance = parsePercent(/\+([\d.]+)%블록/); // 블록확률 -> 블록으로 유연하게 잡음
+  stats.lifeSteal = parsePercent(/\+([\d.]+)%생명력흡수/);
 
   return stats;
 }
-
 
 
 
