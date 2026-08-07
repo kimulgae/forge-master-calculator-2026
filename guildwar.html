@@ -56,38 +56,82 @@
     
 <div class="container">
         <header>
-            <h1>길드전 점수 심화 계산기</h1>
-            <p>클랜 테크 트리 버프 및 다중 리스트업 통합</p>
+            <h1>길드전 점수 종합 계산기</h1>
+            <p>다중 클랜원 리스트업 및 테크트리 합연산 시스템</p>
         </header>
 
-        <!-- 1. 대장간 카드 -->
-        <div class="category-card active" style="display: block;">
+        <!-- ========================================== -->
+        <!-- 1. 대장간 카드 (기존 UI 유지 + 개별 버프) -->
+        <!-- ========================================== -->
+        <div class="category-card" style="display: block;">
             <div class="category-title forge">
                 <span>대장간 상세 설정</span>
             </div>
             
             <div class="input-grid three-col">
-                <div class="input-group"><label>대장간 레벨 (1~35)</label><input type="number" id="forge-level" value="1" min="1" max="35" oninput="calculateAll()"></div>
-                <div class="input-group"><label>보유 망치 개수 (총량)</label><input type="text" id="forge-hammers" placeholder="예: 30k" oninput="calculateAll()"></div>
-                 <div class="input-group"><label>무료 망치 확률 (%)</label><input type="number" id="free-hammer" value="0" min="0" oninput="calculateAll()"></div>
+                <div class="input-group">
+                    <label>대장간 레벨 (1~35)</label>
+                    <input type="number" id="forge-level" value="1" min="1" max="35" oninput="calculateAll()">
+                </div>
+                <div class="input-group">
+                    <label>보유 망치 개수 (총량)</label>
+                    <input type="text" id="forge-hammers" placeholder="예: 30k" oninput="calculateAll()">
+                </div>
+                 <div class="input-group">
+                    <label>무료 망치 확률 (%)</label>
+                    <input type="number" id="free-hammer" value="0" min="0" oninput="calculateAll()">
+                </div>
             </div>
 
             <div class="input-grid">
-                <div class="input-group"><label>보유 코인 (k, m 입력)</label><input type="text" id="coins-owned" placeholder="예: 2.12m" oninput="calculateAll()"></div>
-                <div class="input-group"><label>보유 보석 (스킵용)</label><input type="text" id="gems-owned" placeholder="예: 10k" oninput="calculateAll()"></div>
+                <div class="input-group">
+                    <label>보유 코인 (k, m 단위 입력)</label>
+                    <input type="text" id="coins-owned" placeholder="예: 2.12m" oninput="calculateAll()">
+                </div>
+                <div class="input-group">
+                    <label>보유 보석 (스킵용)</label>
+                    <input type="text" id="gems-owned" placeholder="예: 10k" oninput="calculateAll()">
+                </div>
             </div>
             
             <div class="checkbox-group">
                 <input type="checkbox" id="use-gems" checked onchange="calculateAll()">
-                <label for="use-gems">보석으로 시간 스킵 허용 (체크 해제 시 한 단계 칸만 채우고 멈춤)</label>
+                <label for="use-gems">보석으로 시간 스킵 허용</label>
             </div>
 
-            <div class="prob-box">
-                <h4>최종 도달 레벨에 따른 자동 획득 확률 (%)</h4>
-                <div class="prob-grid">
-                    <div class="input-group"><label>하위 등급 (1점)</label><input type="text" id="prob-1" value="0.00%" readonly style="background: transparent; border: none; color: var(--text-muted);"></div>
-                    <div class="input-group"><label>중위 등급 (2점)</label><input type="text" id="prob-2" value="0.00%" readonly style="background: transparent; border: none; color: var(--text-muted);"></div>
-                    <div class="input-group"><label>상위 등급 (3점)</label><input type="text" id="prob-3" value="0.00%" readonly style="background: transparent; border: none; color: var(--text-muted);"></div>
+            <!-- 대장간 버프 개별 체크 (쇼업) -->
+            <div class="checkbox-group" style="margin-top:20px; border-top: 1px solid var(--border-color); padding-top: 15px;">
+                <input type="checkbox" id="forge-buff-toggle" onchange="toggleSection('forge-buff-section', this.checked); calculateAll();">
+                <label for="forge-buff-toggle" style="color: var(--accent-blue); font-weight: bold;">✨ 일차별 / 대장간 버프 적용</label>
+            </div>
+            <div id="forge-buff-section" class="input-grid" style="display: none; background: rgba(56, 189, 248, 0.05); padding: 15px; border-radius: 8px;">
+                <div class="input-group">
+                    <label><input type="checkbox" id="forge-day2-check" onchange="toggleInput('forge-day2-lv', this.checked); calculateAll();"> 2일차 버프</label>
+                    <input type="number" id="forge-day2-lv" value="0" max="10" placeholder="레벨 (1~10)" style="display: none; margin-top: 5px;" oninput="calculateAll()">
+                </div>
+                <div class="input-group">
+                    <label><input type="checkbox" id="forge-day4-check" onchange="toggleInput('forge-day4-lv', this.checked); calculateAll();"> 4일차 버프</label>
+                    <input type="number" id="forge-day4-lv" value="0" max="10" placeholder="레벨 (1~10)" style="display: none; margin-top: 5px;" oninput="calculateAll()">
+                </div>
+                <div class="input-group">
+                    <label><input type="checkbox" id="forge-day5-check" onchange="toggleInput('forge-day5-lv', this.checked); calculateAll();"> 5일차 버프</label>
+                    <input type="number" id="forge-day5-lv" value="0" max="10" placeholder="레벨 (1~10)" style="display: none; margin-top: 5px;" oninput="calculateAll()">
+                </div>
+                <div class="input-group">
+                    <label><input type="checkbox" id="forge-action-check" onchange="toggleInput('forge-action-lv', this.checked); calculateAll();"> 장비제작 버프</label>
+                    <input type="number" id="forge-action-lv" value="0" max="10" placeholder="레벨 (1~10)" style="display: none; margin-top: 5px;" oninput="calculateAll()">
+                </div>
+            </div>
+
+            <!-- 대장간 현재 상태 리스트업 추가 -->
+            <div class="checkbox-group">
+                <input type="checkbox" id="forge-listup-toggle" onchange="toggleSection('forge-listup-section', this.checked); calculateAll();">
+                <label for="forge-listup-toggle" style="color: var(--accent-amber); font-weight: bold;">👥 현재 대장간 세팅을 리스트에 저장</label>
+            </div>
+            <div id="forge-listup-section" style="display: none; background: rgba(0,0,0,0.2); padding: 15px; border-radius: 8px;">
+                <div style="display: flex; gap: 10px;">
+                    <input type="text" id="forge-mem-name" placeholder="닉네임 (예: 홍길동)" style="flex: 1; padding: 10px; border-radius: 6px; border: 1px solid var(--border-color); background: var(--card-bg); color: #fff;">
+                    <button onclick="addForgeMem()" style="padding: 10px 15px; background: var(--accent-blue); border: none; border-radius: 6px; color: #fff; font-weight: bold; cursor: pointer;">추가</button>
                 </div>
             </div>
 
@@ -108,36 +152,48 @@
             </div>
         </div>
 
+        <!-- ========================================== -->
         <!-- 2. 스킬 카드 -->
+        <!-- ========================================== -->
         <div class="category-card" style="display: block;">
             <div class="category-title skill"><span>스킬 재화 계산</span></div>
             
             <div class="input-grid" id="skill-single-input">
-                <div class="input-group"><label>보유 스킬 뽑기 재화</label><input type="text" id="skill-owned" placeholder="0" oninput="calculateAll()"></div>
+                <div class="input-group"><label>보유 스킬 뽑기 재화</label><input type="text" id="skill-owned" placeholder="예: 30k" oninput="calculateAll()"></div>
                 <div class="input-group"><label>스킬 5회 소환 비용</label><input type="number" id="skill-cost" value="200" oninput="calculateAll()"></div>
             </div>
 
-            <div class="checkbox-group" style="margin-top:0;">
+            <!-- 스킬 버프 개별 체크 (쇼업) -->
+            <div class="checkbox-group">
                 <input type="checkbox" id="skill-buff-toggle" onchange="toggleSection('skill-buff-section', this.checked); calculateAll();">
-                <label for="skill-buff-toggle" style="color: var(--accent-green); font-weight: bold;">✨ 1/3일차 및 스킬 버프 적용</label>
+                <label for="skill-buff-toggle" style="color: var(--accent-green); font-weight: bold;">✨ 일차별 / 스킬 버프 적용</label>
             </div>
-            <div id="skill-buff-section" class="input-grid three-col" style="display: none; background: rgba(16, 185, 129, 0.05); padding: 15px; border-radius: 8px;">
-                <div class="input-group"><label>1일차 버프 레벨</label><input type="number" id="skill-day1-lv" value="0" max="10" oninput="calculateAll()"></div>
-                <div class="input-group"><label>3일차 버프 레벨</label><input type="number" id="skill-day3-lv" value="0" max="10" oninput="calculateAll()"></div>
-                <div class="input-group"><label>스킬강화/소환 버프</label><input type="number" id="skill-action-lv" value="0" max="10" oninput="calculateAll()"></div>
+            <div id="skill-buff-section" class="input-grid" style="display: none; background: rgba(16, 185, 129, 0.05); padding: 15px; border-radius: 8px;">
+                <div class="input-group">
+                    <label><input type="checkbox" id="skill-day1-check" onchange="toggleInput('skill-day1-lv', this.checked); calculateAll();"> 1일차 버프</label>
+                    <input type="number" id="skill-day1-lv" value="0" max="10" placeholder="레벨 (1~10)" style="display: none; margin-top: 5px;" oninput="calculateAll()">
+                </div>
+                <div class="input-group">
+                    <label><input type="checkbox" id="skill-day3-check" onchange="toggleInput('skill-day3-lv', this.checked); calculateAll();"> 3일차 버프</label>
+                    <input type="number" id="skill-day3-lv" value="0" max="10" placeholder="레벨 (1~10)" style="display: none; margin-top: 5px;" oninput="calculateAll()">
+                </div>
+                <div class="input-group">
+                    <label><input type="checkbox" id="skill-action-check" onchange="toggleInput('skill-action-lv', this.checked); calculateAll();"> 스킬소환 버프</label>
+                    <input type="number" id="skill-action-lv" value="0" max="10" placeholder="레벨 (1~10)" style="display: none; margin-top: 5px;" oninput="calculateAll()">
+                </div>
             </div>
 
+            <!-- 다중 리스트업 토글 -->
             <div class="checkbox-group">
                 <input type="checkbox" id="skill-listup-toggle" onchange="toggleListupMode('skill', this.checked); calculateAll();">
-                <label for="skill-listup-toggle" style="color: var(--accent-blue); font-weight: bold;">👥 다중 클랜원 리스트업 모드</label>
+                <label for="skill-listup-toggle" style="color: var(--accent-amber); font-weight: bold;">👥 다중 클랜원 리스트업 모드</label>
             </div>
             <div id="skill-listup-section" style="display: none; background: rgba(0,0,0,0.2); padding: 15px; border-radius: 8px;">
                 <div style="display: flex; gap: 10px; margin-bottom: 10px;">
-                    <input type="text" id="skill-mem-name" placeholder="닉네임 (예: 홍길동)" style="flex: 1; padding: 10px; border-radius: 6px; border: 1px solid var(--border-color); background: var(--card-bg); color: #fff;">
+                    <input type="text" id="skill-mem-name" placeholder="닉네임" style="flex: 1; padding: 10px; border-radius: 6px; border: 1px solid var(--border-color); background: var(--card-bg); color: #fff;">
                     <input type="text" id="skill-mem-amount" placeholder="재화량 (예: 30k)" style="flex: 1; padding: 10px; border-radius: 6px; border: 1px solid var(--border-color); background: var(--card-bg); color: #fff;">
-                    <button onclick="addListMem('skill')" style="padding: 10px 15px; background: var(--accent-blue); border: none; border-radius: 6px; color: #fff; font-weight: bold; cursor: pointer;">추가</button>
+                    <button onclick="addListMem('skill')" style="padding: 10px 15px; background: var(--accent-green); border: none; border-radius: 6px; color: #fff; font-weight: bold; cursor: pointer;">추가</button>
                 </div>
-                <ul id="skill-mem-list" style="list-style: none; padding: 0; max-height: 150px; overflow-y: auto;"></ul>
             </div>
 
             <div class="result-row">
@@ -151,35 +207,45 @@
             <div class="category-title pet" style="border-top: 3px solid var(--accent-purple);"><span>탈것 재화 계산</span></div>
             
             <div class="input-grid three-col" id="mount-single-input">
-                <div class="input-group"><label>보유 탈것 뽑기 재화</label><input type="text" id="mount-owned" placeholder="0" oninput="calculateAll()"></div>
+                <div class="input-group"><label>보유 탈것 뽑기 재화</label><input type="text" id="mount-owned" placeholder="예: 40k" oninput="calculateAll()"></div>
                 <div class="input-group"><label>탈것 1회 소환 비용</label><input type="number" id="mount-cost" value="50" oninput="calculateAll()"></div>
-                <div class="input-group"><label>추가 획득 확률 (%)</label><input type="number" id="mount-ext" value="0" oninput="calculateAll()"></div>
+                <div class="input-group"><label>추탈 (%)</label><input type="number" id="mount-ext" value="0" oninput="calculateAll()"></div>
             </div>
             <div class="checkbox-group" style="margin-top: 0;">
                 <input type="checkbox" id="mount-combine" onchange="calculateAll()"><label for="mount-combine" style="color:#2ecc71;">⚔️ 탈것 합치기 적용</label>
             </div>
 
+            <!-- 탈것 버프 개별 체크 -->
             <div class="checkbox-group">
                 <input type="checkbox" id="mount-buff-toggle" onchange="toggleSection('mount-buff-section', this.checked); calculateAll();">
-                <label for="mount-buff-toggle" style="color: var(--accent-purple); font-weight: bold;">✨ 2/4일차 및 탈것 버프 적용</label>
+                <label for="mount-buff-toggle" style="color: var(--accent-purple); font-weight: bold;">✨ 일차별 / 탈것 버프 적용</label>
             </div>
-            <div id="mount-buff-section" class="input-grid three-col" style="display: none; background: rgba(168, 85, 247, 0.05); padding: 15px; border-radius: 8px;">
-                <div class="input-group"><label>2일차 버프 레벨</label><input type="number" id="mount-day2-lv" value="0" max="10" oninput="calculateAll()"></div>
-                <div class="input-group"><label>4일차 버프 레벨</label><input type="number" id="mount-day4-lv" value="0" max="10" oninput="calculateAll()"></div>
-                <div class="input-group"><label>탈것소환/합성 버프</label><input type="number" id="mount-action-lv" value="0" max="10" oninput="calculateAll()"></div>
+            <div id="mount-buff-section" class="input-grid" style="display: none; background: rgba(168, 85, 247, 0.05); padding: 15px; border-radius: 8px;">
+                <div class="input-group">
+                    <label><input type="checkbox" id="mount-day2-check" onchange="toggleInput('mount-day2-lv', this.checked); calculateAll();"> 2일차 버프</label>
+                    <input type="number" id="mount-day2-lv" value="0" max="10" placeholder="레벨 (1~10)" style="display: none; margin-top: 5px;" oninput="calculateAll()">
+                </div>
+                <div class="input-group">
+                    <label><input type="checkbox" id="mount-day4-check" onchange="toggleInput('mount-day4-lv', this.checked); calculateAll();"> 4일차 버프</label>
+                    <input type="number" id="mount-day4-lv" value="0" max="10" placeholder="레벨 (1~10)" style="display: none; margin-top: 5px;" oninput="calculateAll()">
+                </div>
+                <div class="input-group">
+                    <label><input type="checkbox" id="mount-action-check" onchange="toggleInput('mount-action-lv', this.checked); calculateAll();"> 탈것소환 버프</label>
+                    <input type="number" id="mount-action-lv" value="0" max="10" placeholder="레벨 (1~10)" style="display: none; margin-top: 5px;" oninput="calculateAll()">
+                </div>
             </div>
 
+            <!-- 다중 리스트업 토글 -->
             <div class="checkbox-group">
                 <input type="checkbox" id="mount-listup-toggle" onchange="toggleListupMode('mount', this.checked); calculateAll();">
-                <label for="mount-listup-toggle" style="color: var(--accent-blue); font-weight: bold;">👥 다중 클랜원 리스트업 모드</label>
+                <label for="mount-listup-toggle" style="color: var(--accent-amber); font-weight: bold;">👥 다중 클랜원 리스트업 모드</label>
             </div>
             <div id="mount-listup-section" style="display: none; background: rgba(0,0,0,0.2); padding: 15px; border-radius: 8px;">
                 <div style="display: flex; gap: 10px; margin-bottom: 10px;">
-                    <input type="text" id="mount-mem-name" placeholder="닉네임 (예: 홍길동)" style="flex: 1; padding: 10px; border-radius: 6px; border: 1px solid var(--border-color); background: var(--card-bg); color: #fff;">
+                    <input type="text" id="mount-mem-name" placeholder="닉네임" style="flex: 1; padding: 10px; border-radius: 6px; border: 1px solid var(--border-color); background: var(--card-bg); color: #fff;">
                     <input type="text" id="mount-mem-amount" placeholder="재화량 (예: 40k)" style="flex: 1; padding: 10px; border-radius: 6px; border: 1px solid var(--border-color); background: var(--card-bg); color: #fff;">
-                    <button onclick="addListMem('mount')" style="padding: 10px 15px; background: var(--accent-blue); border: none; border-radius: 6px; color: #fff; font-weight: bold; cursor: pointer;">추가</button>
+                    <button onclick="addListMem('mount')" style="padding: 10px 15px; background: var(--accent-purple); border: none; border-radius: 6px; color: #fff; font-weight: bold; cursor: pointer;">추가</button>
                 </div>
-                <ul id="mount-mem-list" style="list-style: none; padding: 0; max-height: 150px; overflow-y: auto;"></ul>
             </div>
 
             <div class="result-row">
@@ -190,33 +256,41 @@
 
         <!-- 4. 알 부화 카드 -->
         <div class="category-card" style="display: block;">
-            <div class="category-title" style="border-top: 3px solid #f8fafc; color: var(--text-main);"><span>🥚 알 재화 계산</span></div>
+            <div class="category-title" style="border-top: 3px solid #f8fafc; color: var(--text-main);"><span>🥚 알 부화 재화 계산</span></div>
             
             <div class="input-grid" id="egg-single-input">
-                <div class="input-group"><label>보유 알 개수</label><input type="text" id="egg-owned" placeholder="0" oninput="calculateAll()"></div>
+                <div class="input-group"><label>보유 알 개수</label><input type="text" id="egg-owned" placeholder="예: 500" oninput="calculateAll()"></div>
             </div>
 
-            <div class="checkbox-group" style="margin-top: 0;">
+            <div class="checkbox-group">
                 <input type="checkbox" id="egg-buff-toggle" onchange="toggleSection('egg-buff-section', this.checked); calculateAll();">
-                <label for="egg-buff-toggle" style="color: #f8fafc; font-weight: bold;">✨ 3/5일차 및 알 버프 적용</label>
+                <label for="egg-buff-toggle" style="color: #f8fafc; font-weight: bold;">✨ 일차별 / 알 부화 버프 적용</label>
             </div>
-            <div id="egg-buff-section" class="input-grid three-col" style="display: none; background: rgba(255, 255, 255, 0.05); padding: 15px; border-radius: 8px;">
-                <div class="input-group"><label>3일차 버프 레벨</label><input type="number" id="egg-day3-lv" value="0" max="10" oninput="calculateAll()"></div>
-                <div class="input-group"><label>5일차 버프 레벨</label><input type="number" id="egg-day5-lv" value="0" max="10" oninput="calculateAll()"></div>
-                <div class="input-group"><label>알부화/합성 버프</label><input type="number" id="egg-action-lv" value="0" max="10" oninput="calculateAll()"></div>
+            <div id="egg-buff-section" class="input-grid" style="display: none; background: rgba(255, 255, 255, 0.05); padding: 15px; border-radius: 8px;">
+                <div class="input-group">
+                    <label><input type="checkbox" id="egg-day3-check" onchange="toggleInput('egg-day3-lv', this.checked); calculateAll();"> 3일차 버프</label>
+                    <input type="number" id="egg-day3-lv" value="0" max="10" placeholder="레벨 (1~10)" style="display: none; margin-top: 5px;" oninput="calculateAll()">
+                </div>
+                <div class="input-group">
+                    <label><input type="checkbox" id="egg-day5-check" onchange="toggleInput('egg-day5-lv', this.checked); calculateAll();"> 5일차 버프</label>
+                    <input type="number" id="egg-day5-lv" value="0" max="10" placeholder="레벨 (1~10)" style="display: none; margin-top: 5px;" oninput="calculateAll()">
+                </div>
+                <div class="input-group">
+                    <label><input type="checkbox" id="egg-action-check" onchange="toggleInput('egg-action-lv', this.checked); calculateAll();"> 알부화 버프</label>
+                    <input type="number" id="egg-action-lv" value="0" max="10" placeholder="레벨 (1~10)" style="display: none; margin-top: 5px;" oninput="calculateAll()">
+                </div>
             </div>
 
             <div class="checkbox-group">
                 <input type="checkbox" id="egg-listup-toggle" onchange="toggleListupMode('egg', this.checked); calculateAll();">
-                <label for="egg-listup-toggle" style="color: var(--accent-blue); font-weight: bold;">👥 다중 클랜원 리스트업 모드</label>
+                <label for="egg-listup-toggle" style="color: var(--accent-amber); font-weight: bold;">👥 다중 클랜원 리스트업 모드</label>
             </div>
             <div id="egg-listup-section" style="display: none; background: rgba(0,0,0,0.2); padding: 15px; border-radius: 8px;">
                 <div style="display: flex; gap: 10px; margin-bottom: 10px;">
-                    <input type="text" id="egg-mem-name" placeholder="닉네임 (예: 홍길동)" style="flex: 1; padding: 10px; border-radius: 6px; border: 1px solid var(--border-color); background: var(--card-bg); color: #fff;">
-                    <input type="text" id="egg-mem-amount" placeholder="알 개수 (예: 500)" style="flex: 1; padding: 10px; border-radius: 6px; border: 1px solid var(--border-color); background: var(--card-bg); color: #fff;">
-                    <button onclick="addListMem('egg')" style="padding: 10px 15px; background: var(--accent-blue); border: none; border-radius: 6px; color: #fff; font-weight: bold; cursor: pointer;">추가</button>
+                    <input type="text" id="egg-mem-name" placeholder="닉네임" style="flex: 1; padding: 10px; border-radius: 6px; border: 1px solid var(--border-color); background: var(--card-bg); color: #fff;">
+                    <input type="text" id="egg-mem-amount" placeholder="알 개수" style="flex: 1; padding: 10px; border-radius: 6px; border: 1px solid var(--border-color); background: var(--card-bg); color: #fff;">
+                    <button onclick="addListMem('egg')" style="padding: 10px 15px; background: #94a3b8; border: none; border-radius: 6px; color: #fff; font-weight: bold; cursor: pointer;">추가</button>
                 </div>
-                <ul id="egg-mem-list" style="list-style: none; padding: 0; max-height: 150px; overflow-y: auto;"></ul>
             </div>
 
             <div class="result-row">
@@ -225,9 +299,20 @@
             </div>
         </div>
 
+        <!-- 5. 글로벌 전체 장바구니 출력부 -->
+        <div class="category-card" style="display: block; border-top: 3px solid var(--accent-amber);">
+            <div class="category-title" style="color: var(--accent-amber);">
+                <span>📋 전체 클랜원 종합 리스트</span>
+            </div>
+            <div style="background: rgba(0,0,0,0.2); padding: 15px; border-radius: 12px; border: 1px solid var(--border-color); max-height: 300px; overflow-y: auto;">
+                <ul id="global-cart-list" style="list-style: none; margin: 0; padding: 0;">
+                    <li style="text-align: center; color: var(--text-muted); padding: 10px;">데이터가 없습니다. 각 항목에서 리스트에 추가하세요.</li>
+                </ul>
+            </div>
+        </div>
+
     </div>
 
-    <!-- 하단 토탈 바 -->
     <div class="total-sticky-bar">
         <div class="total-box">
             <span class="total-title">클랜 총 예상 획득 점수</span>
