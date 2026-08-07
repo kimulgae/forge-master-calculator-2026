@@ -1,37 +1,38 @@
-const guildForgeData = [ { c: 400, div: 1, s: 0 }, { c: 700, div: 1, s: 0 }, { c: 1500, div: 1, s: 0 }, { c: 3500, div: 1, s: 8 }, { c: 10000, div: 1, s: 17 }, { c: 25000, div: 1, s: 63 }, { c: 50000, div: 1, s: 109 }, { c: 99000, div: 1, s: 155 }, { c: 150000, div: 1, s: 201 }, { c: 249900, div: 3, s: 248 }, { c: 348000, div: 3, s: 294 }, { c: 448000, div: 4, s: 340 }, { c: 600000, div: 4, s: 385 }, { c: 800000, div: 5, s: 432 }, { c: 910000, div: 5, s: 479 }, { c: 1020000, div: 6, s: 525 }, { c: 1130000, div: 7, s: 571 }, { c: 1240000, div: 8, s: 628 }, { c: 1350000, div: 9, s: 709 }, { c: 1450000, div: 10, s: 779 }, { c: 1570000, div: 10, s: 848 }, { c: 1680000, div: 10, s: 917 }, { c: 1790000, div: 10, s: 987 }, { c: 1900000, div: 10, s: 1056 }, { c: 2010000, div: 10, s: 1125 }, { c: 2120000, div: 10, s: 1194 }, { c: 2230000, div: 10, s: 1264 }, { c: 2340000, div: 10, s: 1333 }, { c: 2450000, div: 10, s: 1402 }, { c: 2560000, div: 10, s: 1472 }, { c: 2670000, div: 10, s: 1541 }, { c: 2780000, div: 10, s: 1610 }, { c: 2890000, div: 10, s: 1679 }, { c: 3000000, div: 10, s: 1749 } ];
-const forgeRarity = [[100.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], [99.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], [98.0, 2.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], [96.0, 4.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], [91.5, 8.0, 0.5, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], [82.0, 16.0, 2.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], [64.0, 32.0, 4.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], [27.8, 64.0, 8.0, 0.2, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], [13.0, 70.0, 16.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], [6.0, 60.0, 32.0, 2.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], [0.0, 31.9, 64.0, 4.0, 0.1, 0.0, 0.0, 0.0, 0.0, 0.0], [0.0, 27.5, 64.0, 8.0, 5.0, 0.0, 0.0, 0.0, 0.0, 0.0], [0.0, 8.0, 75.0, 16.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0], [0.0, 0.0, 66.0, 32.0, 2.0, 0.05, 0.0, 0.0, 0.0, 0.0], [0.0, 0.0, 31.7, 64.0, 4.0, 0.25, 0.0, 0.0, 0.0, 0.0], [0.0, 0.0, 21.5, 70.0, 8.0, 0.5, 0.0, 0.0, 0.0, 0.0], [0.0, 0.0, 0.0, 82.9, 16.0, 1.0, 0.05, 0.0, 0.0, 0.0], [0.0, 0.0, 0.0, 65.7, 32.0, 2.0, 0.25, 0.0, 0.0, 0.0], [0.0, 0.0, 0.0, 31.5, 64.0, 4.0, 0.5, 0.0, 0.0, 0.0], [0.0, 0.0, 0.0, 0.0, 91.0, 8.0, 1.0, 0.05, 0.0, 0.0], [0.0, 0.0, 0.0, 0.0, 81.7, 16.0, 2.0, 0.25, 0.0, 0.0], [0.0, 0.0, 0.0, 0.0, 63.5, 32.0, 4.0, 0.5, 0.0, 0.0], [0.0, 0.0, 0.0, 0.0, 27.0, 64.0, 8.0, 1.0, 0.0, 0.0], [0.0, 0.0, 0.0, 0.0, 0.0, 82.0, 16.0, 2.0, 0.02, 0.0], [0.0, 0.0, 0.0, 0.0, 0.0, 64.0, 32.0, 4.0, 0.05, 0.0], [0.0, 0.0, 0.0, 0.0, 0.0, 43.8, 50.0, 6.0, 0.25, 0.0], [0.0, 0.0, 0.0, 0.0, 0.0, 31.5, 60.0, 8.0, 0.5, 0.0], [0.0, 0.0, 0.0, 0.0, 0.0, 21.0, 65.0, 13.0, 1.0, 0.0], [0.0, 0.0, 0.0, 0.0, 0.0, 6.99, 68.0, 23.0, 2.0, 0.02], [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 60.0, 36.0, 4.0, 0.05], [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 50.8, 41.0, 6.0, 0.25], [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 41.5, 50.0, 8.0, 0.5], [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 28.0, 58.0, 13.0, 1.0], [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 11.0, 64.0, 23.0, 2.0], [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 60.0, 36.0, 4.0]];
-
-// 리스트 상태 관리
+// 1. 리스트 및 서버 기본 점수 상태 관리
 let memberLists = { forge: [], skill: [], mount: [], egg: [] };
-let currentForgeBaseScore = 0; // 대장간 리스트업용 전역 변수
+let currentBaseScores = { forge: 0, skill: 0, mount: 0, egg: 0 };
 
-// UI 제어 함수
-function toggleSection(id, isChecked) { document.getElementById(id).style.display = isChecked ? 'grid' : 'none'; }
-function toggleInput(id, isChecked) { document.getElementById(id).style.display = isChecked ? 'block' : 'none'; }
-function toggleListupMode(type, isChecked) {
+// 2. UI 토글 유틸리티
+window.toggleSection = function(id, isChecked) { 
+    document.getElementById(id).style.display = isChecked ? 'grid' : 'none'; 
+};
+window.toggleInput = function(id, isChecked) { 
+    document.getElementById(id).style.display = isChecked ? 'block' : 'none'; 
+};
+window.toggleListupMode = function(type, isChecked) {
     document.getElementById(`${type}-listup-section`).style.display = isChecked ? 'block' : 'none';
     if(document.getElementById(`${type}-single-input`)) {
         document.getElementById(`${type}-single-input`).style.display = isChecked ? 'none' : 'grid';
     }
-}
+};
 
-// k, m 단위 파싱 (30k -> 30000)
-function parseKInput(val) {
+// 3. K, M 파싱 유틸리티 (30k -> 30000)
+window.parseKInput = function(val) {
     if (!val) return 0;
     val = val.toString().toLowerCase().replace(/,/g, '');
     if (val.endsWith('k')) return parseFloat(val) * 1000;
     if (val.endsWith('m')) return parseFloat(val) * 1000000;
     return parseFloat(val) || 0;
-}
-function formatNum(num) { return num.toLocaleString(); }
-function formatKM(num) {
+};
+window.formatNum = function(num) { return num.toLocaleString(); };
+window.formatKM = function(num) {
     if (num >= 1e6) return (num / 1e6).toFixed(2).replace(/\.00$/, '') + 'm';
     if (num >= 1e3) return (num / 1e3).toFixed(2).replace(/\.00$/, '') + 'k';
     return num.toLocaleString();
-}
+};
 
-// 합연산 기반 버프 연산 (체크된 항목들의 레벨만 합산)
-function getBuffMult(type) {
+// 4. 합연산 기반 버프 연산 로직 (1레벨당 +4%)
+window.getBuffMult = function(type) {
     if (!document.getElementById(`${type}-buff-toggle`)?.checked) return 1;
     let totalBuff = 0;
     const keys = {
@@ -47,11 +48,119 @@ function getBuffMult(type) {
             totalBuff += (lv * 0.04);
         }
     });
-    return 1 + totalBuff;
-}
+    return 1 + totalBuff; // 기본 100% + 합연산
+};
 
-// 스킬/탈것/알 리스트 추가
-function addListMem(type) {
+// 5. 백엔드 API 호출 원상복구 (기본 점수 계산용)
+window.calculateGuildWar = async function() {
+    const payload = {
+        start_level: document.getElementById('forge-level')?.value || 1,
+        hammers: parseKInput(document.getElementById('forge-hammers')?.value),
+        freeHammerRate: document.getElementById('free-hammer')?.value || 0,
+        coins: parseKInput(document.getElementById('coins-owned')?.value),
+        gems: parseKInput(document.getElementById('gems-owned')?.value),
+        useGems: document.getElementById('use-gems')?.checked || false,
+        skillOwned: parseKInput(document.getElementById('skill-owned')?.value),
+        skillCost: document.getElementById('skill-cost')?.value || 200,
+        mountOwned: parseKInput(document.getElementById('mount-owned')?.value),
+        mountCost: document.getElementById('mount-cost')?.value || 50,
+        mountExt: document.getElementById('mount-ext')?.value || 0,
+    };
+
+    try {
+        const response = await fetch("https://www.fmcalc.co.kr/api/guildwar", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload)
+        });
+        const data = await response.json();
+
+        if (data.success) {
+            // 서버 응답으로 UI 렌더링
+            document.getElementById('res-forge-status').innerHTML = data.statusText;
+            document.getElementById('res-forge-spent').innerHTML = data.spentText;
+            document.getElementById('prob-1').value = data.prob1;
+            document.getElementById('prob-2').value = data.prob2;
+            document.getElementById('prob-3').value = data.prob3;
+
+            // 서버가 반환한 기본 점수 텍스트 파싱
+            currentBaseScores.forge = parseInt(data.totalForge.replace(/[^0-9]/g, '')) || 0;
+            currentBaseScores.skill = parseInt(data.totalSkill.replace(/[^0-9]/g, '')) || 0;
+            currentBaseScores.mount = parseInt(data.totalMount.replace(/[^0-9]/g, '')) || 0;
+            
+            // 알 부화는 API에 없었으므로 클라이언트에서 독립 연산
+            const eggOwned = parseKInput(document.getElementById('egg-owned')?.value);
+            currentBaseScores.egg = eggOwned * 1250;
+
+            // 기본 점수를 받은 후 버프 및 리스트업 후처리 실행
+            window.applyBuffsAndRender();
+        }
+    } catch (error) {
+        console.error("서버 통신 에러 발생:", error);
+        document.getElementById('res-forge-status').textContent = "서버 연동에 실패했습니다. (API 확인 필요)";
+    }
+};
+
+// 6. 버프 반영 및 UI 최종 렌더링 로직 (서버 부하 없는 즉각 연산)
+window.applyBuffsAndRender = function() {
+    let grandTotal = 0;
+
+    // --- 대장간 ---
+    const forgeBuff = getBuffMult('forge');
+    let forgeTotal = 0;
+    if (document.getElementById('forge-listup-toggle')?.checked) {
+        memberLists.forge.forEach(m => { forgeTotal += Math.floor(m.amount * forgeBuff); });
+    } else {
+        forgeTotal = Math.floor(currentBaseScores.forge * forgeBuff);
+    }
+    document.getElementById('res-forge').textContent = `${formatNum(forgeTotal)} 점`;
+    grandTotal += forgeTotal;
+
+    // --- 스킬 ---
+    const skillBuff = getBuffMult('skill');
+    let skillTotal = 0;
+    if (document.getElementById('skill-listup-toggle')?.checked) {
+        const cost = Math.max(1, parseInt(document.getElementById('skill-cost').value) || 200);
+        memberLists.skill.forEach(m => { skillTotal += Math.floor((Math.floor(m.amount / cost) * 5 * 125) * skillBuff); });
+    } else {
+        skillTotal = Math.floor(currentBaseScores.skill * skillBuff);
+    }
+    document.getElementById('res-skill').textContent = `${formatNum(skillTotal)} 점`;
+    grandTotal += skillTotal;
+
+    // --- 탈것 ---
+    const mountBuff = getBuffMult('mount');
+    let mountTotal = 0;
+    if (document.getElementById('mount-listup-toggle')?.checked) {
+        const cost = Math.max(1, parseInt(document.getElementById('mount-cost').value) || 50);
+        const ext = parseInt(document.getElementById('mount-ext').value) || 0;
+        memberLists.mount.forEach(m => { mountTotal += Math.floor((Math.floor(Math.floor(m.amount / cost) * (1 + ext/100)) * 600) * mountBuff); });
+    } else {
+        mountTotal = Math.floor(currentBaseScores.mount * mountBuff);
+    }
+    document.getElementById('res-pet').textContent = `${formatNum(mountTotal)} 점`;
+    grandTotal += mountTotal;
+
+    // --- 알 ---
+    const eggBuff = getBuffMult('egg');
+    let eggTotal = 0;
+    if (document.getElementById('egg-listup-toggle')?.checked) {
+        memberLists.egg.forEach(m => { eggTotal += Math.floor((m.amount * 1250) * eggBuff); });
+    } else {
+        eggTotal = Math.floor(currentBaseScores.egg * eggBuff);
+    }
+    if(document.getElementById('res-egg')) {
+        document.getElementById('res-egg').textContent = `${formatNum(eggTotal)} 점`;
+    }
+    grandTotal += eggTotal;
+
+    // --- 총합 렌더링 ---
+    document.getElementById('grand-total').textContent = `${formatNum(grandTotal)} 점`;
+    window.renderGlobalCart();
+};
+
+// 7. 리스트 멤버 추가 (스킬, 탈것, 알)
+window.addListMem = function(type) {
     const name = document.getElementById(`${type}-mem-name`).value || '익명';
     const amount = parseKInput(document.getElementById(`${type}-mem-amount`).value);
     if (amount <= 0) return alert("올바른 재화량을 입력하세요. (예: 30k)");
@@ -59,139 +168,31 @@ function addListMem(type) {
     memberLists[type].push({ id: Date.now(), name, amount });
     document.getElementById(`${type}-mem-name`).value = '';
     document.getElementById(`${type}-mem-amount`).value = '';
-    calculateAll();
-}
+    window.applyBuffsAndRender();
+};
 
-// 대장간 리스트 추가 (현재 설정된 결과값을 저장)
-function addForgeMem() {
+// 8. 리스트 멤버 추가 (대장간)
+window.addForgeMem = function() {
     const name = document.getElementById('forge-mem-name').value || '익명';
-    if (currentForgeBaseScore <= 0) return alert("대장간 재화를 먼저 설정하세요.");
+    if (currentBaseScores.forge <= 0) return alert("위에서 대장간 설정을 먼저 완료해주세요.");
     
-    memberLists.forge.push({ id: Date.now(), name, amount: currentForgeBaseScore });
+    memberLists.forge.push({ id: Date.now(), name, amount: currentBaseScores.forge });
     document.getElementById('forge-mem-name').value = '';
-    calculateAll();
-}
+    window.applyBuffsAndRender();
+};
 
-// 멤버 삭제
-function removeListMem(type, id) {
+// 9. 멤버 삭제
+window.removeListMem = function(type, id) {
     memberLists[type] = memberLists[type].filter(item => item.id !== id);
-    calculateAll();
-}
+    window.applyBuffsAndRender();
+};
 
-// 핵심 종합 연산 및 렌더링
-function calculateAll() {
-    let grandTotal = 0;
-
-    // 1. 대장간 연산
-    let fStart = Math.max(1, Math.min(36, parseInt(document.getElementById('forge-level').value) || 1));
-    let fHammers = parseKInput(document.getElementById('forge-hammers').value);
-    let fFreeRate = Math.min(99.9, Math.max(0, parseFloat(document.getElementById('free-hammer').value) || 0));
-    let fCoins = parseKInput(document.getElementById('coins-owned').value);
-    let fGems = parseKInput(document.getElementById('gems-owned').value);
-    let fUseGems = document.getElementById('use-gems').checked;
-
-    let fCoinsSpent = 0, fGemsSpent = 0, fCurrLv = fStart, fSteps = 0, fTargetDiv = 1, fStop = "";
-    
-    while (fCurrLv < 36 && fCoins > 0) {
-        let d = guildForgeData[fCurrLv - 1]; if (!d) break;
-        fTargetDiv = d.div; let cPerStep = d.c / d.div;
-        let affSteps = Math.floor(fCoins / cPerStep);
-        if (affSteps >= d.div) {
-            fCoins -= d.div * cPerStep; fCoinsSpent += d.div * cPerStep;
-            if (fUseGems || d.s === 0) {
-                if (fGems >= d.s) { fGems -= d.s; fGemsSpent += d.s; fCurrLv++; fSteps = 0; } 
-                else { fSteps = d.div; fStop = "(보석 부족)"; break; }
-            } else { fSteps = d.div; fStop = "(1단계 완료)"; break; }
-        } else {
-            if (affSteps > 0) { fCoins -= affSteps * cPerStep; fCoinsSpent += affSteps * cPerStep; fSteps = affSteps; }
-            fStop = "(코인 부족)"; break;
-        }
-    }
-
-    let fStatus = fCurrLv >= 36 ? `36 레벨 (MAX)` : (fSteps === fTargetDiv ? `${fCurrLv} ➔ ${fCurrLv + 1} 대기중 ${fStop}` : `${fCurrLv} ➔ ${fCurrLv + 1} 진행중 (${fSteps}/${fTargetDiv}) ${fStop}`);
-    document.getElementById('res-forge-status').textContent = fStatus;
-    document.getElementById('res-forge-spent').innerHTML = `코인: ${formatKM(fCoinsSpent)} / 보석: ${formatKM(fGemsSpent)}`;
-
-    let pIdx = Math.min(Math.max(1, fCurrLv) - 1, forgeRarity.length - 1);
-    let pr = forgeRarity[pIdx];
-    let p1 = (pr[0]+pr[1]+pr[2])/100, p2 = (pr[3]+pr[4]+pr[5])/100, p3 = (pr[6]+pr[7]+pr[8]+pr[9])/100;
-    document.getElementById('prob-1').value = (p1*100).toFixed(2) + "%";
-    document.getElementById('prob-2').value = (p2*100).toFixed(2) + "%";
-    document.getElementById('prob-3').value = (p3*100).toFixed(2) + "%";
-
-    let hammerScore = Math.floor(Math.floor(fHammers / (1 - (fFreeRate/100))) * (p1*1 + p2*2 + p3*3));
-    currentForgeBaseScore = hammerScore + Math.floor(fCoinsSpent/1000)*27 + fGemsSpent*50;
-    
-    const forgeBuff = getBuffMult('forge');
-    let forgeTotal = 0;
-    
-    if (document.getElementById('forge-listup-toggle').checked) {
-        memberLists.forge.forEach(m => {
-            let fin = Math.floor(m.amount * forgeBuff);
-            forgeTotal += fin;
-        });
-    } else {
-        forgeTotal = Math.floor(currentForgeBaseScore * forgeBuff);
-    }
-    document.getElementById('res-forge').textContent = `${formatNum(forgeTotal)} 점`;
-    grandTotal += forgeTotal;
-
-    // 2. 스킬 연산
-    const isSkillList = document.getElementById('skill-listup-toggle').checked;
-    const skillCost = Math.max(1, parseInt(document.getElementById('skill-cost').value) || 200);
-    const skillBuff = getBuffMult('skill');
-    let skillTotal = 0;
-
-    if (isSkillList) {
-        memberLists.skill.forEach(m => { skillTotal += Math.floor((Math.floor(m.amount / skillCost) * 5 * 125) * skillBuff); });
-    } else {
-        const owned = parseKInput(document.getElementById('skill-owned').value);
-        skillTotal = Math.floor((Math.floor(owned / skillCost) * 5 * 125) * skillBuff);
-    }
-    document.getElementById('res-skill').textContent = `${formatNum(skillTotal)} 점`;
-    grandTotal += skillTotal;
-
-    // 3. 탈것 연산
-    const isMountList = document.getElementById('mount-listup-toggle').checked;
-    const mountCost = Math.max(1, parseInt(document.getElementById('mount-cost').value) || 50);
-    const mountExt = parseInt(document.getElementById('mount-ext').value) || 0;
-    const mountBuff = getBuffMult('mount');
-    let mountTotal = 0;
-
-    if (isMountList) {
-        memberLists.mount.forEach(m => { mountTotal += Math.floor((Math.floor(Math.floor(m.amount / mountCost) * (1 + mountExt/100)) * 600) * mountBuff); });
-    } else {
-        const owned = parseKInput(document.getElementById('mount-owned').value);
-        mountTotal = Math.floor((Math.floor(Math.floor(owned / mountCost) * (1 + mountExt/100)) * 600) * mountBuff);
-    }
-    document.getElementById('res-pet').textContent = `${formatNum(mountTotal)} 점`;
-    grandTotal += mountTotal;
-
-    // 4. 알 부화 연산
-    const isEggList = document.getElementById('egg-listup-toggle').checked;
-    const eggBuff = getBuffMult('egg');
-    let eggTotal = 0;
-
-    if (isEggList) {
-        memberLists.egg.forEach(m => { eggTotal += Math.floor((m.amount * 1250) * eggBuff); });
-    } else {
-        const owned = parseKInput(document.getElementById('egg-owned').value);
-        eggTotal = Math.floor((owned * 1250) * eggBuff);
-    }
-    document.getElementById('res-egg').textContent = `${formatNum(eggTotal)} 점`;
-    grandTotal += eggTotal;
-
-    // 5. 총합계 렌더링
-    document.getElementById('grand-total').textContent = `${formatNum(grandTotal)} 점`;
-    
-    // 6. 글로벌 카트 렌더링
-    renderGlobalCart();
-}
-
-function renderGlobalCart() {
+// 10. 글로벌 카트 렌더링
+window.renderGlobalCart = function() {
     const container = document.getElementById('global-cart-list');
-    let html = '';
+    if(!container) return;
     
+    let html = '';
     const types = [
         { key: 'forge', label: '대장간', icon: '🔨' },
         { key: 'skill', label: '스킬', icon: '⚡' },
@@ -204,7 +205,7 @@ function renderGlobalCart() {
         memberLists[t.key].forEach(m => {
             let base = 0, fin = 0, amountText = '';
             
-            if(t.key === 'forge') { base = m.amount; amountText = `현재 설정`; }
+            if(t.key === 'forge') { base = m.amount; amountText = `현재 설정된 세팅`; }
             else if(t.key === 'skill') { 
                 const cost = Math.max(1, parseInt(document.getElementById('skill-cost').value) || 200);
                 base = Math.floor(m.amount / cost) * 5 * 125; 
@@ -234,7 +235,8 @@ function renderGlobalCart() {
         });
     });
 
-    container.innerHTML = html || `<li style="text-align: center; color: var(--text-muted); padding: 10px;">데이터가 없습니다.</li>`;
-}
+    container.innerHTML = html || `<li style="text-align: center; color: var(--text-muted); padding: 10px;">데이터가 없습니다. 각 항목에서 리스트에 추가하세요.</li>`;
+};
 
-window.onload = calculateAll;
+// 11. 초기 로드
+window.onload = window.calculateGuildWar;
