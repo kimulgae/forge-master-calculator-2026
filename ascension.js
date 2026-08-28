@@ -21,7 +21,7 @@ window.onload = () => {
         });
     });
 
-    // 🌟 2. 절전모드 깨우기 (기상나팔)
+    // 2. 절전모드 깨우기 (기상나팔)
     fetch('/api/ascension', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -42,32 +42,24 @@ function parseCurrency(value) {
 }
 
 function formatInput(input) {
-    // 1. 기존 콤마 제거 및 숫자, 소수점(.), k, m 이외의 문자 방지
     let value = input.value.replace(/,/g, '').replace(/[^0-9.kmKM]/g, '');
     
-    // 2. k나 m이 포함되어 있으면 계산을 멈추고 그대로 표시 (예: 1.5k)
     if (value.toLowerCase().includes('k') || value.toLowerCase().includes('m')) {
         input.value = value;
         return;
     }
 
-    // 3. 완전히 지워졌을 때는 빈칸 유지
     if (value === '') {
         input.value = '';
         return;
     }
 
-    // 4. 대망의 소수점 처리 로직! (소수점이 있는 경우와 없는 경우 나누기)
     if (value.includes('.')) {
         let parts = value.split('.');
-        // 정수 부분에만 천 단위 콤마 적용
         let integerPart = parts[0] ? Number(parts[0]).toLocaleString('ko-KR') : '0';
-        // 소수점 이하 부분은 건드리지 않고 그대로 갖다 붙임
         let decimalPart = parts.length > 1 ? '.' + parts[1] : ''; 
-        
         input.value = integerPart + decimalPart;
     } else {
-        // 소수점이 없는 순수 정수일 경우 기존처럼 처리
         input.value = Number(value).toLocaleString('ko-KR');
     }
 }
@@ -110,10 +102,13 @@ async function calc(type) {
 
     if(btn) { btn.disabled = true; btn.style.opacity = '0.5'; }
 
+    // 🌟 승천 데이터 추가 추출 (ascCur, ascTar)
     const orderData = {
         type: type,
         currentMode: currentMode,
+        ascCur: val(`${type.charAt(0)}-asc-cur`), 
         cur: val(`${type.charAt(0)}-cur`),
+        ascTar: val(`${type.charAt(0)}-asc-tar`), 
         tar: val(`${type.charAt(0)}-tar`),
         prog: val(`${type.charAt(0)}-prog`),
         curr: parseCurrency(document.getElementById(`${type.charAt(0)}-curr`)?.value || '0'),
@@ -165,7 +160,9 @@ async function calcForge() {
     const orderData = {
         type: 'forge',
         currentMode: currentMode,
+        ascCur: val('f-asc-cur'),
         cur: val('f-cur'),
+        ascTar: val('f-asc-tar'),
         tar: val('f-tar'),
         curr: parseCurrency(document.getElementById('f-curr').value),
         spd: val('f-spd'),
@@ -263,7 +260,6 @@ async function fetchMyTechTree() {
         if (document.getElementById('s-cost') && data.tech_skill_cost !== null) document.getElementById('s-cost').value = data.tech_skill_cost;
         if (document.getElementById('m-cost') && data.tech_mount_cost !== null) document.getElementById('m-cost').value = data.tech_mount_cost;
         
-        // 🌟 탈것과 펫 추탈을 각자의 칸에 분리해서 꽂아줌
         if (document.getElementById('m-ext') && data.tech_mount_ext !== null) document.getElementById('m-ext').value = data.tech_mount_ext;
         if (document.getElementById('p-ext') && data.tech_pet_ext !== null) document.getElementById('p-ext').value = data.tech_pet_ext;
     }
