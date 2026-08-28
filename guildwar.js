@@ -1,178 +1,189 @@
-// 햄버거 메뉴(사이드바) 열기/닫기 함수
-function toggleSidebar() {
-    document.getElementById('sidebar').classList.toggle('show');
-    document.getElementById('sidebar-overlay').classList.toggle('show');
+// ==========================================
+// 1. 길드전 대장간 기본 데이터 및 확률
+// ==========================================
+const guildForgeData = [
+    { c: 400, div: 1, s: 0 }, { c: 700, div: 1, s: 0 }, { c: 1500, div: 1, s: 0 }, { c: 3500, div: 1, s: 8 },
+    { c: 10000, div: 1, s: 17 }, { c: 25000, div: 1, s: 63 }, { c: 50000, div: 1, s: 109 }, { c: 99000, div: 1, s: 155 },
+    { c: 150000, div: 1, s: 201 }, { c: 249900, div: 3, s: 248 }, { c: 348000, div: 3, s: 294 }, { c: 448000, div: 4, s: 340 },
+    { c: 600000, div: 4, s: 385 }, { c: 800000, div: 5, s: 432 }, { c: 910000, div: 5, s: 479 }, { c: 1020000, div: 6, s: 525 },
+    { c: 1130000, div: 7, s: 571 }, { c: 1240000, div: 8, s: 628 }, { c: 1350000, div: 9, s: 709 }, { c: 1450000, div: 10, s: 779 },
+    { c: 1570000, div: 10, s: 848 }, { c: 1680000, div: 10, s: 917 }, { c: 1790000, div: 10, s: 987 }, { c: 1900000, div: 10, s: 1056 },
+    { c: 2010000, div: 10, s: 1125 }, { c: 2120000, div: 10, s: 1194 }, { c: 2230000, div: 10, s: 1264 }, { c: 2340000, div: 10, s: 1333 },
+    { c: 2450000, div: 10, s: 1402 }, { c: 2560000, div: 10, s: 1472 }, { c: 2670000, div: 10, s: 1541 }, { c: 2780000, div: 10, s: 1610 },
+    { c: 2890000, div: 10, s: 1679 }, { c: 3000000, div: 10, s: 1749 }
+];
+
+const forgeRarity = [
+    [100.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], [99.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], 
+    [98.0, 2.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], [96.0, 4.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], 
+    [91.5, 8.0, 0.5, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], [82.0, 16.0, 2.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], 
+    [64.0, 32.0, 4.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], [27.8, 64.0, 8.0, 0.2, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], 
+    [13.0, 70.0, 16.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], [6.0, 60.0, 32.0, 2.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], 
+    [0.0, 31.9, 64.0, 4.0, 0.1, 0.0, 0.0, 0.0, 0.0, 0.0], [0.0, 27.5, 64.0, 8.0, 5.0, 0.0, 0.0, 0.0, 0.0, 0.0], 
+    [0.0, 8.0, 75.0, 16.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0], [0.0, 0.0, 66.0, 32.0, 2.0, 0.05, 0.0, 0.0, 0.0, 0.0], 
+    [0.0, 0.0, 31.7, 64.0, 4.0, 0.25, 0.0, 0.0, 0.0, 0.0], [0.0, 0.0, 21.5, 70.0, 8.0, 0.5, 0.0, 0.0, 0.0, 0.0], 
+    [0.0, 0.0, 0.0, 82.9, 16.0, 1.0, 0.05, 0.0, 0.0, 0.0], [0.0, 0.0, 0.0, 65.7, 32.0, 2.0, 0.25, 0.0, 0.0, 0.0], 
+    [0.0, 0.0, 0.0, 31.5, 64.0, 4.0, 0.5, 0.0, 0.0, 0.0], [0.0, 0.0, 0.0, 0.0, 91.0, 8.0, 1.0, 0.05, 0.0, 0.0], 
+    [0.0, 0.0, 0.0, 0.0, 81.7, 16.0, 2.0, 0.25, 0.0, 0.0], [0.0, 0.0, 0.0, 0.0, 63.5, 32.0, 4.0, 0.5, 0.0, 0.0], 
+    [0.0, 0.0, 0.0, 0.0, 27.0, 64.0, 8.0, 1.0, 0.0, 0.0], [0.0, 0.0, 0.0, 0.0, 0.0, 82.0, 16.0, 2.0, 0.02, 0.0], 
+    [0.0, 0.0, 0.0, 0.0, 0.0, 64.0, 32.0, 4.0, 0.05, 0.0], [0.0, 0.0, 0.0, 0.0, 0.0, 43.8, 50.0, 6.0, 0.25, 0.0], 
+    [0.0, 0.0, 0.0, 0.0, 0.0, 31.5, 60.0, 8.0, 0.5, 0.0], [0.0, 0.0, 0.0, 0.0, 0.0, 21.0, 65.0, 13.0, 1.0, 0.0], 
+    [0.0, 0.0, 0.0, 0.0, 0.0, 6.99, 68.0, 23.0, 2.0, 0.02], [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 60.0, 36.0, 4.0, 0.05], 
+    [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 50.8, 41.0, 6.0, 0.25], [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 41.5, 50.0, 8.0, 0.5], 
+    [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 28.0, 58.0, 13.0, 1.0], [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 11.0, 64.0, 23.0, 2.0], 
+    [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 60.0, 36.0, 4.0]
+];
+
+// ==========================================
+// 2. 유틸리티 함수
+// ==========================================
+function formatKM(num) {
+    if (num >= 1e6) return (num / 1e6).toFixed(2).replace(/\.00$/, '') + 'm';
+    if (num >= 1e3) return (num / 1e3).toFixed(2).replace(/\.00$/, '') + 'k';
+    return num.toLocaleString();
 }
 
-function parseCurrency(value) {
-    if (!value) return 0;
-    let str = value.toString().toLowerCase().replace(/,/g, '').trim();
-    let num = parseFloat(str);
-    if (isNaN(num)) return 0;
-    if (str.endsWith('k')) return num * 1000;
-    if (str.endsWith('m')) return num * 1000000;
-    return num;
+function parseAmount(val) {
+    if (typeof val === 'number') return val;
+    if (!val) return 0;
+    const str = String(val).toLowerCase().replace(/,/g, '').trim();
+    if (str.endsWith('m')) return parseFloat(str) * 1000000;
+    if (str.endsWith('k')) return parseFloat(str) * 1000;
+    return parseFloat(str) || 0;
 }
 
-// 🌟 소수점 입력 및 천 단위 콤마 자동 포매팅
+// HTML onkeyup 방지용 빈 함수 (문자열 k, m 입력 방해하지 않도록)
 function formatInput(input) {
-    let value = input.value.replace(/,/g, '').replace(/[^0-9.kmKM]/g, '');
-    if (value.toLowerCase().includes('k') || value.toLowerCase().includes('m')) {
-        input.value = value;
-        return;
-    }
-    if (value === '') {
-        input.value = '';
-        return;
-    }
-    if (value.includes('.')) {
-        let parts = value.split('.');
-        let integerPart = parts[0] ? Number(parts[0]).toLocaleString('ko-KR') : '0';
-        let decimalPart = parts.length > 1 ? '.' + parts[1] : ''; 
-        input.value = integerPart + decimalPart;
-    } else {
-        input.value = Number(value).toLocaleString('ko-KR');
-    }
+    // 필요한 경우 여기에 정규식 콤마 처리 로직을 추가할 수 있습니다.
 }
 
-// HTML에서 지워진 칸이 있어도 에러 없이 0으로 넘어가도록 안전 장치
-function val(id) { 
-    const el = document.getElementById(id);
-    return el ? (parseFloat(el.value.toString().replace(/,/g, '')) || 0) : 0; 
+// UI 토글 함수 (사이드바, 프로필)
+function toggleSidebar() {
+    const sidebar = document.getElementById('sidebar');
+    const overlay = document.getElementById('sidebar-overlay');
+    if(sidebar) sidebar.classList.toggle('show');
+    if(overlay) overlay.classList.toggle('show');
 }
+function toggleProfileMenu() {
+    const menu = document.getElementById('profile-menu-top');
+    if(menu) menu.classList.toggle('show');
+}
+function signInWithGoogle() { alert("구글 로그인 연동 필요"); }
+function signOut() { alert("로그아웃 되었습니다."); }
 
-// 서버(/api/guildwar)로 통신 요청
-async function calculateGuildWar() {
-    const orderData = {
-        start_level: val('forge-level'),
-        hammers: parseCurrency(document.getElementById('forge-hammers')?.value || '0'),
-        freeHammerRate: val('free-hammer'),
-        coins: parseCurrency(document.getElementById('coins-owned')?.value || '0'),
-        gems: parseCurrency(document.getElementById('gems-owned')?.value || '0'),
-        useGems: document.getElementById('use-gems')?.checked ?? true,
-        skillOwned: parseCurrency(document.getElementById('skill-owned')?.value || '0'),
-        skillCost: val('skill-cost'),
-        mountOwned: parseCurrency(document.getElementById('mount-owned')?.value || '0'),
-        mountCost: val('mount-cost'),
-        mountExt: val('mount-ext')
-    };
+// ==========================================
+// 3. 메인 계산 로직 (프론트엔드 단일 구조)
+// ==========================================
+function calculateGuildWar() {
+    // 1. DOM에서 입력값 안전하게 가져오기
+    let start_level = Math.max(1, Math.min(36, parseInt(document.getElementById('forge-level')?.value) || 1));
+    let hammers = parseAmount(document.getElementById('forge-hammers')?.value);
+    let freeHammerRate = parseFloat(document.getElementById('free-hammer')?.value) || 0;
+    
+    let coins = parseAmount(document.getElementById('coins-owned')?.value);
+    let gems = parseAmount(document.getElementById('gems-owned')?.value);
+    let useGems = document.getElementById('use-gems')?.checked;
 
-    try {
-        const response = await fetch('/api/guildwar', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(orderData)
-        });
+    let skillOwned = parseAmount(document.getElementById('skill-owned')?.value);
+    let skillCost = Math.max(1, parseAmount(document.getElementById('skill-cost')?.value || 200));
 
-        const result = await response.json();
+    let mountOwned = parseAmount(document.getElementById('mount-owned')?.value);
+    let mountCost = Math.max(1, parseAmount(document.getElementById('mount-cost')?.value || 50));
+    let mountExt = parseFloat(document.getElementById('mount-ext')?.value) || 0;
 
-        if (result.success) {
-            if(document.getElementById('res-forge-status')) document.getElementById('res-forge-status').innerHTML = result.statusText;
-            if(document.getElementById('res-forge-spent')) document.getElementById('res-forge-spent').innerHTML = result.spentText;
-            if(document.getElementById('prob-1')) document.getElementById('prob-1').value = result.prob1;
-            if(document.getElementById('prob-2')) document.getElementById('prob-2').value = result.prob2;
-            if(document.getElementById('prob-3')) document.getElementById('prob-3').value = result.prob3;
-            if(document.getElementById('res-forge')) document.getElementById('res-forge').innerText = result.totalForge;
-            if(document.getElementById('res-skill')) document.getElementById('res-skill').innerText = result.totalSkill;
+    // 2. 대장간 루프 계산
+    let total_coins_spent = 0;
+    let total_gems_spent = 0;
+    let current_level = start_level;
+    let steps_filled = 0;
+    let target_div = 1;
+    let stop_reason = "";
 
-            // 🌟 2배 합치기 로직
-            let numForge = parseInt(String(result.totalForge).replace(/[^0-9-]/g, ''), 10) || 0;
-            let numSkill = parseInt(String(result.totalSkill).replace(/[^0-9-]/g, ''), 10) || 0;
-            let numMount = parseInt(String(result.totalMount).replace(/[^0-9-]/g, ''), 10) || 0;
+    while (current_level < 36 && coins > 0) {
+        let data = guildForgeData[current_level - 1]; 
+        if (!data) break;
 
-            const isCombine = document.getElementById('mount-combine')?.checked;
-            if (isCombine) {
-                numMount *= 2;
-            }
-
-            const mountRes = document.getElementById('res-mount') || document.getElementById('res-pet');
-            if (mountRes) mountRes.innerText = numMount.toLocaleString('ko-KR');
+        target_div = data.div;
+        let cost_per_step = data.c / data.div;
+        let affordable_steps = Math.floor(coins / cost_per_step);
+        
+        if (affordable_steps >= data.div) {
+            let spent_c = data.div * cost_per_step;
+            coins -= spent_c;
+            total_coins_spent += spent_c;
             
-            if (document.getElementById('grand-total')) {
-                document.getElementById('grand-total').innerText = (numForge + numSkill + numMount).toLocaleString('ko-KR');
+            if (useGems || data.s === 0) {
+                if (gems >= data.s) {
+                    gems -= data.s;
+                    total_gems_spent += data.s;
+                    current_level++; 
+                    steps_filled = 0;
+                } else {
+                    steps_filled = data.div; 
+                    stop_reason = "(보석 부족 대기)";
+                    break; 
+                }
+            } else {
+                steps_filled = data.div;
+                stop_reason = "(1단계 완료 및 대기)";
+                break;
             }
+        } else {
+            if (affordable_steps > 0) {
+                let spent_c = affordable_steps * cost_per_step;
+                coins -= spent_c;
+                total_coins_spent += spent_c;
+                steps_filled = affordable_steps;
+            }
+            stop_reason = "(코인 부족)";
+            break;
         }
-    } catch (error) {
-        const statusEl = document.getElementById('res-forge-status');
-        if(statusEl) statusEl.innerText = "서버 통신 에러가 발생했습니다.";
     }
+
+    // 3. 상태 텍스트 생성
+    let statusText = current_level >= 36 ? `36 레벨 (MAX 달성)` : 
+        (steps_filled === target_div) ? `${current_level} ➔ ${current_level + 1} 업그레이드 중 ${stop_reason}` : 
+        `${current_level} ➔ ${current_level + 1} 레벨 진행중 (${steps_filled}/${target_div}칸) ${stop_reason}`;
+
+    let spentText = `코인 소모: <span style="color:#dbdee1; font-weight:700;">${formatKM(total_coins_spent)}</span> (잔여: ${formatKM(coins)})<br>` +
+                    `보석 소모: <span style="color:#dbdee1; font-weight:700;">${formatKM(total_gems_spent)}</span> (잔여: ${formatKM(gems)})`;
+
+    // 4. 확률 및 점수 계산
+    let probLevel = Math.max(1, Math.min(36, current_level));
+    let probs = forgeRarity[Math.min(probLevel - 1, forgeRarity.length - 1)];
+    
+    let p1 = (probs ? (probs[0] + probs[1] + probs[2]) : 0) / 100;
+    let p2 = (probs ? (probs[3] + probs[4] + probs[5]) : 0) / 100;
+    let p3 = (probs ? (probs[6] + probs[7] + probs[8] + probs[9]) : 0) / 100;
+
+    let coinScore = Math.floor(total_coins_spent / 1000) * 27;
+    let gemScore = total_gems_spent * 50;
+    
+    let safeFreeRate = Math.min(99.9, Math.max(0, freeHammerRate));
+    let effectiveCrafts = Math.floor(hammers / (1 - (safeFreeRate / 100))); 
+    let hammerScore = Math.floor(effectiveCrafts * ((p1 * 1) + (p2 * 2) + (p3 * 3)));
+    
+    let totalForge = hammerScore + coinScore + gemScore;
+    let totalSkill = Math.floor(skillOwned / skillCost) * 5 * 125;
+    let totalMountPulls = Math.floor(mountOwned / mountCost) * (1 + mountExt / 100);
+    let mountScore = Math.floor(totalMountPulls) * 600;
+    let grandTotal = totalForge + totalSkill + mountScore;
+
+    // 5. DOM에 결과 즉시 반영
+    document.getElementById('prob-1').value = (p1 * 100).toFixed(2) + "%";
+    document.getElementById('prob-2').value = (p2 * 100).toFixed(2) + "%";
+    document.getElementById('prob-3').value = (p3 * 100).toFixed(2) + "%";
+
+    document.getElementById('res-forge-status').innerText = statusText;
+    document.getElementById('res-forge-spent').innerHTML = spentText;
+
+    document.getElementById('res-forge').innerText = (totalForge || 0).toLocaleString() + ' 점';
+    document.getElementById('res-skill').innerText = (totalSkill || 0).toLocaleString() + ' 점';
+    document.getElementById('res-pet').innerText = (mountScore || 0).toLocaleString() + ' 점';
+    document.getElementById('grand-total').innerText = (grandTotal || 0).toLocaleString() + ' 점';
 }
 
-// 🌟 페이지 로드 및 이벤트 바인딩
+// 6. 페이지 로드 시 초기 계산 실행
 window.onload = () => {
     calculateGuildWar();
-    document.getElementById('mount-combine')?.addEventListener('change', calculateGuildWar);
 };
-
-// ============================================
-// 구글 로그인 및 기술트리 DB (Supabase) 연동
-// ============================================
-const SUPABASE_URL = 'https://exoghsmbjaehcsjakrij.supabase.co';
-const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImV4b2doc21iamFlaGNzamFrcmlqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODExNzc2OTUsImV4cCI6MjA5Njc1MzY5NX0.Kq8VJ_QDQkN0xOWhdJyEC3hfwaHyOs_LPUHcQrIbb_s';
-const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-let currentUser = null;
-
-supabaseClient.auth.onAuthStateChange((event, session) => {
-    const user = session?.user;
-    currentUser = user;
-    if (user) {
-        document.getElementById('login-btn-top').style.display = 'none';
-        document.getElementById('user-info-top').style.display = 'block';
-        document.getElementById('profile-img').src = user.user_metadata.avatar_url || 'https://cdn-icons-png.flaticon.com/512/149/149071.png';
-        document.getElementById('user-name-top').innerText = user.user_metadata.full_name || '용사';
-        fetchMyTechTree(); 
-    } else {
-        document.getElementById('login-btn-top').style.display = 'flex';
-        document.getElementById('user-info-top').style.display = 'none';
-    }
-});
-
-function toggleProfileMenu() { document.getElementById('profile-menu-top').classList.toggle('show'); }
-window.addEventListener('click', function(e) {
-    const userInfoTop = document.getElementById('user-info-top');
-    const profileMenu = document.getElementById('profile-menu-top');
-    if (userInfoTop && !userInfoTop.contains(e.target)) { if(profileMenu) profileMenu.classList.remove('show'); }
-});
-async function signInWithGoogle() { await supabaseClient.auth.signInWithOAuth({ provider: 'google', options: { redirectTo: window.location.origin } }); }
-async function signOut() { await supabaseClient.auth.signOut(); location.reload(); }
-
-function openTechModal() {
-    document.getElementById('tech-modal').classList.add('show');
-    document.getElementById('tech-modal-overlay').classList.add('show');
-    document.getElementById('profile-menu-top').classList.remove('show'); 
-}
-
-function closeTechModal() {
-    document.getElementById('tech-modal').classList.remove('show');
-    document.getElementById('tech-modal-overlay').classList.remove('show');
-}
-
-async function fetchMyTechTree() {
-    if (!currentUser) return;
-    const { data } = await supabaseClient.from('user_profiles').select('*').eq('id', currentUser.id).maybeSingle();
-    if (data) {
-        if (document.getElementById('free-hammer')) document.getElementById('free-hammer').value = data.tech_free_hammer || 0;
-        if (document.getElementById('skill-cost')) document.getElementById('skill-cost').value = data.tech_skill_cost || 150;
-        if (document.getElementById('mount-cost')) document.getElementById('mount-cost').value = data.tech_mount_cost || 50;
-        if (document.getElementById('mount-ext')) document.getElementById('mount-ext').value = data.tech_mount_ext || 0;
-        if (document.getElementById('pet-ext')) document.getElementById('pet-ext').value = data.tech_pet_ext || 0;
-        calculateGuildWar();
-    }
-}
-
-async function saveTechTree() {
-    if (!currentUser) return alert("로그인이 필요합니다.");
-    const saveData = {
-        id: currentUser.id,
-        tech_forge_dis: val('db-forge-dis'),
-        tech_forge_spd: val('db-forge-spd'),
-        tech_skill_cost: val('db-skill-cost'),
-        tech_mount_cost: val('db-mount-cost'),
-        tech_ext_rate: val('db-ext-rate'),
-        tech_free_hammer: val('db-free-hammer'),
-        updated_at: new Date()
-    };
-    const { error } = await supabaseClient.from('user_profiles').upsert(saveData);
-    if (error) alert("저장 실패: " + error.message);
-    else { alert("기술트리가 완벽하게 연동되었습니다! 🚀"); fetchMyTechTree(); closeTechModal(); }
-}
