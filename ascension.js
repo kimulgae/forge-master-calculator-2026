@@ -74,6 +74,26 @@ function toggleMode() {
     
     document.querySelectorAll('.result-box').forEach(el => el.style.display = 'none');
     document.querySelectorAll('.rarity-container').forEach(el => el.style.display = 'none');
+
+    // 🌟 [자동 레이아웃 정렬] 화면에 노출된 입력칸이 홀수일 경우 마지막 칸만 길게 늘림
+    document.querySelectorAll('.input-grid').forEach(grid => {
+        const items = Array.from(grid.querySelectorAll('.input-group'));
+        
+        // 현재 모드에서 실제로 보이는 칸만 필터링
+        const visibleItems = items.filter(el => {
+            if (currentMode === 'target' && el.classList.contains('mode-curr')) return false;
+            if (currentMode === 'curr' && el.classList.contains('mode-target')) return false;
+            return true;
+        });
+        
+        // 초기화
+        items.forEach(el => el.classList.remove('full-width'));
+        
+        // 보이는 칸이 홀수 개라면 마지막 칸에만 full-width 클래스 부여
+        if (visibleItems.length % 2 !== 0 && visibleItems.length > 0) {
+            visibleItems[visibleItems.length - 1].classList.add('full-width');
+        }
+    });
 }
 
 function tab(id) {
