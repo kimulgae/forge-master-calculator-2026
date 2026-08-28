@@ -118,7 +118,7 @@
         <a href="/" class="sidebar-link">🚀 승천 계산기</a>
         <a href="/guildwar/guildwar.html" class="sidebar-link">⚔️ 길드전 계산기</a>
         <a href="/offline/offline.html" class="sidebar-link">💤 오프라인 & 대장간</a>
-        <a href="/pvp.html" class="sidebar-link active">⚔️ PvP 승률 계산기</a>
+        <a href="/pvp/pvp.html" class="sidebar-link active">⚔️ PvP 승률 계산기</a>
     </div>
 
     <!-- 메인 컨텐츠 -->
@@ -304,7 +304,7 @@
                 document.getElementById('user-info-top').style.display = 'none';
             }
         });
-        async function signInWithGoogle() { await supabaseClient.auth.signInWithOAuth({ provider: 'google', options: { redirectTo: window.location.origin + '/pvp.html' } }); }
+        async function signInWithGoogle() { await supabaseClient.auth.signInWithOAuth({ provider: 'google', options: { redirectTo: window.location.origin + '/pvp/pvp.html' } }); }
         async function signOut() { await supabaseClient.auth.signOut(); location.reload(); }
     </script>
 </body>
