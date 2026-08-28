@@ -25,19 +25,13 @@ function normalizeRarity(arr) {
     for (let i = 0; i < arr.length; i++) {
         let row = arr[i];
         let sum = row.reduce((a, b) => a + b, 0);
-        
         if (Math.abs(sum - 100) > 0.0001 && sum > 0) {
             let diff = 100 - sum;
             let lastIdx = -1;
             for (let j = row.length - 1; j >= 0; j--) {
-                if (row[j] > 0) {
-                    lastIdx = j;
-                    break;
-                }
+                if (row[j] > 0) { lastIdx = j; break; }
             }
-            if (lastIdx !== -1) {
-                row[lastIdx] += diff; 
-            }
+            if (lastIdx !== -1) row[lastIdx] += diff; 
         }
         for (let j = 0; j < row.length; j++) {
             row[j] = Math.round(row[j] * 100) / 100;
@@ -50,9 +44,6 @@ normalizeRarity(petRarity);
 normalizeRarity(mountRarity);
 normalizeRarity(forgeRarity);
 
-// ============================================
-// 3. UI 및 텍스트 포맷팅 유틸리티
-// ============================================
 const RarityNames = ['일반', '희귀', '서사', '전설', '궁극', '신화'];
 const RarityColors = ['#FAFB04', '#6EB504', '#46FAAA', '#FAFA5A', '#FA465A', '#B44704'];
 const ForgeNames = ['원시', '중세', '근대', '현대', '우주', '성간', '다중우주', '양자', '지하세계', '신성'];
@@ -106,16 +97,12 @@ function generateRarityHTML(level, probData, names, colors) {
 // 4. 메인 핸들러 (서버 연산)
 // ============================================
 export default function handler(req, res) {
-    if (req.method !== 'POST') {
-        return res.status(405).json({ message: 'POST 요청만 받습니다.' });
-    }
-    if (req.body.type === 'wakeup') {
-        return res.status(200).json({ success: true, message: '서버 기상 완료!' });
-    }
+    if (req.method !== 'POST') return res.status(405).json({ message: 'POST 요청만 받습니다.' });
+    if (req.body.type === 'wakeup') return res.status(200).json({ success: true, message: '서버 기상 완료!' });
 
     const { type, currentMode, cur, tar, curr, prog, cost, ext, spd, dis, isCombine } = req.body;
-    let ascCur = req.body.ascCur || 0;
-    let ascTar = req.body.ascTar || 0;
+    let ascCur = req.body.ascCur !== undefined ? req.body.ascCur : 0;
+    let ascTar = req.body.ascTar !== undefined ? req.body.ascTar : 0;
     
     let resHTML = "";
     let rarityHTML = "";
@@ -125,24 +112,18 @@ export default function handler(req, res) {
     // 스킬 계산
     // ----------------------------------------
     if (type === 'skill') {
-        if (cur < 1 || cur > 100) return res.status(200).json({ success: false, message: `<span style="color:#ed4245; font-weight:bold;">현재 레벨을 1~100 사이로 입력하세요.</span>` });
-        if (ascCur < 0 || ascCur > 3) return res.status(200).json({ success: false, message: `<span style="color:#ed4245; font-weight:bold;">현재 승천을 0~3 사이로 입력하세요.</span>` });
-
+        if (cur < 1 || cur > 100) return res.status(200).json({ success: false, message: `<span style="color:#ed4245; font-weight:bold;">현재 레벨을 올바르게 입력하세요.</span>` });
         let absCur = (ascCur * 100) + cur;
 
         if (isTarget) {
-            if (tar < 1 || tar > 100) return res.status(200).json({ success: false, message: `<span style="color:#ed4245; font-weight:bold;">목표 레벨을 1~100 사이로 입력하세요.</span>` });
-            if (ascTar < 0 || ascTar > 3) return res.status(200).json({ success: false, message: `<span style="color:#ed4245; font-weight:bold;">목표 승천을 0~3 사이로 입력하세요.</span>` });
-            
+            if (tar < 1 || tar > 100) return res.status(200).json({ success: false, message: `<span style="color:#ed4245; font-weight:bold;">목표 레벨을 올바르게 입력하세요.</span>` });
             let absTar = (ascTar * 100) + tar;
             if (absTar > 400 || absCur >= absTar) return res.status(200).json({ success: false, message: `<span style="color:#ed4245; font-weight:bold;">목표 수치(승천 및 레벨)가 현재보다 커야 합니다.</span>` });
             
             let total = 0;
             for (let i = absCur; i < absTar; i++) {
                 let currentLvl = ((i - 1) % 100) + 1;
-                if (currentLvl < 100) {
-                    total += (currentLvl - 1 < skillData.length ? skillData[currentLvl - 1] : 110);
-                }
+                if (currentLvl < 100) total += (currentLvl - 1 < skillData.length ? skillData[currentLvl - 1] : 110);
             }
             
             total = Math.max(0, total - prog);
@@ -157,17 +138,15 @@ export default function handler(req, res) {
             let absLevel = absCur;
             let usedPulls = 0;
             
-            while (absLevel < 400) { // 3승천 100레벨
+            while (absLevel < 400) { 
                 let currentLvl = ((absLevel - 1) % 100) + 1;
-                let needNext = (currentLvl < 100) ? (currentLvl - 1 < skillData.length ? skillData[currentLvl - 1] : 110) : 0; // 100렙 통과시 0 비용
+                let needNext = (currentLvl < 100) ? (currentLvl - 1 < skillData.length ? skillData[currentLvl - 1] : 110) : 0; 
                 
                 if (totalAvail >= needNext) {
                     totalAvail -= needNext;
                     usedPulls += needNext;
                     absLevel++;
-                } else {
-                    break;
-                }
+                } else { break; }
             }
             
             let finalAsc = Math.floor((absLevel - 1) / 100);
@@ -194,24 +173,18 @@ export default function handler(req, res) {
     // 알(펫) 계산
     // ----------------------------------------
     else if (type === 'pet') {
-        if (cur < 1 || cur > 100) return res.status(200).json({ success: false, message: `<span style="color:#ed4245; font-weight:bold;">현재 레벨을 1~100 사이로 입력하세요.</span>` });
-        if (ascCur < 0 || ascCur > 3) return res.status(200).json({ success: false, message: `<span style="color:#ed4245; font-weight:bold;">현재 승천을 0~3 사이로 입력하세요.</span>` });
-
+        if (cur < 1 || cur > 100) return res.status(200).json({ success: false, message: `<span style="color:#ed4245; font-weight:bold;">현재 레벨을 올바르게 입력하세요.</span>` });
         let absCur = (ascCur * 100) + cur;
 
         if (isTarget) {
-            if (tar < 1 || tar > 100) return res.status(200).json({ success: false, message: `<span style="color:#ed4245; font-weight:bold;">목표 레벨을 1~100 사이로 입력하세요.</span>` });
-            if (ascTar < 0 || ascTar > 3) return res.status(200).json({ success: false, message: `<span style="color:#ed4245; font-weight:bold;">목표 승천을 0~3 사이로 입력하세요.</span>` });
-            
+            if (tar < 1 || tar > 100) return res.status(200).json({ success: false, message: `<span style="color:#ed4245; font-weight:bold;">목표 레벨을 올바르게 입력하세요.</span>` });
             let absTar = (ascTar * 100) + tar;
             if (absTar > 400 || absCur >= absTar) return res.status(200).json({ success: false, message: `<span style="color:#ed4245; font-weight:bold;">목표 수치(승천 및 레벨)가 현재보다 커야 합니다.</span>` });
             
             let total = 0;
             for (let i = absCur; i < absTar; i++) {
                 let currentLvl = ((i - 1) % 100) + 1;
-                if (currentLvl < 100) {
-                    total += (currentLvl - 1 < petData.length ? petData[currentLvl - 1] : 23);
-                }
+                if (currentLvl < 100) total += (currentLvl - 1 < petData.length ? petData[currentLvl - 1] : 23);
             }
             
             total = Math.max(0, total - prog);
@@ -235,9 +208,7 @@ export default function handler(req, res) {
                     totalAvail -= needNext;
                     usedPulls += needNext;
                     absLevel++;
-                } else {
-                    break;
-                }
+                } else { break; }
             }
             
             let finalAsc = Math.floor((absLevel - 1) / 100);
@@ -264,22 +235,18 @@ export default function handler(req, res) {
     // 탈것 계산
     // ----------------------------------------
     else if (type === 'mount') {
-        if (cur < 1 || cur > 100) return res.status(200).json({ success: false, message: `<span style="color:#ed4245; font-weight:bold;">현재 레벨을 1~100 사이로 입력하세요.</span>` });
-        if (ascCur < 0 || ascCur > 3) return res.status(200).json({ success: false, message: `<span style="color:#ed4245; font-weight:bold;">현재 승천을 0~3 사이로 입력하세요.</span>` });
-
+        if (cur < 1 || cur > 100) return res.status(200).json({ success: false, message: `<span style="color:#ed4245; font-weight:bold;">현재 레벨을 올바르게 입력하세요.</span>` });
         let absCur = (ascCur * 100) + cur;
 
         if (isTarget) {
-            if (tar < 1 || tar > 100) return res.status(200).json({ success: false, message: `<span style="color:#ed4245; font-weight:bold;">목표 레벨을 1~100 사이로 입력하세요.</span>` });
-            if (ascTar < 0 || ascTar > 3) return res.status(200).json({ success: false, message: `<span style="color:#ed4245; font-weight:bold;">목표 승천을 0~3 사이로 입력하세요.</span>` });
-            
+            if (tar < 1 || tar > 100) return res.status(200).json({ success: false, message: `<span style="color:#ed4245; font-weight:bold;">목표 레벨을 올바르게 입력하세요.</span>` });
             let absTar = (ascTar * 100) + tar;
             if (absTar > 400 || absCur >= absTar) return res.status(200).json({ success: false, message: `<span style="color:#ed4245; font-weight:bold;">목표 수치(승천 및 레벨)가 현재보다 커야 합니다.</span>` });
             
             let n = 0;
             for (let i = absCur; i < absTar; i++) {
                 let currentLvl = ((i - 1) % 100) + 1;
-                if (currentLvl < 100) n += 20; // 100레벨 승천 비용 0
+                if (currentLvl < 100) n += 20; 
             }
             
             n = Math.max(0, n - prog);
@@ -314,9 +281,7 @@ export default function handler(req, res) {
                     totalAvail -= needNext;
                     usedPulls += needNext;
                     absLevel++;
-                } else {
-                    break;
-                }
+                } else { break; }
             }
             
             if (isCombine) {
@@ -345,42 +310,30 @@ export default function handler(req, res) {
         }
     }
     // ----------------------------------------
-    // 대장간 계산 (승천 시스템 전격 패치)
+    // 대장간 계산 
     // ----------------------------------------
     else if (type === 'forge') {
         let actualDis = 1 - (dis / 100);
         let actualSpd = 1 + (spd / 100);
 
         if (cur < 1 || cur > 35) return res.status(200).json({ success: false, message: `<span style="color:#ed4245; font-weight:bold;">현재 레벨을 올바르게 입력하세요 (1~35).</span>` });
-        if (ascCur < 0 || ascCur > 3) return res.status(200).json({ success: false, message: `<span style="color:#ed4245; font-weight:bold;">현재 승천을 올바르게 입력하세요 (0~3).</span>` });
-
-        // 절대 레벨 환산 (1승천당 35레벨)
         let absCur = (ascCur * 35) + cur;
 
         if (isTarget) {
             if (tar < 1 || tar > 35) return res.status(200).json({ success: false, message: `<span style="color:#ed4245; font-weight:bold;">목표 레벨을 올바르게 입력하세요 (1~35).</span>` });
-            if (ascTar < 0 || ascTar > 3) return res.status(200).json({ success: false, message: `<span style="color:#ed4245; font-weight:bold;">목표 승천을 올바르게 입력하세요 (0~3).</span>` });
-            
             let absTar = (ascTar * 35) + tar;
             
             if (absTar > 140) return res.status(200).json({ success: false, message: `<span style="color:#ed4245; font-weight:bold;">최대 성장(3승천 35레벨)을 초과했습니다.</span>` });
             if (absCur >= absTar) return res.status(200).json({ success: false, message: `<span style="color:#ed4245; font-weight:bold;">목표 수치(승천 및 레벨)가 현재보다 커야 합니다.</span>` });
             
             let c = 0, t = 0, s = 0;
-            
             for (let i = absCur; i < absTar; i++) {
                 let currentLvl = ((i - 1) % 35) + 1;
-                
                 if (currentLvl < 35) {
-                    let baseData = forgeBase[currentLvl - 1]; // 레벨업 데이터
-                    c += baseData.c; 
-                    t += baseData.t; 
-                    s += baseData.s;
+                    let baseData = forgeBase[currentLvl - 1]; 
+                    c += baseData.c; t += baseData.t; s += baseData.s;
                 } else {
-                    // 35레벨 달성 시 -> 다음 승천을 위해 3,000,000 코인 소모
-                    c += 3000000;
-                    t += 0; 
-                    s += 0; 
+                    c += 3000000; t += 0; s += 0; 
                 }
             }
             
@@ -392,7 +345,7 @@ export default function handler(req, res) {
             let costAccum = 0;
             let remainingCurr = curr;
             
-            while (absLevel < 140) { // 최대 3승천 35레벨 (140)
+            while (absLevel < 140) { 
                 let currentLvl = ((absLevel - 1) % 35) + 1;
                 let nextCost = 0, nextTime = 0;
 
@@ -401,7 +354,6 @@ export default function handler(req, res) {
                     nextCost = Math.floor(baseData.c * actualDis);
                     nextTime = baseData.t;
                 } else {
-                    // 승천을 위한 3M 코인 소비 단계
                     nextCost = Math.floor(3000000 * actualDis);
                     nextTime = 0;
                 }
@@ -411,9 +363,7 @@ export default function handler(req, res) {
                     costAccum += nextCost;
                     timeAccum += nextTime;
                     absLevel++;
-                } else {
-                    break;
-                }
+                } else { break; }
             }
             
             let finalAsc = Math.floor((absLevel - 1) / 35);
