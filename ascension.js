@@ -10,6 +10,9 @@ function toggleSidebar() {
 let currentMode = 'target';
 
 window.onload = () => {
+    // 🌟 페이지 로딩 즉시 레이아웃을 계산하여 맞춤
+    toggleMode(); 
+
     // 1. 엔터키 즉시 연산 바인딩
     document.querySelectorAll('input').forEach(input => {
         input.addEventListener('keypress', function(e) {
@@ -30,7 +33,6 @@ window.onload = () => {
         console.log("기상 신호 전송 완료"); 
     });
 };
-
 function parseCurrency(value) {
     if (!value) return 0;
     let str = value.toString().toLowerCase().replace(/,/g, '').trim();
