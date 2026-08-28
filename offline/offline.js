@@ -115,7 +115,7 @@ function setLoginUI(user) {
     document.getElementById('user-name-top').innerText = user.user_metadata.full_name || '용사';
 }
 
-async function signInWithGoogle() { await supabaseClient.auth.signInWithOAuth({ provider: 'google', options: { redirectTo: window.location.origin + '/offline.html' } }); }
+async function signInWithGoogle() { await supabaseClient.auth.signInWithOAuth({ provider: 'google', options: { redirectTo: window.location.origin + '/offline/offline.html' } }); }
 async function signOut() { await supabaseClient.auth.signOut(); location.reload(); }
 
 async function fetchMyTechTree() {
