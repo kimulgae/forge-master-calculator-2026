@@ -71,27 +71,24 @@ function toggleMode() {
     document.querySelectorAll('.mode-label').forEach(l => l.classList.remove('active'));
     document.getElementById(currentMode === 'target' ? 'lbl-target' : 'lbl-curr').classList.add('active');
     
-    document.querySelectorAll('.mode-target').forEach(el => el.style.display = currentMode === 'target' ? 'block' : 'none');
-    document.querySelectorAll('.mode-curr').forEach(el => el.style.display = currentMode === 'curr' ? 'block' : 'none');
+    // 🌟 수정됨: 'block' 대신 빈 문자열('')을 사용해 기존 CSS(flex 등) 레이아웃이 깨지지 않도록 복원
+    document.querySelectorAll('.mode-target').forEach(el => el.style.display = currentMode === 'target' ? '' : 'none');
+    document.querySelectorAll('.mode-curr').forEach(el => el.style.display = currentMode === 'curr' ? '' : 'none');
     
     document.querySelectorAll('.result-box').forEach(el => el.style.display = 'none');
     document.querySelectorAll('.rarity-container').forEach(el => el.style.display = 'none');
 
-    // 🌟 [자동 레이아웃 정렬] 화면에 노출된 입력칸이 홀수일 경우 마지막 칸만 길게 늘림
     document.querySelectorAll('.input-grid').forEach(grid => {
         const items = Array.from(grid.querySelectorAll('.input-group'));
         
-        // 현재 모드에서 실제로 보이는 칸만 필터링
         const visibleItems = items.filter(el => {
             if (currentMode === 'target' && el.classList.contains('mode-curr')) return false;
             if (currentMode === 'curr' && el.classList.contains('mode-target')) return false;
             return true;
         });
         
-        // 초기화
         items.forEach(el => el.classList.remove('full-width'));
         
-        // 보이는 칸이 홀수 개라면 마지막 칸에만 full-width 클래스 부여
         if (visibleItems.length % 2 !== 0 && visibleItems.length > 0) {
             visibleItems[visibleItems.length - 1].classList.add('full-width');
         }
