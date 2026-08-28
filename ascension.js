@@ -88,6 +88,13 @@ function val(id) {
     return el ? (parseFloat(el.value) || 0) : 0; 
 }
 
+// 🌟 승천 입력값이 비어있을 때를 위한 스마트 폴백(Fallback) 함수
+function getAsc(id, fallback) {
+    const el = document.getElementById(id);
+    if (!el || el.value === '') return fallback; // 아무것도 입력 안하면 기본값(또는 현재승천) 적용
+    return parseInt(el.value) || 0;
+}
+
 // ============================================
 // 1. 서버 통신 (API) 계산 로직 - 스킬, 알, 탈것
 // ============================================
@@ -102,13 +109,16 @@ async function calc(type) {
 
     if(btn) { btn.disabled = true; btn.style.opacity = '0.5'; }
 
-    // 🌟 승천 데이터 추가 추출 (ascCur, ascTar)
+    // 🌟 스마트 승천 추출 (목표를 비워두면 현재 승천과 같다고 자동 간주)
+    let ascCurVal = getAsc(`${type.charAt(0)}-asc-cur`, 0);
+    let ascTarVal = getAsc(`${type.charAt(0)}-asc-tar`, ascCurVal);
+
     const orderData = {
         type: type,
         currentMode: currentMode,
-        ascCur: val(`${type.charAt(0)}-asc-cur`), 
+        ascCur: ascCurVal, 
         cur: val(`${type.charAt(0)}-cur`),
-        ascTar: val(`${type.charAt(0)}-asc-tar`), 
+        ascTar: ascTarVal, 
         tar: val(`${type.charAt(0)}-tar`),
         prog: val(`${type.charAt(0)}-prog`),
         curr: parseCurrency(document.getElementById(`${type.charAt(0)}-curr`)?.value || '0'),
@@ -157,12 +167,15 @@ async function calcForge() {
 
     if(btn) { btn.disabled = true; btn.style.opacity = '0.5'; }
 
+    let ascCurVal = getAsc('f-asc-cur', 0);
+    let ascTarVal = getAsc('f-asc-tar', ascCurVal);
+
     const orderData = {
         type: 'forge',
         currentMode: currentMode,
-        ascCur: val('f-asc-cur'),
+        ascCur: ascCurVal,
         cur: val('f-cur'),
-        ascTar: val('f-asc-tar'),
+        ascTar: ascTarVal,
         tar: val('f-tar'),
         curr: parseCurrency(document.getElementById('f-curr').value),
         spd: val('f-spd'),
